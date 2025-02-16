@@ -1,0 +1,133 @@
+.project-container{
+    color: #ccd6f6;
+}
+
+.trendz-links{
+    margin: 10px;
+}
+
+
+.featured-project-header{
+    font-weight: 700;
+    color: #64ffda;
+}
+
+.trendz-links:hover{
+    color: #64ffda;
+}
+
+.link-color{
+    color: #ffffff;
+}
+
+.nxt-trendz-container{
+    width: 100%;
+}
+
+@media (max-width:1023px){
+    .project-container{
+        padding: 5% 15%;
+        padding-bottom: 20%;
+    }
+    .project-image{
+        width: 100%;
+    }
+}
+
+@media (min-width: 1024px){
+    .project-container{
+        padding: 5% 15%;
+    }
+    .nxt-trendz-container,.nxt-watch-container{
+        display: flex;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .project-image{
+        width:70%;
+        object-fit: contain;
+    }
+    .project-content{
+        position: absolute;
+        width: 30%;
+        right: 12%;
+        text-align: end;
+    }
+    .project-exp{
+        background-color: #090f17;
+        padding: 26px;
+        border-radius: 14px;
+        margin-left: -50px;
+    }
+}
+
+/* .project{
+    padding:10% 15%;
+    color: #ffffff;
+}
+
+.main-project-image{
+    background-image: url('./Main-project-image.png');
+    background-repeat: no-repeat;
+}
+
+.g-color{
+    background-color: #112240c0;
+    padding:11px;
+}
+.trendz-links{
+    margin:10px;
+    font-size: 20px;
+}
+.large-content{
+    display: none;
+}
+.link-color{
+    color: #ffffff;
+    text-decoration: none;
+}
+.featured-header{
+    color: #64ffdaa1;
+}
+
+@media (min-width: 1024px){
+    .main-project-container{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    .main-project-image{
+        background-size: contain;
+        width: 580px;
+        object-fit: contain;
+        margin-top:5%;
+        height:302px;
+    }
+    .small-content{
+        display: none;
+    }
+    .large-content{
+        display: block;
+    }
+    .featured-content{
+        text-align:end;
+    }
+    .featured-app-explanation{
+        background-color: #112240;
+        border-radius: 6px;
+        padding: 15px;
+        margin-left: -54px;
+        text-align: start;
+    }
+    .g-color{
+        background-color: #64ffdb8f;
+        height: 300px;
+        width: 580px;
+    }
+    .g-color:hover{
+        background-color: transparent;
+    }
+    .trendz-links:hover{
+        color: #64ffdaa1;
+    }
+} */

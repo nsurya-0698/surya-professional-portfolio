@@ -1,0 +1,119 @@
+.about-container {
+    padding: 100px 0;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+  }
+  
+  .about-header {
+    color: #ccd6f6;
+    font-size: 32px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  
+  .about-header::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 70px;
+    height: 2px;
+    background-color: #64ffdb;
+  }
+  
+  .about-content-wrapper {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 50px;
+    align-items: center;
+  }
+  
+  .about-content {
+    color: #8892b0;
+    line-height: 1.6;
+  }
+  
+  .about-content p {
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  
+  .about-content-one {
+    animation: slideInLeft 0.6s ease 0.3s forwards;
+  }
+  
+  .about-content-two {
+    animation: slideInLeft 0.6s ease 0.6s forwards;
+  }
+  
+  .personal-image-container {
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.9s forwards;
+  }
+  
+  .personalpic {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    position: relative;
+  }
+  
+  .personalpic::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #64ffdb;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .personalpic:hover {
+    transform: translate(-5px, -5px);
+  }
+  
+  .personalpic:hover::after {
+    transform: translate(10px, 10px);
+  }
+  
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInLeft {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @media (max-width: 1023px) {
+    .about-content-wrapper {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .personal-image-container {
+      order: -1;
+      text-align: center;
+    }
+    
+    .personalpic {
+      max-width: 250px;
+    }
+  }

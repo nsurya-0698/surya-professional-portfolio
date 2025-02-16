@@ -1,0 +1,117 @@
+.contact-container{
+    color: #ffffff;
+    text-align: center;
+}
+
+.contact-header{
+    color: #ccd6f6;
+}
+
+.contact-btn{
+    border: 1px solid #64ffda;
+    background-color: transparent;
+    color: #64ffda;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: monospace;
+}
+
+.contact-btn:hover{
+    background-color: #64ffda5c;
+}
+
+@media (max-width: 1023px) {
+    .contact-container{
+        padding: 5% 5%;
+    }
+}
+
+@media (min-width: 1024px){
+    .contact-container{
+        padding: 5% 30%;
+    }
+    .contact-content{
+        font-size:18px;
+        margin: 20px;
+    }
+}
+
+.emailForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: transparent; /* Transparent background */
+    padding: 20px;
+    border: 1px solid #64ffda5c; /* Specific border color */
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto; /* Center align the form */
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column; /* Stack inputs vertically */
+    gap: 1rem; /* Space between the inputs */
+  }
+  
+  .formInput, .formTextarea {
+    padding: 0.5rem;
+    font-size: 1rem;
+    color: #fff; /* White font color */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    border: none;
+    border-bottom: 1px solid #64ffda5c; /* Bottom border color */
+    outline: none; /* Remove outline */
+  }
+  
+  .formInput::placeholder,
+  .formTextarea::placeholder {
+    color: rgba(255, 255, 255, 0.8); /* Placeholder text color */
+  }
+  
+  .formInput:focus,
+  .formTextarea:focus {
+    border-bottom: 1px solid #64ffda; /* Border color on focus */
+  }
+  
+  .formTextarea {
+    min-height: 150px;
+    resize: vertical; /* Allow vertical resizing */
+  }
+  
+  button {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #fff;
+  background-color: #64ffda5c; /* Specific button background color */
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Initial box shadow */
+}
+
+button:hover {
+  background-color: #52deb8; /* Darker background color on hover */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+  transform: scale(1.05); /* Slight scale up on hover */
+}
+
+.notification {
+    background-color: #52deb8;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .error {
+    color: #ff6666;
+    background-color: rgba(255, 102, 102, 0.2);
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
+  }

@@ -1,0 +1,129 @@
+.experience {
+    color: #ffffff;
+    animation: fadeIn 1s;
+    
+  }
+  
+  .experience-names {
+    display: flex;
+    justify-content: center;
+    animation: slideIn 1s;
+  }
+  
+  .company-name {
+    cursor: pointer;
+    padding: 10px;
+    animation: pulse 1s;
+  }
+  
+  .company-name:hover {
+    background-color: #112240e3;
+    border-bottom: 1px solid #112240e3;
+  }
+  
+  .job-content-scrollable {
+    max-height: 300px;
+    overflow-y: auto;
+    animation: slideIn 1s;
+  }
+  
+  .experience-data {
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 1s;
+  }
+  
+  @media (max-width: 1023px) {
+   .experience-names {
+      justify-content: center;
+    }
+   .experience {
+      padding: 5% 15%;
+    }
+   .tabColor {
+      color: #64ffda;
+    }
+   .company-name {
+      border-bottom: 1px solid;
+    }
+   .company-content {
+      height: 460px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+   .experience {
+      padding: 8% 20%;
+    }
+   .experience-header {
+      color: #ccd6f6;
+    }
+   .experience-names {
+      flex-direction: column;
+    }
+   .experience-data {
+      flex-direction: row;
+      justify-content: center;
+    }
+   .company-content {
+      margin-left: 50px;
+      height: 290px;
+    }
+   .company-name {
+      border-left: 1px solid;
+      margin-bottom: -16px;
+    }
+   .company-name:hover {
+      border-left: 1px solid #112240e3;
+    }
+   .tabColor {
+      color: #64ffda;
+    }
+  }
+  
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideIn {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+.date {
+    color: white;
+}
+
+@media (max-width: 600px) {
+    .element-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .location, .date {
+        text-align: left;
+        width: 100%;
+        padding: 5px 0;
+    }
+}

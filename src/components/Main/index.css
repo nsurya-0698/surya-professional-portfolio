@@ -1,0 +1,162 @@
+.opening-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 0 15%;
+  background-color: black;
+}
+
+.opening-content {
+  max-width: 1000px;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.intro {
+  color: #64ffdb;
+  font-size: 1.5rem;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: slideInRight 0.6s ease 0.2s forwards;
+}
+
+.name-header {
+  color: #ffffff;
+  font-size: 59px;
+  margin: 0;
+  line-height: 1.1;
+  opacity: 0;
+  animation: slideInRight 0.6s ease 0.4s forwards;
+}
+
+.passion-header {
+  color: #8892b0;
+  font-size: 59px;
+  margin: 0 0 20px 0;
+  line-height: 1.1;
+  opacity: 0;
+  animation: slideInRight 0.6s ease 0.6s forwards;
+}
+
+.main-content-wrapper {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 50px;
+  align-items: center;
+  opacity: 0;
+  animation: fadeIn 0.8s ease 0.8s forwards;
+}
+
+.text-content {
+  max-width: 540px;
+}
+
+.statement {
+  color: #8892b0;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.get-in-touch {
+  padding: 20px 35px;
+  background-color: transparent;
+  border: 1px solid #64ffdb;
+  color: #64ffdb;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.get-in-touch:hover {
+  background-color: rgba(100, 255, 219, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 20px rgba(100, 255, 219, 0.2);
+}
+
+.personal-image-container {
+  position: relative;
+  text-align: right;
+}
+
+.personalpic {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.personalpic::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid #64ffdb;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.personalpic:hover {
+  transform: translate(-5px, -5px);
+}
+
+.personalpic:hover::after {
+  transform: translate(10px, 10px);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1023px) {
+  .opening-container {
+    padding: 100px 5% 0;
+  }
+  
+  .main-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .personal-image-container {
+    order: -1;
+    text-align: center;
+  }
+  
+  .text-content {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
+  .name-header {
+    font-size: 45px;
+  }
+  
+  .passion-header {
+    font-size: 30px;
+  }
+  
+  .intro {
+    font-size: 1.2rem;
+  }
+  
+  .personalpic {
+    max-width: 250px;
+  }
+}
