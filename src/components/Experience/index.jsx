@@ -35,14 +35,14 @@ function App() {
               )}
               <span className="location">{element.location}</span>
               <p id="description">{element.description}</p>
-              {showButton && (
-                <a
-                  className={`button ${isWorkIcon ? 'workButton' : 'schoolButton'}`}
-                  href="/"
-                >
-                  {element.buttonText}
-                </a>
-              )}
+{showButton && (
+  <a
+    className={`button ${isWorkIcon ? 'workButton' : 'schoolButton'}`}
+    href={isWorkIcon ? "https://nsurya-0698.github.io/surya-professional-portfolio/" : "https://github.com/nsurya-0698"}
+  >
+    {element.buttonText}
+  </a>
+)}
             </VerticalTimelineElement>
           );
         })}

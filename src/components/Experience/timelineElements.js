@@ -3,9 +3,10 @@ let timelineElements = [
     id: 1,
     title: "Full Stack Developer at Optum Global Solutions (United Health Group)",
     location: "Minnesota, USA",
-    description:"As a Full Stack Developer at Optum Global Solutions (United Health Group), I developed Spring Boot microservices using JPA, Hibernate, and REST for claim processing in the ICE healthcare application. I designed PostgreSQL schemas for efficient data storage, employed Azure Functions for logging, utilized Grafana for monitoring, and deployed microservices with Jenkins, GitHub, Docker, and Kubernetes. Additionally, I implemented React interfaces for seamless claim data access.",
+    description: `
+    As a Full Stack Developer at Optum Global Solutions (United Health Group), I led the development of a claim amount calculation microservice using Java Spring Boot, PostgreSQL, and TensorFlow. I designed and deployed containerized microservices as Kubernetes clusters using Docker, optimizing scalability and efficiency. I developed HTTP and gRPC-based RESTful APIs using Golang and Java Spring Boot, ensuring reliability through testing with Postman and Selenium. I automated deployments on AWS EC2 instances using EKS, ECS, Docker, and Kubernetes, maintaining builds on AWS S3 for seamless hosting. I built CI/CD pipelines, reducing manual effort and enhancing workflows. Continuously updating my skills, I integrated emerging technologies for product optimization. Additionally, I successfully led a team of 5 developers, fostering collaboration and ensuring project alignment.`,
     buttonText: "Read more",
-    date: "02/2022 - Present",
+    date: "01/2023 - Present",
     icon: "work",
   },
   {
@@ -20,21 +21,24 @@ let timelineElements = [
   },
   {
     id: 3,
-    title: "Java Developer at NxtWave - iB Hubs - CCBP Learning Platform",
+    title: "Software Development Engineer 2 at HDFC Bank Limited - iB Hubs - CCBP Learning Platform",
     location: "Hyderabad, India",
-    description: "As a Java Developer at NxtWave - iB Hubs - CCBP Learning Platform in Hyderabad, India, I specialized in a payment gateway project involving Razorpay, RuPay, VISA, and PayPal for secure transactions. I developed a Java Spring Boot backend with MongoDB for efficient database management, ensuring PCI DSS compliance. I contributed to RESTful API development using Spring MVC, integrated banking APIs for seamless fund transfers, and optimized Angular application performance with AWS EC2, Auto Scaling, and CloudWatch, earning the MVP Award.",
-    buttonText: "Read more",
-    date: "04/2019 –08/2021",
+    description: `
+    As a Java Developer at NxtWave - iB Hubs - CCBP Learning Platform in Hyderabad, India, I translated business requirements into technical specifications and collaborated with teams to onboard user assets using Java-based solutions. I developed Java APIs with Spring Boot and MongoDB, deploying them via Azure DevOps to ensure frequent, reliable updates. I implemented role-based access control using Spring Security with JWT, ensuring secure API session management and compliance with data protection standards. Additionally, I built CI/CD pipelines using Jenkins and Terraform, utilized Prometheus and Grafana for monitoring, and implemented rollback procedures for high availability.
+  
+    I actively participated in code reviews, improving code quality and reducing defects. I conducted debugging and troubleshooting, achieving a 15% reduction in critical system defects. I also resolved front-end bugs in Angular applications using Chrome DevTools. Furthermore, I enhanced process automation by integrating Python scripts with ML models for workflow management and implemented database optimizations for improved performance.
+  `,    buttonText: "Read more",
+    date: "05/2019 –03/2021",
     icon: "work",
   },
   {
     id: 4,
-    title: "Junior Software Engineer at iB Hubs",
-    location: "Kurnool, India",
-    description:
-      "As a Junior Software Engineer at iB Hubs - CCBP Learning Platform in India, I developed a web-based task management application using Angular and Node.js to streamline project coordination. I implemented user authentication and authorization features, enhancing application security and user privacy, and integrated real-time updates using WebSocket technology, improving collaboration and task visibility among team members. Additionally, I earned certifications in Web Application Development and Core Personality Strengths.",
-    buttonText: "Read more",
-    date: "03/2018 – 04/2019",
+    title: "Software Engineer at Paytm",
+    location: "Hyderabad, India",
+    description: `
+  Conducted detailed testing and debugging of software applications, reducing critical defects by 20% and improving reliability in transaction processing systems. Designed and implemented Java-based applications using MySQL, Spring Boot, Kubernetes, Docker, and Gradle. Deployed and managed containerized applications with Kubernetes and Docker, ensuring smooth scalability and seamless deployment. Provided efficient resolution of bugs, enhancing system stability and minimizing downtime. Collaborated within Agile development environments, participating in sprint planning, backlog grooming, and retrospective meetings to ensure timely delivery of projects. Developed optimized data pipelines to handle and process large datasets, reducing data processing times by 30%. Utilized Java and big data technologies to design and build high-performance pipelines capable of managing data volumes effectively.
+`,    buttonText: "Read more",
+    date: "02/2018 – 04/2019",
     icon: "work",
   },
   {
@@ -42,7 +46,7 @@ let timelineElements = [
     title: "Aditya Engineering College",
     location: "India, Andhra Pradesh",
     description:
-      "I earned a Bachelor of Technology in Electrical and Computer engineering from Aditya Engineering College, achieving a 2.8/4.0 of . My coursework included Advanced Data Structures, C Language, and Operating Systems. I also completed various projects, which are available on my GitHub.",
+      "I earned a Bachelor of Technology in Electrical and Computer engineering from Aditya Engineering College, achieving a 3.0/4.0 of . My coursework included Advanced Data Structures, C Language, and Operating Systems. I also completed various projects, which are available on my GitHub.",
     buttonText: "GitHub",
     date: "05/2015 -06/2019",
     icon: "school",
