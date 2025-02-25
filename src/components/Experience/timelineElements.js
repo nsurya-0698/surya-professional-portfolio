@@ -24,7 +24,7 @@ let timelineElements = [
     title: "Software Development Engineer 2 at HDFC Bank Limited",
     location: "Hyderabad, India",
     description: `
-    As a Java Developer at NxtWave - iB Hubs - CCBP Learning Platform in Hyderabad, India, I translated business requirements into technical specifications and collaborated with teams to onboard user assets using Java-based solutions. I developed Java APIs with Spring Boot and MongoDB, deploying them via Azure DevOps to ensure frequent, reliable updates. I implemented role-based access control using Spring Security with JWT, ensuring secure API session management and compliance with data protection standards. Additionally, I built CI/CD pipelines using Jenkins and Terraform, utilized Prometheus and Grafana for monitoring, and implemented rollback procedures for high availability.
+    As a Java Developer at HDFC Bank Limited, I translated business requirements into technical specifications and collaborated with teams to onboard user assets using Java-based solutions. I developed Java APIs with Spring Boot and MongoDB, deploying them via Azure DevOps to ensure frequent, reliable updates. I implemented role-based access control using Spring Security with JWT, ensuring secure API session management and compliance with data protection standards. Additionally, I built CI/CD pipelines using Jenkins and Terraform, utilized Prometheus and Grafana for monitoring, and implemented rollback procedures for high availability.
   
     I actively participated in code reviews, improving code quality and reducing defects. I conducted debugging and troubleshooting, achieving a 15% reduction in critical system defects. I also resolved front-end bugs in Angular applications using Chrome DevTools. Furthermore, I enhanced process automation by integrating Python scripts with ML models for workflow management and implemented database optimizations for improved performance.
   `,    buttonText: "Read more",
@@ -43,7 +43,7 @@ let timelineElements = [
   },
   {
     id: 5,
-    title: "Aditya Engineering College",
+    title: "Aditya Engineering University",
     location: "India, Andhra Pradesh",
     description:
       "I earned a Bachelor of Technology in Electrical and Computer engineering from Aditya Engineering College, achieving a 3.0/4.0 of . My coursework included Advanced Data Structures, C Language, and Operating Systems. I also completed various projects, which are available on my GitHub.",
