@@ -21,7 +21,7 @@ let timelineElements = [
   },
   {
     id: 3,
-    title: "Software Development Engineer 2 at HDFC Bank Limited - iB Hubs - CCBP Learning Platform",
+    title: "Software Development Engineer 2 at HDFC Bank Limited",
     location: "Hyderabad, India",
     description: `
     As a Java Developer at NxtWave - iB Hubs - CCBP Learning Platform in Hyderabad, India, I translated business requirements into technical specifications and collaborated with teams to onboard user assets using Java-based solutions. I developed Java APIs with Spring Boot and MongoDB, deploying them via Azure DevOps to ensure frequent, reliable updates. I implemented role-based access control using Spring Security with JWT, ensuring secure API session management and compliance with data protection standards. Additionally, I built CI/CD pipelines using Jenkins and Terraform, utilized Prometheus and Grafana for monitoring, and implemented rollback procedures for high availability.
