@@ -1,17 +1,16 @@
 .certifications-section {
-    /* min-height: 100vh; */
-    /* padding: 4rem 0; */
+    padding: 4rem 0;
     background-color: black;
-    overflow: hidden;
-  }
-  
-  .certifications-container {
-    max-width: 1200px;
+    overflow-x: hidden;
+}
+
+.certifications-container {
+    max-width: 1600px;
     margin: 0 auto;
     padding: 0 2rem;
-  }
-  
-  .section-title {
+}
+
+.section-title {
     display: flex;
     align-items: center;
     gap: 0.75rem;
@@ -21,61 +20,60 @@
     margin-bottom: 3rem;
     text-align: center;
     justify-content: center;
-  }
-  
-  .aws-small-badge {
+}
+
+.aws-small-badge {
     width: 2rem;
     height: 2rem;
     background-image: url('https://images.credly.com/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-  }
-  
-  .certificates-slider {
+}
+
+.certificates-slider {
     position: relative;
     overflow: hidden;
     padding: 2rem 0;
-  }
-  
-  .slider-track {
+}
+
+.slider-track {
     display: flex;
-    animation: scroll 40s linear infinite;
-  }
-  
-  .certificates-slider.paused .slider-track {
-    animation-play-state: paused;
-  }
-  
-  .certificate-card {
-    flex: 0 0 auto;
-    width: 400px;
-    margin: 0 auto;
+    gap: 3rem;
+    padding: 2rem;
+    width: max-content;
+    animation: scroll 60s linear infinite;
+}
+
+.certificate-card {
+    flex: 0 0 380px;
+    width: 380px;
+    margin: 0;
     transform: translateZ(0);
     cursor: pointer;
     transition: transform 0.5s ease;
-  }
-  
-  .certificate-card.expanded {
+}
+
+.certificate-card.expanded {
     transform: scale(1.05);
     cursor: default;
-  }
-  
-  .certificate-content {
+}
+
+.certificate-content {
     background: rgba(22, 28, 41, 0.8);
     border: 1px solid rgba(100, 255, 219, 0.1);
     border-radius: 1rem;
     overflow: hidden;
     position: relative;
     transition: all 0.3s ease;
-  }
-  
-  .certificate-content:hover {
+}
+
+.certificate-content:hover {
     transform: translateY(-5px);
     border-color: rgba(100, 255, 219, 0.3);
-  }
-  
-  .certificate-image {
+}
+
+.certificate-image {
     position: relative;
     height: 200px;
     overflow: hidden;
@@ -83,29 +81,29 @@
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #232f3e 0%, #161e2d 100%);
-  }
-  
-  .aws-badge {
+}
+
+.aws-badge {
     position: relative;
     width: 150px;
     height: 150px;
     perspective: 1000px;
     animation: float 3s ease-in-out infinite;
-  }
-  
-  .badge-front {
+}
+
+.badge-front {
     position: relative;
     width: 100%;
     height: 100%;
     border-radius: 50%;
     box-shadow:
-      0 0 20px rgba(255, 153, 0, 0.3),
-      0 0 60px rgba(255, 153, 0, 0.1);
+        0 0 20px rgba(255, 153, 0, 0.3),
+        0 0 60px rgba(255, 153, 0, 0.1);
     transform-style: preserve-3d;
     backface-visibility: hidden;
-  }
-  
-  .badge-image {
+}
+
+.badge-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -113,51 +111,51 @@
     background: #232f3e;
     padding: 10px;
     box-shadow:
-      inset 0 0 15px rgba(0, 0, 0, 0.5),
-      0 0 0 2px #FF9900,
-      0 0 0 4px rgba(255, 153, 0, 0.3);
-  }
-  
-  /* Specific styling for AI badge to match AWS badge */
-  .badge-image[alt="Generative AI with LLMs Badge"] {
+        inset 0 0 15px rgba(0, 0, 0, 0.5),
+        0 0 0 2px #FF9900,
+        0 0 0 4px rgba(255, 153, 0, 0.3);
+}
+
+/* Specific styling for AI badge to match AWS badge */
+.badge-image[alt="Generative AI with LLMs Badge"] {
     padding: 10px;
     background: #232f3e;
     box-shadow:
-      inset 0 0 15px rgba(0, 0, 0, 0.5),
-      0 0 0 2px #667eea,
-      0 0 0 4px rgba(102, 126, 234, 0.3);
-  }
-  
-  .certificate-details {
+        inset 0 0 15px rgba(0, 0, 0, 0.5),
+        0 0 0 2px #667eea,
+        0 0 0 4px rgba(102, 126, 234, 0.3);
+}
+
+.certificate-details {
     padding: 1.5rem;
-  }
-  
-  .certificate-details h3 {
+}
+
+.certificate-details h3 {
     color: #ccd6f6;
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
-  }
-  
-  .score {
+}
+
+.score {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     color: #64ffdb;
     margin-bottom: 1rem;
-  }
-  
-  .score-icon {
+}
+
+.score-icon {
     width: 1rem;
     height: 1rem;
-  }
-  
-  .certificate-details p {
+}
+
+.certificate-details p {
     color: #8892b0;
     margin-bottom: 1.5rem;
     line-height: 1.6;
-  }
-  
-  .view-certificate {
+}
+
+.view-certificate {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -165,52 +163,122 @@
     text-decoration: none;
     font-size: 0.875rem;
     transition: color 0.2s ease;
-  }
-  
-  .aws-mini-badge {
+}
+
+.aws-mini-badge {
     width: 1rem;
     height: 1rem;
     background-image: url('https://images.credly.com/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-  }
-  
-  .view-certificate:hover {
+}
+
+.view-certificate:hover {
     color: rgba(100, 255, 219, 0.8);
-  }
-  
-  @keyframes float {
+}
+
+@keyframes float {
     0%, 100% {
-      transform: translateY(0) rotateX(0);
+        transform: translateY(0) rotateX(0);
     }
     50% {
-      transform: translateY(-10px) rotateX(10deg);
+        transform: translateY(-10px) rotateX(10deg);
     }
-  }
-  
-  @keyframes pulse {
+}
+
+@keyframes pulse {
     0%, 100% {
-      opacity: 0.5;
-      transform: scale(1);
+        opacity: 0.5;
+        transform: scale(1);
     }
     50% {
-      opacity: 1;
-      transform: scale(1.1);
+        opacity: 1;
+        transform: scale(1.1);
     }
-  }
-  
-  @media (max-width: 1023px) {
-    .certifications-container {
-      padding: 0 1rem;
+}
+
+@media (max-width: 1200px) {
+    .slider-track {
+        animation-duration: 50s;
     }
-  
+}
+
+@media (max-width: 900px) {
     .certificate-card {
-      width: 300px;
+        flex-basis: 340px;
+        width: 340px;
     }
-  
+    .slider-track {
+        animation-duration: 40s;
+    }
+}
+
+@media (max-width: 768px) {
+    .certifications-section {
+        padding: 3rem 0;
+    }
+    .certificates-slider {
+        padding: 1rem 0;
+    }
+    .slider-track {
+        animation: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 2.5rem;
+    }
+    .certificate-card {
+        width: 90%;
+        max-width: 400px;
+        flex-basis: auto;
+    }
+    .certificate-card.expanded {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 480px) {
     .section-title {
-      font-size: 1.75rem;
+        font-size: 1.8rem;
     }
-  }
+    .certificate-content {
+        /* Adjust padding or other properties for very small screens if needed */
+    }
+}
+
+.certificates-slider.paused .slider-track {
+    animation-play-state: paused;
+}
+
+/* Responsive adjustments for laptop screens */
+@media (min-width: 1024px) {
+    .certifications-container {
+        padding: 0 4rem;
+    }
+}
+
+/* Laptop & Medium Screens: Centered, static grid */
+@media (min-width: 769px) and (max-width: 1400px) {
+    .slider-track {
+        animation: none; /* Disable scrolling animation */
+        justify-content: center;
+        flex-wrap: wrap; /* Allow cards to wrap if needed */
+        width: 100%;
+        padding: 2rem 1rem;
+    }
+    .certificate-card {
+        flex-basis: 360px; /* Adjust card size for this view */
+    }
+}
+
+/* Wide Screens: Keep the scrolling animation */
+@media (min-width: 1401px) {
+    .certifications-container {
+        padding: 0 4rem; /* Add horizontal padding */
+    }
+    .slider-track {
+        animation: scroll 60s linear infinite;
+    }
+}
   

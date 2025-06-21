@@ -8,10 +8,12 @@ import Experience from './components/Experience';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Certifications from './components/Certifications';
+import BackgroundMusic from './components/BackgroundMusic';
 
 function App() {
   return (
     <div className="App">
+      <BackgroundMusic />
       <div className="main-container">
         <div className="social-icons-container">
           <a href="https://github.com/nsurya-0698" target="_blank" rel="noopener noreferrer">

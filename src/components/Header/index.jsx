@@ -30,10 +30,10 @@ class Header extends Component {
         return (
             <div className={`header-container ${topVal !== 0 ? 'updatetop' : ''}`} onScroll={this.scrolled}>
                 <a href="https://nsurya-0698.github.io/surya-professional-portfolio/">
-                    <img className="site-logo" src={logo} alt="logo" />
+                    <img className="site-logo animate-float hover-scale" src={logo} alt="logo" />
                 </a>
                 <div className={`overlay ${hamburgerClicked ? "" : "burger-data"} ${makeBlur ? "" : "hider"}`}>
-                    <span className="closing" onClick={this.closeHam}>&times;</span>
+                    <span className="closing animate-fade-up" onClick={this.closeHam}>&times;</span>
                     <ul className="header-list overlay-content">
                         {/* <a href="#about" className="nav-things">
                             <li className="header-content about">About</li>
@@ -42,22 +42,22 @@ class Header extends Component {
                             <li className="header-content exp">Education</li>
                         </a> */}
                         <a href="#exp" className="nav-things">
-                            <li className="header-content exp">Experience</li>
+                            <li className="header-content exp animate-slide-left hover-glow">Experience</li>
                         </a>
                         <a href="#certifications" className="nav-things">
-                            <li className="header-content work">Certifications</li>
+                            <li className="header-content work animate-slide-left hover-glow">Certifications</li>
                         </a>
                         <a href="#contact" className="nav-things">
-                            <li className="header-content contact">Contact</li>
+                            <li className="header-content contact animate-slide-left hover-glow">Contact</li>
                         </a>
                         <li>
                             <a href={resume} target="_blank" rel="noreferrer">
-                                <button className="btn resume">Resume</button>
+                                <button className="btn resume animate-slide-right hover-lift animate-glow">Resume</button>
                             </a>
                         </li>
                     </ul>
                 </div>
-                <span className={`burger ${hideHam ? "hamhider" : ""}`} onClick={this.hamClicked}>&#9776;</span>
+                <span className={`burger ${hideHam ? "hamhider" : ""} animate-pulse`} onClick={this.hamClicked}>&#9776;</span>
             </div>
         );
     }

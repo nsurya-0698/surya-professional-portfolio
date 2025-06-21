@@ -3,8 +3,8 @@ import "./index.css";
 const Projects = () => {
   return (
     <div className="project-container" id="work">
-      <h1 className="project-header">Some Things I’ve Built</h1>
-      <div>
+      <h1 className="project-header animate-fade-up">Some Things I've Built</h1>
+      <div className="animate-fade-up">
         <h1>Will Be out soon </h1>
       </div>
       {/* <div className="nxt-trendz-container">
