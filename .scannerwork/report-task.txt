@@ -1,0 +1,7 @@
+organization=nsurya-0698
+projectKey=surya-professional-portfolio
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.63177
+dashboardUrl=https://sonarcloud.io/dashboard?id=surya-professional-portfolio
+ceTaskId=AZa7l0bfkSBTz9mMRmc7
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZa7l0bfkSBTz9mMRmc7

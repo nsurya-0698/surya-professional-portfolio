@@ -118,6 +118,16 @@
       0 0 0 4px rgba(255, 153, 0, 0.3);
   }
   
+  /* Specific styling for AI badge to match AWS badge */
+  .badge-image[alt="Generative AI with LLMs Badge"] {
+    padding: 10px;
+    background: #232f3e;
+    box-shadow:
+      inset 0 0 15px rgba(0, 0, 0, 0.5),
+      0 0 0 2px #667eea,
+      0 0 0 4px rgba(102, 126, 234, 0.3);
+  }
+  
   .certificate-details {
     padding: 1.5rem;
   }

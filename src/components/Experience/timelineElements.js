@@ -1,16 +1,29 @@
 let timelineElements = [
-  {
-    id: 1,
+
+    {
+      id: 1,
+      title: "Full Stack Developer at Optum Global Solutions (United Health Group)",
+      location: "Minnesota, USA",
+      title: "Senior Software Engineer at Quest Diagnostics",
+      location: "Virginia, USA",
+      description: `
+      As a Software Engineer in a clinical diagnostics environment, I developed and maintained lab instrument integration modules using Java, JDBC, and SQL Server, enabling reliable data capture and bidirectional communication between instruments and backend systems. I designed and implemented over 20 decoupled modules deployed on WildFly Server across UAT, PROD, and TEST environments, ensuring scalable and modular communication pipelines. I engineered robust message parsing and interpretation logic, handling diverse instrument protocols like ASTM and HL7, and ensured accurate data mapping to internal structures. I configured JNDI resources, managed deployment artifacts, and optimized SQL queries and stored procedures for real-time processing of lab results. I collaborated closely with SMEs and instrument vendors, reviewing technical specs to support seamless integration and regulatory compliance. I actively monitored production logs, conducted root cause analysis, and resolved critical issues impacting clinical workflows. My contributions helped enhance system stability, performance, and data accuracy across the laboratory information ecosystem.`,
+      buttonText: "Read more",
+      date: "01/2024 - Present",
+      icon: "work",
+    },
+    {
+    id: 2,
     title: "Full Stack Developer at Optum Global Solutions (United Health Group)",
     location: "Minnesota, USA",
     description: `
     As a Full Stack Developer at Optum Global Solutions (United Health Group), I led the development of a claim amount calculation microservice using Java Spring Boot, PostgreSQL, and TensorFlow. I designed and deployed containerized microservices as Kubernetes clusters using Docker, optimizing scalability and efficiency. I developed HTTP and gRPC-based RESTful APIs using Golang and Java Spring Boot, ensuring reliability through testing with Postman and Selenium. I automated deployments on AWS EC2 instances using EKS, ECS, Docker, and Kubernetes, maintaining builds on AWS S3 for seamless hosting. I built CI/CD pipelines, reducing manual effort and enhancing workflows. Continuously updating my skills, I integrated emerging technologies for product optimization. Additionally, I successfully led a team of 5 developers, fostering collaboration and ensuring project alignment.`,
     buttonText: "Read more",
-    date: "01/2023 - Present",
+    date: "01/2023 - 12/2024",
     icon: "work",
   },
   {
-    id: 2,
+    id: 3,
     title: "University of Missouri Kansas City",
     location: "Kansas City, MO",
     description:
@@ -20,7 +33,7 @@ let timelineElements = [
     icon: "school",
   },
   {
-    id: 3,
+    id: 4,
     title: "Software Development Engineer 2 at HDFC Bank Limited",
     location: "Hyderabad, India",
     description: `
@@ -28,11 +41,11 @@ let timelineElements = [
   
     I actively participated in code reviews, improving code quality and reducing defects. I conducted debugging and troubleshooting, achieving a 15% reduction in critical system defects. I also resolved front-end bugs in Angular applications using Chrome DevTools. Furthermore, I enhanced process automation by integrating Python scripts with ML models for workflow management and implemented database optimizations for improved performance.
   `,    buttonText: "Read more",
-    date: "05/2019 –03/2021",
+    date: "05/2019 –08/2021",
     icon: "work",
   },
   {
-    id: 4,
+    id: 5,
     title: "Software Engineer at Paytm",
     location: "Hyderabad, India",
     description: `
@@ -42,7 +55,7 @@ let timelineElements = [
     icon: "work",
   },
   {
-    id: 5,
+    id: 6,
     title: "Aditya Engineering University",
     location: "India, Andhra Pradesh",
     description:
