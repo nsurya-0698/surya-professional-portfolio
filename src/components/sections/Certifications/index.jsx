@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { CheckCircle } from 'lucide-react';
-import certificate from './AWS_Certified_Solutions_Architect.pdf'; // Import resume PDF
+import certificate from '../../../assets/documents/AWS_Certified_Solutions_Architect.pdf'; // Import resume PDF
 import { Award } from 'lucide-react';
-import genaiBadge from './genai-badge.svg';
+import genaiBadge from '../../../assets/icons/genai-badge.svg';
 import './index.css';
 
 function Certifications() {

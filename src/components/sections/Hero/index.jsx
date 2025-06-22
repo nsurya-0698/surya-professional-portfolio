@@ -1,8 +1,8 @@
 import React from 'react';
-import proPic from './ProffPic.jpeg';
+import proPic from '../../../assets/images/ProffPic.jpeg';
 import './index.css';
 
-const Main = () => {
+const Hero = () => {
     return (
         <div className="opening-container" id="home">
             <div className="opening-content">
@@ -31,4 +31,4 @@ const Main = () => {
     );
 }
 
-export default Main;
+export default Hero;

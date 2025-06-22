@@ -1,12 +1,12 @@
 import React from 'react';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import { ReactComponent as WorkIcon } from './work.svg';
-import { ReactComponent as SchoolIcon } from './school.svg';
+import { ReactComponent as WorkIcon } from '../../../assets/icons/work.svg';
+import { ReactComponent as SchoolIcon } from '../../../assets/icons/school.svg';
 import timelineElements from './timelineElements';
 import './index.css';
 
-function App() {
+function Experience() {
   const workIconStyles = { background: '#06D6A0' };
   const schoolIconStyles = { background: '#f9c74f' };
 
@@ -51,4 +51,4 @@ function App() {
   );
 }
 
-export default App;
+export default Experience;

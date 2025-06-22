@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import resume from './Surya.pdf'; // Import resume PDF
-import logo from './logo.svg'; // Import logo SVG
+import resume from '../../../assets/documents/Surya.pdf'; // Import resume PDF
+import logo from '../../../assets/icons/logo.svg'; // Import logo SVG
 import './index.css';
 
 class Header extends Component {
