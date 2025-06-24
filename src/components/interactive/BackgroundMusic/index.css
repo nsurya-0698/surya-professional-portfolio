@@ -43,6 +43,72 @@
     animation: musicBeat 1.5s ease-in-out infinite;
     color: #ff4d6d; /* Change color to indicate active state */
   }
+
+  /* --- Music Prompt Overlay --- */
+  .music-prompt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 25, 47, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .music-prompt {
+    background: linear-gradient(135deg, rgba(10, 25, 47, 0.95), rgba(20, 35, 57, 0.95));
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(100, 255, 218, 0.3);
+    border-radius: 20px;
+    padding: 30px 40px;
+    text-align: center;
+    color: #64ffda;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: slideInUp 0.6s ease-out;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .music-prompt:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(100, 255, 218, 0.5);
+  }
+
+  .music-prompt svg {
+    margin-bottom: 15px;
+    animation: musicBeat 2s ease-in-out infinite;
+    color: #64ffda;
+  }
+
+  .music-prompt p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: #8892b0;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
   
   @media (max-width: 1024px) {
       .music-toggle-button {
@@ -51,6 +117,15 @@
           left: auto;
           width: 40px;
           height: 40px;
+      }
+
+      .music-prompt {
+        padding: 25px 30px;
+        margin: 20px;
+      }
+
+      .music-prompt p {
+        font-size: 14px;
       }
   }
   
@@ -61,5 +136,14 @@
           left: auto;
           width: 40px;
           height: 40px;
+      }
+
+      .music-prompt {
+        padding: 20px 25px;
+        margin: 15px;
+      }
+
+      .music-prompt p {
+        font-size: 13px;
       }
   } 
