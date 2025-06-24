@@ -1,0 +1,11 @@
+import{r,j as e}from"./index-DQrcgOXJ.js";import{c as f}from"./createLucideIcon-CUDjRpeN.js";/**
+ * @license lucide-react v0.475.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const g=[["circle",{cx:"8",cy:"18",r:"4",key:"1fc0mg"}],["path",{d:"M12 18V2l7 4",key:"g04rme"}]],y=f("Music2",g);/**
+ * @license lucide-react v0.475.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const x=[["circle",{cx:"12",cy:"18",r:"4",key:"m3r9ws"}],["path",{d:"M16 18V2",key:"40x2m5"}]],E=f("Music3",x),k="https://www.bensound.com/bensound-music/bensound-sway.mp3",j=()=>{const[a,u]=r.useState(!1),[n,l]=r.useState(!1),[v,d]=r.useState(!1),m=r.useRef(null),i=async()=>{if(n)return;const s=m.current;if(s)try{s.volume=.3;const o=s.play();if(o!==void 0)return await o,u(!0),l(!0),d(!1),console.log("Music autoplay successful"),!0}catch(o){return console.warn("Music autoplay was prevented by the browser:",o),!1}},t=async()=>{n||await i()&&(l(!0),d(!1),p())},p=()=>{document.removeEventListener("click",t),document.removeEventListener("keydown",t),document.removeEventListener("touchstart",t),document.removeEventListener("mousedown",t),document.removeEventListener("scroll",t),window.removeEventListener("focus",t)};r.useEffect(()=>{i().then(c=>{if(c){l(!0);return}}),["click","keydown","touchstart","mousedown","scroll"].forEach(c=>{document.addEventListener(c,t,{passive:!0})}),window.addEventListener("focus",t);const o=()=>{!document.hidden&&!n&&setTimeout(()=>i(),100)};document.addEventListener("visibilitychange",o);const w=setTimeout(()=>{n||i().then(c=>{c||d(!0)})},2e3);return()=>{p(),document.removeEventListener("visibilitychange",o),clearTimeout(w)}},[n]);const h=()=>{const s=m.current;a?(s.pause(),u(!1)):(s.play(),u(!0))};return e.jsxs(e.Fragment,{children:[e.jsx("audio",{ref:m,src:k,loop:!0,preload:"auto"}),v&&e.jsx("div",{className:"music-prompt-overlay",onClick:t,children:e.jsxs("div",{className:"music-prompt",children:[e.jsx(y,{size:24}),e.jsx("p",{children:"Click anywhere to start background music"})]})}),e.jsx("button",{onClick:h,className:`music-toggle-button ${a?"playing":""}`,"aria-label":"Toggle Music",children:a?e.jsx(E,{size:20}):e.jsx(y,{size:20})})]})};export{j as default};
