@@ -1,6 +1,8 @@
 .contact-container{
     color: #ffffff;
     text-align: center;
+    padding-top: 0;
+    margin-top: 0;
 }
 
 .contact-header{
@@ -115,3 +117,19 @@ button:hover {
     margin-top: 10px;
     text-align: center;
   }
+
+.title-icon {
+  width: 40px;
+  height: 4px;
+  background: linear-gradient(90deg, #64ffda, #43e97b);
+  border-radius: 2px;
+  display: inline-block;
+  margin: 0 16px;
+  vertical-align: middle;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}

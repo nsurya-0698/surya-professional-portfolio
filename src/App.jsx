@@ -17,6 +17,7 @@ const Experience = lazy(() => import('./components/sections/Experience'));
 const Contact = lazy(() => import('./components/sections/Contact'));
 const Footer = lazy(() => import('./components/layout/Footer'));
 const Certifications = lazy(() => import('./components/sections/Certifications'));
+const Projects = lazy(() => import('./components/sections/Projects'));
 const BackgroundMusic = lazy(() => import('./components/interactive/BackgroundMusic'));
 
 // Loading component for Suspense fallback
@@ -70,6 +71,7 @@ function App() {
                 <Hero />
                 <Experience />
                 <Certifications />
+                <Projects />
                 <Contact />
                 <Footer />
               </Suspense>
