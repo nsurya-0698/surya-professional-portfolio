@@ -43,7 +43,7 @@
     animation: musicBeat 1.5s ease-in-out infinite;
     color: #ff4d6d; /* Change color to indicate active state */
   }
-
+  
   /* --- Music Prompt Overlay --- */
   .music-prompt-overlay {
     position: fixed;

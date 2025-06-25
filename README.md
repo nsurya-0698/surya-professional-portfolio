@@ -280,6 +280,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Vite](https://vitejs.dev/) - Build tool
 - [React Icons](https://react-icons.github.io/react-icons/) - Icon library
 
+## Command to push and deploy
+
+- git add . && git commit -m "Enhance Projects section: auto-scroll, new AI/LLM projects, improved navigation and button visibility. UI/UX polish." && git push && npm run deploy
+
 ---
 
 ⭐ **Star this repository if you found it helpful!**

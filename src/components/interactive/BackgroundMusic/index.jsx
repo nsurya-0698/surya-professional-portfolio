@@ -23,10 +23,10 @@ const BackgroundMusic = () => {
       audio.volume = 0.3;
       
       // Try to play immediately
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
         await playPromise;
-        setIsPlaying(true);
+          setIsPlaying(true);
         setHasAttemptedAutoplay(true);
         setShowPrompt(false);
         console.log('Music autoplay successful');
@@ -94,7 +94,7 @@ const BackgroundMusic = () => {
             setShowPrompt(true);
           }
         });
-      }
+    }
     }, 2000);
 
     return () => {

@@ -125,28 +125,28 @@ function Projects() {
                   {currentProject.technologies.map((tech, index) => (
                     <span key={index} className="tech-tag">
                       {tech}
-                    </span>
+          </span>
                   ))}
                 </div>
                 {currentProject.liveLink === "#" && currentProject.githubLink === "#" && (
                   <div className="project-status" style={{marginTop: '18px', color: '#ffb347', fontWeight: 600}}>
                     Under Progress
-                  </div>
+        </div>
                 )}
                 <div className="project-links" style={{marginTop: '24px'}}>
-                  <a 
+        <a
                     href={currentProject.liveLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+          target="_blank"
+          rel="noopener noreferrer"
                     className="project-link live"
                   >
                     <ExternalLink size={16} />
                     <span>Live Demo</span>
-                  </a>
-                  <a 
+            </a>
+            <a
                     href={currentProject.githubLink} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
+              target="_blank"
+              rel="noopener noreferrer"
                     className="project-link github"
                   >
                     <Github size={16} />
@@ -168,7 +168,7 @@ function Projects() {
             ))}
           </div>
         </div>
-      </div>
+    </div>
     </section>
   );
 }
