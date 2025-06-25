@@ -19,7 +19,7 @@ const Hero = () => {
                         serverless computing (Lambda), containerization (Docker/Kubernetes), and event-driven architectures.
                         </p>
                         <a href="#contact" className="nav-things">
-                            <button className="get-in-touch hover-lift animate-glow">Connect</button>
+                            <button className="get-in-touch hover-lift animate-glow">Let's Talk</button>
                         </a>
                     </div>
                     <div className="personal-image-container animate-fade-up">

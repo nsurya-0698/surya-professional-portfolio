@@ -16,16 +16,24 @@ const EmailForm = () => {
       setMessage('');
     };
   
+    const validateEmail = (email) => {
+      // Simple email regex
+      return /^\S+@\S+\.\S+$/.test(email);
+    };
+
     const handleSubmit = (e) => {
       e.preventDefault();
 
       if (name.trim() === '') {
         setError('Name is required.');
         return;
-      } else if (phone.trim() === '') {
-        setError('Phone number is required.');
+      } else if (email.trim() === '') {
+        setError('Email is required.');
         return;
-      } 
+      } else if (!validateEmail(email)) {
+        setError('Please enter a valid email address.');
+        return;
+      }
 
       setError(''); // Clear any previous error
   
@@ -37,7 +45,6 @@ const EmailForm = () => {
       // Create a new object that contains dynamic template params
       const templateParams = {
         from_name: name,
-        
         from_email: email,
         from_phone: phone,
         to_name: 'Surya',
@@ -62,17 +69,19 @@ const EmailForm = () => {
         <div className="formGroup">
           <input
             type="text"
-            placeholder="Your Name"
+            placeholder="Your Name *"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="formInput nameInput"
+            required
           />
           <input
             type="email"
-            placeholder="Your Email"
+            placeholder="Your Email *"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="formInput emailInput"
+            required
           />
           <input
             type="tel"
@@ -90,7 +99,7 @@ const EmailForm = () => {
           onChange={(e) => setMessage(e.target.value)}
           className="formTextarea"
         />
-        <button type="submit">Send Email</button>
+        <button type="submit">Let's Talk</button>
   
         {error && <div className="error">{error}</div>}
         {showNotification && <div className="notification">Form submitted successfully!</div>}
