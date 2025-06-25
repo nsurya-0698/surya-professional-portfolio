@@ -1,0 +1,1 @@
+import{j as a}from"./index-BAERz3Y6.js";const e=()=>a.jsx("p",{className:"credit animate-fade-up",children:a.jsx("a",{href:"https://nsurya-0698.github.io/surya-professional-portfolio/",className:"nav-things credit hover-glow",children:"Built by Surya Teja Nammi"})});export{e as default};
