@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Award, Github } from 'lucide-react';
 import certificate from '../../../assets/documents/AWS_Certified_Solutions_Architect.pdf'; // Import resume PDF
-import { Award } from 'lucide-react';
 import genaiBadge from '../../../assets/icons/genai-badge.svg';
 import './index.css';
 
@@ -69,10 +68,12 @@ function Certifications() {
                     <span>Score: 965/1000</span>
                   </div>
                   <p>Validated expertise in designing distributed systems and applications using AWS technologies. Demonstrated proficiency in AWS services, architectural best practices, and building secure and reliable applications.</p>
-                  <a href={certificate} target="_blank" rel="noreferrer" className="view-certificate">
-                    <span>View Certificate</span>
-                    <Award className="view-icon" />
-                  </a>
+                  <div className="certificate-buttons">
+                    <a href={certificate} target="_blank" rel="noreferrer" className="view-certificate">
+                      <span>View Certificate</span>
+                      <Award className="view-icon" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -119,10 +120,16 @@ function Certifications() {
                     <span>DeepLearning.AI & AWS</span>
                   </div>
                   <p>Mastered the fundamentals of generative AI and LLMs, including transformer architecture, fine-tuning techniques, and deployment strategies. Gained practical skills in prompt engineering and model evaluation.</p>
-                  <a href="https://github.com/nsurya-0698/genAI-with-Large-Language-Models" target="_blank" rel="noreferrer" className="view-certificate">
-                    <span>View Certificate</span>
-                    <Award className="view-icon" />
-                  </a>
+                  <div className="certificate-buttons">
+                    <a href="https://www.coursera.org/account/accomplishments/verify/5G0I2YX1E2H4?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" rel="noreferrer" className="view-certificate">
+                      <span>View Certificate</span>
+                      <Award className="view-icon" />
+                    </a>
+                    <a href="https://github.com/nsurya-0698/genAI-with-Large-Language-Models" target="_blank" rel="noreferrer" className="github-button">
+                      <span>GitHub</span>
+                      <Github className="github-icon" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
