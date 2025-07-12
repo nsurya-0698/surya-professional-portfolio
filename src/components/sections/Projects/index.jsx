@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, Github, ArrowLeft, ArrowRight } from 'lucide-react';
 import './index.css';
 
 function Projects() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const cardRef = useRef(null);
 
   const projects = [
     {
@@ -55,13 +57,25 @@ function Projects() {
 
   // Auto-scroll effect
   useEffect(() => {
+    if (isPaused) return;
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) =>
         prevIndex === projects.length - 1 ? 0 : prevIndex + 1
       );
     }, 3000); // Change project every 3 seconds
     return () => clearInterval(interval);
-  }, [projects.length]);
+  }, [projects.length, isPaused]);
+
+  // Resume auto-scroll on click outside the card
+  useEffect(() => {
+    function handleDocumentClick(e) {
+      if (cardRef.current && !cardRef.current.contains(e.target)) {
+        setIsPaused(false);
+      }
+    }
+    document.addEventListener('mousedown', handleDocumentClick);
+    return () => document.removeEventListener('mousedown', handleDocumentClick);
+  }, []);
 
   const nextProject = () => {
     setCurrentIndex((prevIndex) => 
@@ -73,6 +87,18 @@ function Projects() {
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? projects.length - 1 : prevIndex - 1
     );
+  };
+
+  const handleCardClick = () => {
+    setIsPaused(true);
+  };
+
+  const handleCardMouseEnter = () => {
+    setIsPaused(true);
+  };
+
+  const handleCardMouseLeave = () => {
+    setIsPaused(false);
   };
 
   const currentProject = projects[currentIndex];
@@ -112,7 +138,14 @@ function Projects() {
           </div>
 
           <div className="project-card-container">
-            <div className="project-card">
+            <div
+              className="project-card"
+              ref={cardRef}
+              onClick={handleCardClick}
+              onMouseEnter={handleCardMouseEnter}
+              onMouseLeave={handleCardMouseLeave}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="project-details">
                 <div className="project-header">
                   <h3 className="project-title">{currentProject.title}</h3>
@@ -125,28 +158,28 @@ function Projects() {
                   {currentProject.technologies.map((tech, index) => (
                     <span key={index} className="tech-tag">
                       {tech}
-          </span>
+                    </span>
                   ))}
                 </div>
                 {currentProject.liveLink === "#" && currentProject.githubLink === "#" && (
                   <div className="project-status" style={{marginTop: '18px', color: '#ffb347', fontWeight: 600}}>
                     Under Progress
-        </div>
+                  </div>
                 )}
                 <div className="project-links" style={{marginTop: '24px'}}>
-        <a
+                  <a 
                     href={currentProject.liveLink} 
-          target="_blank"
-          rel="noopener noreferrer"
+                    target="_blank" 
+                    rel="noopener noreferrer"
                     className="project-link live"
                   >
                     <ExternalLink size={16} />
                     <span>Live Demo</span>
-            </a>
-            <a
+                  </a>
+                  <a 
                     href={currentProject.githubLink} 
-              target="_blank"
-              rel="noopener noreferrer"
+                    target="_blank" 
+                    rel="noopener noreferrer"
                     className="project-link github"
                   >
                     <Github size={16} />
@@ -168,7 +201,7 @@ function Projects() {
             ))}
           </div>
         </div>
-    </div>
+      </div>
     </section>
   );
 }

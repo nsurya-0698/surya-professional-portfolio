@@ -19,6 +19,7 @@ const Footer = lazy(() => import('./components/layout/Footer'));
 const Certifications = lazy(() => import('./components/sections/Certifications'));
 const Projects = lazy(() => import('./components/sections/Projects'));
 const BackgroundMusic = lazy(() => import('./components/interactive/BackgroundMusic'));
+const SkillsMatrix = lazy(() => import('./components/sections/SkillsMatrix'));
 
 // Loading component for Suspense fallback
 const LoadingSpinner = () => (
@@ -72,6 +73,7 @@ function App() {
                 <Experience />
                 <Certifications />
                 <Projects />
+                <SkillsMatrix />
                 <Contact />
                 <Footer />
               </Suspense>
