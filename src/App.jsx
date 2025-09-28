@@ -18,6 +18,7 @@ const Contact = lazy(() => import('./components/sections/Contact'));
 const Footer = lazy(() => import('./components/layout/Footer'));
 const Certifications = lazy(() => import('./components/sections/Certifications'));
 const Projects = lazy(() => import('./components/sections/Projects'));
+const Appreciations = lazy(() => import('./components/sections/Appreciations'));
 const BackgroundMusic = lazy(() => import('./components/interactive/BackgroundMusic'));
 const SkillsMatrix = lazy(() => import('./components/sections/SkillsMatrix'));
 
@@ -73,6 +74,7 @@ function App() {
                 <Experience />
                 <Certifications />
                 <Projects />
+                <Appreciations />
                 <SkillsMatrix />
                 <Contact />
                 <Footer />

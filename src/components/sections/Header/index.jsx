@@ -50,6 +50,9 @@ class Header extends Component {
                         <a href="#projects" className="nav-things">
                             <li className="header-content projects animate-slide-left hover-glow">Projects</li>
                         </a>
+                        <a href="#appreciations" className="nav-things">
+                            <li className="header-content appreciations animate-slide-left hover-glow">Appreciations</li>
+                        </a>
                         <a href="#contact" className="nav-things">
                             <li className="header-content contact animate-slide-left hover-glow">Contact</li>
                         </a>
