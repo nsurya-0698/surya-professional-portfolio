@@ -1,7 +1,16 @@
 let timelineElements = [
-
     {
       id: 1,
+      title: "Oracle - OCI",
+      role: "Senior Member of Technical Staff",
+      location: "Nashville, Tennessee, United States",
+      description: `Working on the design and development of a large-scale enterprise chat application that powers Generative AI experiences across Oracle. Building backend systems primarily in Python, with active migration to Java for scalability. Designing and implementing APIs using FastAPI, Helidon, and modern Java frameworks. Integrating and orchestrating LLM-based workflows, including model inference and web-augmented response generation. Deploying and operating services on Oracle Cloud Infrastructure (OCI), following enterprise security, reliability, and observability practices.`,
+      buttonText: "Read more",
+      date: "11/2025 - Present",
+      icon: "work",
+    },
+    {
+      id: 2,
       title: "Full Stack Developer at Optum Global Solutions (United Health Group)",
       location: "Minnesota, USA",
       title: "Senior Software Engineer at Quest Diagnostics",
@@ -12,7 +21,7 @@ let timelineElements = [
       icon: "work",
     },
     {
-    id: 2,
+    id: 3,
     title: "Full Stack Developer at Optum Global Solutions (United Health Group)",
     location: "Minnesota, USA",
     description: `
@@ -22,7 +31,7 @@ let timelineElements = [
     icon: "work",
   },
   {
-    id: 3,
+    id: 4,
     title: "University of Missouri Kansas City",
     location: "Kansas City, MO",
     description:
@@ -32,7 +41,7 @@ let timelineElements = [
     icon: "school",
   },
   {
-    id: 4,
+    id: 5,
     title: "Software Development Engineer 2 at HDFC Bank Limited",
     location: "Hyderabad, India",
     description: `
@@ -44,7 +53,7 @@ let timelineElements = [
     icon: "work",
   },
   {
-    id: 5,
+    id: 6,
     title: "Software Engineer at Paytm",
     location: "Hyderabad, India",
     description: `
@@ -54,7 +63,7 @@ let timelineElements = [
     icon: "work",
   },
   {
-    id: 6,
+    id: 7,
     title: "Aditya Engineering University",
     location: "India, Andhra Pradesh",
     description:

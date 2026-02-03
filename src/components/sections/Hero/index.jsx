@@ -1,5 +1,5 @@
 import React from 'react';
-import proPic from '../../../assets/images/ProffPic.jpeg';
+import proPic from './Image.png';
 import './index.css';
 
 const Hero = () => {
@@ -12,7 +12,7 @@ const Hero = () => {
                 <div className="main-content-wrapper">
                     <div className="text-content animate-fade-up">
                         <p className="statement">
-                        AWS-Certified Full Stack Developer with 6+ years of experience in building enterprise-grade solutions for healthcare and fintech domains. 
+                        AWS-Certified Full Stack Developer with 5+ years of experience in building enterprise-grade solutions for healthcare and fintech domains. 
                         Specialized in Spring Boot microservices, Angular applications, and cloud-native architectures deployed on AWS/Azure. 
                         Proven success in optimizing system performance by 40%, reducing deployment times by 25% through CI/CD pipelines, 
                         and implementing real-time processing with Kafka/WebSockets. Certified AWS Solutions Architect with expertise in 
