@@ -7,7 +7,7 @@ const EmailForm = () => {
     const [phone, setPhone] = useState('');
     const [message, setMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false); // State for notification
-    const [error, setError] = useState(''); // error message
+    const [error, setError] = useState(''); // Error Message
   
     const resetForm = () => {
       setName('');
