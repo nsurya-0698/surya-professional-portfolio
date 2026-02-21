@@ -2,132 +2,137 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Music2, Music3 } from 'lucide-react';
 import './index.css';
 
-// Pleasant, royalty-free jazz music from Bensound.
-// Source: https://www.bensound.com/royalty-free-music/track/sway-gentle-lofi-music
-const MUSIC_URL = 'https://www.bensound.com/bensound-music/bensound-sway.mp3';
+// Pleasant, royalty-free background music
+// Note: If this URL doesn't work, you can host the music file locally in the public folder
+// and use: '/music/your-music-file.mp3'
+const MUSIC_URL = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
 
 const BackgroundMusic = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [hasAttemptedAutoplay, setHasAttemptedAutoplay] = useState(false);
-  const [showPrompt, setShowPrompt] = useState(false);
   const audioRef = useRef(null);
 
-  const attemptAutoplay = async () => {
-    if (hasAttemptedAutoplay) return;
-    
+  useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    try {
-      // Set volume to a reasonable level
-      audio.volume = 0.3;
-      
-      // Try to play immediately
-    const playPromise = audio.play();
-    if (playPromise !== undefined) {
-        await playPromise;
-          setIsPlaying(true);
-        setHasAttemptedAutoplay(true);
-        setShowPrompt(false);
-        console.log('Music autoplay successful');
-        return true;
-      }
-    } catch (error) {
-      console.warn("Music autoplay was prevented by the browser:", error);
-      return false;
-    }
-  };
+    // Initialize audio volume
+    audio.volume = 0.3;
 
-  const handleUserInteraction = async () => {
-    if (!hasAttemptedAutoplay) {
-      const success = await attemptAutoplay();
-      if (success) {
-        setHasAttemptedAutoplay(true);
-        setShowPrompt(false);
-        // Remove all listeners after successful autoplay
-        removeAllListeners();
-      }
-    }
-  };
-
-  const removeAllListeners = () => {
-    document.removeEventListener('click', handleUserInteraction);
-    document.removeEventListener('keydown', handleUserInteraction);
-    document.removeEventListener('touchstart', handleUserInteraction);
-    document.removeEventListener('mousedown', handleUserInteraction);
-    document.removeEventListener('scroll', handleUserInteraction);
-    window.removeEventListener('focus', handleUserInteraction);
-  };
-
-  useEffect(() => {
-    // Try to autoplay immediately on mount
-    attemptAutoplay().then(success => {
-      if (success) {
-        setHasAttemptedAutoplay(true);
-        return;
-      }
-    });
-
-    // Add multiple event listeners for different types of user interactions
-    const events = ['click', 'keydown', 'touchstart', 'mousedown', 'scroll'];
-    events.forEach(event => {
-      document.addEventListener(event, handleUserInteraction, { passive: true });
-    });
-
-    // Also try when window gains focus (user switches back to tab)
-    window.addEventListener('focus', handleUserInteraction);
-
-    // Try autoplay when page becomes visible (user switches back to tab)
-    const handleVisibilityChange = () => {
-      if (!document.hidden && !hasAttemptedAutoplay) {
-        setTimeout(() => attemptAutoplay(), 100);
-      }
+    // Sync state with actual audio playback state
+    const handlePlay = () => {
+      console.log('Audio started playing');
+      setIsPlaying(true);
     };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    const handlePause = () => {
+      console.log('Audio paused');
+      setIsPlaying(false);
+    };
+    const handleEnded = () => {
+      console.log('Audio ended');
+      setIsPlaying(false);
+    };
+    const handleError = (e) => {
+      console.error("Audio error:", e);
+      console.error("Audio error details:", audio.error);
+      if (audio.error) {
+        switch (audio.error.code) {
+          case audio.error.MEDIA_ERR_ABORTED:
+            console.error("The user aborted the audio");
+            break;
+          case audio.error.MEDIA_ERR_NETWORK:
+            console.error("A network error occurred");
+            break;
+          case audio.error.MEDIA_ERR_DECODE:
+            console.error("An error occurred while decoding the audio");
+            break;
+          case audio.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+            console.error("The audio source is not supported or CORS blocked");
+            break;
+          default:
+            console.error("An unknown error occurred");
+        }
+      }
+      setIsPlaying(false);
+    };
+    const handleCanPlay = () => {
+      console.log('Audio can play');
+    };
+    const handleLoadedData = () => {
+      console.log('Audio data loaded');
+    };
 
-    // Try autoplay after a short delay (some browsers allow this)
-    const delayedAutoplay = setTimeout(() => {
-      if (!hasAttemptedAutoplay) {
-        attemptAutoplay().then(success => {
-          if (!success) {
-            // Show prompt if autoplay failed
-            setShowPrompt(true);
-          }
-        });
-    }
-    }, 2000);
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('error', handleError);
+    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('loadeddata', handleLoadedData);
+
+    // Check initial state
+    setIsPlaying(!audio.paused);
 
     return () => {
-      removeAllListeners();
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      clearTimeout(delayedAutoplay);
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('loadeddata', handleLoadedData);
     };
-  }, [hasAttemptedAutoplay]);
+  }, []);
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     const audio = audioRef.current;
-    if (isPlaying) {
-      audio.pause();
+    if (!audio) {
+      console.error("Audio element not found");
+      return;
+    }
+
+    try {
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        // Check if audio is ready
+        if (audio.readyState >= 2) { // HAVE_CURRENT_DATA or higher
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            await playPromise;
+            console.log("Music started successfully");
+          }
+        } else {
+          // Wait for audio to be ready
+          audio.load(); // Reload the audio
+          await new Promise((resolve) => {
+            const handleCanPlay = () => {
+              audio.removeEventListener('canplay', handleCanPlay);
+              resolve();
+            };
+            audio.addEventListener('canplay', handleCanPlay);
+          });
+          const playPromise = audio.play();
+          if (playPromise !== undefined) {
+            await playPromise;
+            console.log("Music started successfully after loading");
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling music:", error);
+      console.error("Audio readyState:", audio.readyState);
+      console.error("Audio networkState:", audio.networkState);
       setIsPlaying(false);
-    } else {
-      audio.play();
-      setIsPlaying(true);
     }
   };
 
   return (
     <>
-      <audio ref={audioRef} src={MUSIC_URL} loop preload="auto" />
-      
-      {/* Music prompt overlay */}
-      {showPrompt && (
-        <div className="music-prompt-overlay" onClick={handleUserInteraction}>
-          <div className="music-prompt">
-            <Music2 size={24} />
-            <p>Click anywhere to start background music</p>
-          </div>
-        </div>
-      )}
+      <audio 
+        ref={audioRef} 
+        src={MUSIC_URL} 
+        loop 
+        preload="auto"
+        crossOrigin="anonymous"
+      />
       
       <button 
         onClick={togglePlay} 

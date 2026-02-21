@@ -57,7 +57,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     animation: fadeIn 0.5s ease-out;
   }
 
@@ -87,11 +86,55 @@
   }
 
   .music-prompt p {
-    margin: 0;
+    margin: 0 0 20px 0;
     font-size: 16px;
     font-weight: 500;
     letter-spacing: 0.5px;
     color: #8892b0;
+  }
+
+  .music-prompt-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .music-prompt-button {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    letter-spacing: 0.5px;
+    min-width: 100px;
+  }
+
+  .music-prompt-button-yes {
+    color: #64ffda;
+    border-color: #64ffda;
+    background-color: rgba(100, 255, 218, 0.1);
+  }
+
+  .music-prompt-button-yes:hover {
+    background-color: rgba(100, 255, 218, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+  }
+
+  .music-prompt-button-no {
+    color: #8892b0;
+    border-color: #8892b0;
+    background-color: rgba(136, 146, 176, 0.1);
+  }
+
+  .music-prompt-button-no:hover {
+    background-color: rgba(136, 146, 176, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(136, 146, 176, 0.3);
   }
 
   @keyframes fadeIn {
@@ -127,6 +170,12 @@
       .music-prompt p {
         font-size: 14px;
       }
+
+      .music-prompt-button {
+        padding: 10px 25px;
+        font-size: 14px;
+        min-width: 80px;
+      }
   }
   
   @media (max-width: 768px) {
@@ -145,5 +194,15 @@
 
       .music-prompt p {
         font-size: 13px;
+      }
+
+      .music-prompt-buttons {
+        gap: 10px;
+      }
+
+      .music-prompt-button {
+        padding: 10px 20px;
+        font-size: 13px;
+        min-width: 70px;
       }
   } 
