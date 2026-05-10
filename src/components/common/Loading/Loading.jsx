@@ -1,5 +1,4 @@
-import React, { memo } from 'react';
-import PropTypes from 'prop-types';
+import { memo } from 'react';
 import './Loading.css';
 
 /**
@@ -70,13 +69,6 @@ const Loading = memo(({
   );
 });
 
-Loading.propTypes = {
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  variant: PropTypes.oneOf(['spinner', 'dots', 'pulse', 'bars']),
-  text: PropTypes.string,
-  className: PropTypes.string
-};
-
 Loading.displayName = 'Loading';
 
-export default Loading; 
+export default Loading;

@@ -1,286 +1,259 @@
-*{
-  border-color: red;
+* {
+  box-sizing: border-box;
 }
 
-/* Global Animation Classes */
+html {
+  scroll-behavior: smooth;
+  background: #020617;
+}
+
+body {
+  background: #020617;
+  color: var(--text-primary);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+a {
+  color: inherit;
+}
+
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-}
-
-@keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
 }
 
 @keyframes slideInFromLeft {
-  0% { transform: translateX(-100px); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
+  from { transform: translateX(-24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 @keyframes slideInFromRight {
-  0% { transform: translateX(100px); opacity: 0; }
-  100% { transform: translateX(0); opacity: 1; }
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 @keyframes fadeInUp {
-  0% { transform: translateY(30px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-@keyframes blink {
-  0%, 50% { border-color: transparent; }
-  51%, 100% { border-color: #64ffdb; }
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(100, 255, 219, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(100, 255, 219, 0.6), 0 0 30px rgba(100, 255, 219, 0.4); }
+  0%, 100% { box-shadow: 0 0 0 rgba(100, 255, 218, 0); }
+  50% { box-shadow: 0 0 20px rgba(100, 255, 218, 0.2); }
 }
 
-@keyframes rotate {
+.animate-float {
+  animation: float 3.5s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.animate-slide-left {
+  animation: slideInFromLeft 0.7s ease-out both;
+}
+
+.animate-slide-right {
+  animation: slideInFromRight 0.7s ease-out both;
+}
+
+.animate-fade-up {
+  animation: fadeInUp 0.7s ease-out both;
+}
+
+.animate-glow {
+  animation: glow 2.5s ease-in-out infinite;
+}
+
+.hover-lift,
+.hover-scale,
+.hover-glow {
+  transition: color var(--transition-normal), transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.hover-lift:hover,
+.hover-lift:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.hover-scale:hover,
+.hover-scale:focus-visible {
+  transform: scale(1.03);
+}
+
+.hover-glow:hover,
+.hover-glow:focus-visible {
+  box-shadow: 0 0 16px rgba(100, 255, 218, 0.28);
+}
+
+.App {
+  min-height: 100vh;
+  overflow-x: clip;
+  background:
+    linear-gradient(180deg, rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 1)),
+    #020617;
+}
+
+.main-container {
+  min-height: 100vh;
+}
+
+.content-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 3rem);
+}
+
+section[id] {
+  scroll-margin-top: 6.5rem;
+}
+
+.section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  margin: 0 0 clamp(2rem, 5vw, 3.75rem);
+  color: var(--primary-color);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.section-heading__line {
+  display: block;
+  width: clamp(1.5rem, 8vw, 3rem);
+  height: 3px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--gradient-accent);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.section-heading__icon {
+  color: var(--primary-color);
+}
+
+.loading-spinner {
+  display: grid;
+  min-height: 50vh;
+  place-items: center;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border: 3px solid rgba(100, 255, 218, 0.2);
+  border-top-color: var(--primary-color);
+  border-radius: 999px;
+  animation: spin 0.8s linear infinite;
+}
+
+.social-icons-container,
+.mail-container {
+  position: fixed;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social-icons-container {
+  left: 32px;
+  animation: slideInFromLeft 0.8s ease-out both;
+}
+
+.mail-container {
+  right: 32px;
+  animation: slideInFromRight 0.8s ease-out both;
+}
+
+.social-icons {
+  width: 25px;
+  height: 25px;
+  margin-bottom: 20px;
+  color: var(--text-muted);
+  transition: color var(--transition-normal), transform var(--transition-normal);
+}
+
+.social-icons:hover,
+.social-icons:focus-visible,
+.mail:hover,
+.mail-anchor:focus-visible .mail {
+  color: var(--primary-color);
+  transform: translateY(-3px);
+}
+
+.mail-anchor {
+  text-decoration: none;
+}
+
+.mail {
+  writing-mode: vertical-rl;
+  margin: 0 0 20px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  transition: color var(--transition-normal), transform var(--transition-normal);
+}
+
+.v-line {
+  width: 1px;
+  height: 140px;
+  background: var(--text-muted);
+}
+
+@keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-/* Apply animations to elements */
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-pulse {
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.animate-gradient {
-  background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-}
-
-.animate-slide-left {
-  animation: slideInFromLeft 0.8s ease-out;
-}
-
-.animate-slide-right {
-  animation: slideInFromRight 0.8s ease-out;
-}
-
-.animate-fade-up {
-  animation: fadeInUp 0.8s ease-out;
-}
-
-.animate-glow {
-  animation: glow 2s ease-in-out infinite alternate;
-}
-
-.animate-rotate {
-  animation: rotate 10s linear infinite;
-}
-
-/* Hover effects */
-.hover-lift {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.hover-scale {
-  transition: transform 0.3s ease;
-}
-
-.hover-scale:hover {
-  transform: scale(1.05);
-}
-
-.hover-glow {
-  transition: box-shadow 0.3s ease;
-}
-
-.hover-glow:hover {
-  box-shadow: 0 0 15px rgba(100, 255, 219, 0.5);
-}
-
-.App {
-  /* background-color:#0a192f; */
-  background-color:black;
-  padding: 0 50px;
-}
-
-.social-icons-container{
-  display:flex;
-  flex-direction:column;
-  align-self: flex-end;
-  position: fixed;
-  align-items: center;
-  bottom:0;
-  animation: slideInFromRight 1s ease-out;
-}
-
-.mail-container{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-self: flex-end;
-  left: 94%;
-  position: fixed;
-  bottom:0;
-  animation: slideInFromLeft 1s ease-out;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 5s linear;
+@media (max-width: 1200px) {
+  .content-container {
+    padding: 0 clamp(1rem, 5vw, 2rem);
   }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotateX(0deg);
-  }
-  to {
-    transform: rotateX(360deg);
-  }
-}
-
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-* {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-/* Additional scrollbar hiding for specific elements */
-html, body {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-html::-webkit-scrollbar, 
-body::-webkit-scrollbar {
-  display: none;
-}
-
-@media (max-width: 1023px){
-  .App{
-    padding: 0 20px;
-  }
-  .social-icons-container,.mail-container{
+  .social-icons-container,
+  .mail-container {
     display: none;
   }
 }
 
-@media (min-width: 1024px){
-  .main-container{
-    display: flex;
-  }
-  .social-icons{
-    font-size:25px;
-    color:#8892b0;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  .social-icons:hover,.mail:hover{
-    color:#64ffdb62;
-    transform: translateY(-3px);
-  }
-  .mail{
-    writing-mode: vertical-rl;
-    color: #8892b0;
-    font-size: 17px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.3s ease;
-  }
-  .mail-anchor{
-    text-decoration: none;
-  }
-  .git,.linkedin,.mail{
-    transition: font-size 200ms;
-  }
-  .git:hover,.linkedin:hover{
-    font-size: 20px;
-  }
-  .v-line{
-    border-left: 1px solid #8892b0;
-    height: 140px;
-    animation: pulse 3s ease-in-out infinite;
+@media (max-width: 560px) {
+  .section-heading {
+    gap: 0.6rem;
   }
 }
 
-/* Loading Spinner for Suspense Fallback */
-.loading-spinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--border-primary);
-  border-top: 3px solid var(--primary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: var(--space-4);
-}
-
-.loading-spinner p {
-  font-size: var(--font-size-base);
-  color: var(--text-secondary);
-  margin: 0;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

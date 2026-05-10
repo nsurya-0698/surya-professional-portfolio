@@ -1,177 +1,76 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Quote, Star, ChevronLeft, ChevronRight, Users } from 'lucide-react';
+import { Quote, Star, Users } from 'lucide-react';
 import './index.css';
 
+const APPRECIATIONS = [
+  {
+    id: 1,
+    name: 'Katie Ruiz and Patrick Thomas',
+    role: 'Senior Manager and Lead Engineer',
+    company: 'Quest Diagnostics',
+    feedback:
+      'Surya’s dedication on the Elisa project has been outstanding. His prompt responses, self-motivation, and ability to stay on top of every detail have been a huge asset. Both Patrick and I truly value his contributions and appreciate the quality he brings to the team.',
+    rating: 5,
+    category: 'Reliability & Ownership',
+  },
+  {
+    id: 2,
+    name: 'Keith Chan',
+    role: 'Director of IT',
+    company: 'Optum Global Solutions',
+    feedback:
+      'Surya’s ability to understand business requirements and translate them into technical solutions is remarkable. He is proactive in learning new technologies, shares his knowledge generously, and brings strong AI/ML and full-stack engineering expertise to the team.',
+    rating: 5,
+    category: 'Technical Excellence',
+  },
+];
+
+const renderStars = (rating) =>
+  Array.from({ length: 5 }, (_, index) => (
+    <Star
+      key={index}
+      size={16}
+      className={`appreciation-star ${index < rating ? 'filled' : 'empty'}`}
+      fill={index < rating ? 'currentColor' : 'none'}
+      aria-hidden="true"
+    />
+  ));
+
 const Appreciations = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const cardRef = useRef(null);
-
-  const appreciations = [
-    {
-        id: 1,
-        name: "Katie Ruiz and Patrick Thomas",
-        role: "Sr.Manager and Lead Engineer",
-        company: "Quest Diagnostics",
-        feedback: "Surya’s dedication on the Elisa project has been outstanding. His prompt responses, self-motivation, and ability to stay on top of every detail have been a huge asset. Both Patrick and I truly value his contributions and appreciate the quality he brings to the team.",
-        rating: 5,
-        category: "Reliability & Ownership"
-    },
-    {
-      id: 2,
-      name: "Keith chan",
-      role: "Director of IT",
-      company: "Optum Global Solutions",
-      feedback: "Surya's ability to understand business requirements and translate them into technical solutions is remarkable. He's always available for discussions and provides valuable insights that help shape our product roadmap. His technical expertise in AI/ML and full-stack development is impressive. He's proactive in learning new technologies and shares his knowledge generously with the team.",
-      rating: 5,
-      category: "Technical Excellence"
-    }
-  ];
-
-  // Auto-scroll effect
-  useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === appreciations.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 4000); // Change appreciation every 4 seconds
-    return () => clearInterval(interval);
-  }, [appreciations.length, isPaused]);
-
-  // Resume auto-scroll on click outside the card
-  useEffect(() => {
-    function handleDocumentClick(e) {
-      if (cardRef.current && !cardRef.current.contains(e.target)) {
-        setIsPaused(false);
-      }
-    }
-    document.addEventListener('mousedown', handleDocumentClick);
-    return () => document.removeEventListener('mousedown', handleDocumentClick);
-  }, []);
-
-  const nextAppreciation = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === appreciations.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const prevAppreciation = () => {
-    setCurrentIndex((prevIndex) => 
-      prevIndex === 0 ? appreciations.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleCardClick = () => {
-    setIsPaused(true);
-  };
-
-  const handleCardMouseEnter = () => {
-    setIsPaused(true);
-  };
-
-  const handleCardMouseLeave = () => {
-    setIsPaused(false);
-  };
-
-  const renderStars = (rating) => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <Star
-        key={index}
-        size={16}
-        className={`star ${index < rating ? 'filled' : 'empty'}`}
-        fill={index < rating ? 'currentColor' : 'none'}
-      />
-    ));
-  };
-
-  const currentAppreciation = appreciations[currentIndex];
-
   return (
     <section id="appreciations" className="appreciations-section">
       <div className="appreciations-container">
-        <h2 className="section-title">
-          <div className="title-icon" />
-          <Users size={24} className="title-icon-svg" />
+        <h2 className="section-heading">
+          <span className="section-heading__line" />
+          <Users size={24} className="section-heading__icon" aria-hidden="true" />
           Appreciations & Feedback
-          <div className="title-icon" />
+          <span className="section-heading__line" />
         </h2>
 
-        <div className="appreciations-content">
-          <div className="appreciation-navigation">
-            <button 
-              className="nav-button prev" 
-              onClick={prevAppreciation}
-              aria-label="Previous Appreciation"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            
-            <div className="appreciation-counter">
-              <span className="current-number">{currentIndex + 1}</span>
-              <span className="separator">/</span>
-              <span className="total-number">{appreciations.length}</span>
-            </div>
+        <div className="appreciations-grid">
+          {APPRECIATIONS.map((appreciation) => (
+            <article className="appreciation-card" key={appreciation.id}>
+              <Quote className="quote-icon" size={32} aria-hidden="true" />
 
-            <button 
-              className="nav-button next" 
-              onClick={nextAppreciation}
-              aria-label="Next Appreciation"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+              <p className="feedback-text">&ldquo;{appreciation.feedback}&rdquo;</p>
 
-          <div className="appreciation-card-container">
-            <div
-              className="appreciation-card"
-              ref={cardRef}
-              onClick={handleCardClick}
-              onMouseEnter={handleCardMouseEnter}
-              onMouseLeave={handleCardMouseLeave}
-              style={{ cursor: 'pointer' }}
-            >
-              <div className="quote-icon">
-                <Quote size={32} />
+              <div className="rating-container" aria-label={`${appreciation.rating} out of 5 stars`}>
+                <div className="stars">{renderStars(appreciation.rating)}</div>
+                <span className="rating-text">{appreciation.rating}/5</span>
               </div>
-              
-              <div className="appreciation-content">
-                <div className="feedback-text">
-                  "{currentAppreciation.feedback}"
+
+              <div className="person-info">
+                <div className="person-details">
+                  <h3 className="person-name">{appreciation.name}</h3>
+                  <p className="person-role">{appreciation.role}</p>
+                  <p className="person-company">{appreciation.company}</p>
                 </div>
-                
-                <div className="rating-container">
-                  <div className="stars">
-                    {renderStars(currentAppreciation.rating)}
-                  </div>
-                  <span className="rating-text">{currentAppreciation.rating}/5</span>
-                </div>
-                
-                <div className="person-info">
-                  <div className="person-details">
-                    <h4 className="person-name">{currentAppreciation.name}</h4>
-                    <p className="person-role">{currentAppreciation.role}</p>
-                    <p className="person-company">{currentAppreciation.company}</p>
-                  </div>
-                  
-                  <div className="category-badge">
-                    {currentAppreciation.category}
-                  </div>
+
+                <div className="category-badge">
+                  {appreciation.category}
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className="appreciation-indicators">
-            {appreciations.map((_, index) => (
-              <button
-                key={index}
-                className={`indicator ${index === currentIndex ? 'active' : ''}`}
-                onClick={() => setCurrentIndex(index)}
-                aria-label={`Go to appreciation ${index + 1}`}
-              />
-            ))}
-          </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

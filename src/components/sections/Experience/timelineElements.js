@@ -1,76 +1,133 @@
-let timelineElements = [
-    {
-      id: 1,
-      title: "Oracle - OCI",
-      role: "Senior Member of Technical Staff",
-      location: "Nashville, Tennessee, United States",
-      description: `Working on the design and development of a large-scale enterprise chat application that powers Generative AI experiences across Oracle. Building backend systems primarily in Python, with active migration to Java for scalability. Designing and implementing APIs using FastAPI, Helidon, and modern Java frameworks. Integrating and orchestrating LLM-based workflows, including model inference and web-augmented response generation. Deploying and operating services on Oracle Cloud Infrastructure (OCI), following enterprise security, reliability, and observability practices.`,
-      buttonText: "Read more",
-      date: "11/2025 - Present",
-      icon: "work",
-    },
-    {
-      id: 2,
-      title: "Full Stack Developer at Optum Global Solutions (United Health Group)",
-      location: "Minnesota, USA",
-      title: "Senior Software Engineer at Quest Diagnostics",
-      location: "Virginia, USA",
-      description: `
-     As a Software Engineer in a clinical diagnostics environment, I developed and maintained lab instrument integration modules using Java, JDBC, and SQL Server, enabling reliable data capture and bidirectional communication between instruments and backend systems. I designed and implemented over 20 decoupled modules deployed on WildFly Server across UAT, PROD, and TEST environments, ensuring scalable and modular communication pipelines. I engineered robust message parsing and interpretation logic, handling diverse instrument protocols like ASTM and HL7, and ensured accurate data mapping to internal structures. I collaborated closely with SMEs and instrument vendors, reviewing technical specs to support seamless integration and regulatory compliance. I actively monitored production logs, conducted root cause analysis, and resolved critical issues impacting clinical workflows. My contributions helped enhance system stability, performance, and data accuracy across the laboratory information ecosystem.`,      buttonText: "Read more",
-      date: "01/2024 - Present",
-      icon: "work",
-    },
-    {
-    id: 3,
-    title: "Full Stack Developer at Optum Global Solutions (United Health Group)",
-    location: "Minnesota, USA",
-    description: `
-    As a Full Stack Developer at Optum Global Solutions (United Health Group), I led the development of a claim amount calculation microservice using Java Spring Boot, PostgreSQL, and TensorFlow. I designed and deployed containerized microservices as Kubernetes clusters using Docker, optimizing scalability and efficiency. I developed HTTP and gRPC-based RESTful APIs using Golang and Java Spring Boot, ensuring reliability through testing with Postman and Selenium. I automated deployments on AWS EC2 instances using EKS, ECS, Docker, and Kubernetes, maintaining builds on AWS S3 for seamless hosting. I built CI/CD pipelines, reducing manual effort and enhancing workflows. Continuously updating my skills, I integrated emerging technologies for product optimization. Additionally, I successfully led a team of 5 developers, fostering collaboration and ensuring project alignment.`,
-    buttonText: "Read more",
-    date: "01/2023 - 12/2024",
-    icon: "work",
-  },
+// Add future experience, education, project, or certification entries here.
+// The tree path, stop positions, platforms, and character reactions are generated from this array.
+// Supported reactions: confidentPoint, presenting, thumbsUp, waving, curiousProud, proudCelebrate, surprised.
+const timelineElements = [
   {
-    id: 4,
-    title: "University of Missouri Kansas City",
-    location: "Kansas City, MO",
+    id: 'experience-oracle-oci',
+    type: 'experience',
+    icon: 'work',
+    title: 'Oracle - OCI',
+    role: 'Senior Member of Technical Staff',
+    location: 'Nashville, Tennessee, United States',
     description:
-      "I earned a Master of Science in Computer Science from the University of Missouri – Kansas City, achieving a GPA of 3.5/4.0. My coursework included Cloud Computing (AWS, Azure, and GCP), Artificial Intelligence and Machine Learning, Data Structures and Algorithms, and Advanced Software Engineering. I also completed various projects, which are available on my GitHub.",
-    buttonText: "GitHub",
-    date: "08/2021-12/2022",
-    icon: "school",
+      'Designing and developing a large-scale enterprise chat application that powers Generative AI experiences across Oracle. Building backend systems in Python with active migration paths to Java for scale, designing APIs with FastAPI, Helidon, and modern Java frameworks, and deploying reliable services on Oracle Cloud Infrastructure.',
+    highlights: ['Enterprise GenAI chat', 'FastAPI and Helidon APIs', 'OCI reliability practices'],
+    date: '11/2025 - Present',
+    characterReaction: 'confidentPoint',
+    guide: {
+      kicker: 'Now building',
+      message: 'Enterprise GenAI, backend APIs, and OCI reliability all come together here.',
+    },
   },
   {
-    id: 5,
-    title: "Software Development Engineer 2 at HDFC Bank Limited",
-    location: "Hyderabad, India",
-    description: `
-    As a Java Developer at HDFC Bank Limited, I translated business requirements into technical specifications and collaborated with teams to onboard user assets using Java-based solutions. I developed Java APIs with Spring Boot and MongoDB, deploying them via Azure DevOps to ensure frequent, reliable updates. I implemented role-based access control using Spring Security with JWT, ensuring secure API session management and compliance with data protection standards. Additionally, I built CI/CD pipelines using Jenkins and Terraform, utilized Prometheus and Grafana for monitoring, and implemented rollback procedures for high availability.
-  
-    I actively participated in code reviews, improving code quality and reducing defects. I conducted debugging and troubleshooting, achieving a 15% reduction in critical system defects. I also resolved front-end bugs in Angular applications using Chrome DevTools. Furthermore, I enhanced process automation by integrating Python scripts with ML models for workflow management and implemented database optimizations for improved performance.
-  `,    buttonText: "Read more",
-    date: "05/2019 –08/2021",
-    icon: "work",
-  },
-  {
-    id: 6,
-    title: "Software Engineer at Paytm",
-    location: "Hyderabad, India",
-    description: `
-  Conducted detailed testing and debugging of software applications, reducing critical defects by 20% and improving reliability in transaction processing systems. Designed and implemented Java-based applications using MySQL, Spring Boot, Kubernetes, Docker, and Gradle. Deployed and managed containerized applications with Kubernetes and Docker, ensuring smooth scalability and seamless deployment. Provided efficient resolution of bugs, enhancing system stability and minimizing downtime. Collaborated within Agile development environments, participating in sprint planning, backlog grooming, and retrospective meetings to ensure timely delivery of projects. Developed optimized data pipelines to handle and process large datasets, reducing data processing times by 30%. Utilized Java and big data technologies to design and build high-performance pipelines capable of managing data volumes effectively.
-`,    buttonText: "Read more",
-    date: "02/2018 – 04/2019",
-    icon: "work",
-  },
-  {
-    id: 7,
-    title: "Aditya Engineering University",
-    location: "India, Andhra Pradesh",
+    id: 'experience-quest-diagnostics',
+    type: 'experience',
+    icon: 'work',
+    title: 'Quest Diagnostics',
+    role: 'Senior Software Engineer',
+    location: 'Virginia, United States',
     description:
-      "I earned a Bachelor of Technology in Electrical and Computer engineering from Aditya Engineering College, achieving a 3.0/4.0 of . My coursework included Advanced Data Structures, C Language, and Operating Systems. I also completed various projects, which are available on my GitHub.",
-    buttonText: "GitHub",
-    date: "05/2015 -06/2019",
-    icon: "school",
+      'Developed and maintained lab instrument integration modules using Java, JDBC, and SQL Server, enabling reliable data capture and bidirectional communication between instruments and backend systems. Built decoupled modules on WildFly across UAT, PROD, and TEST environments, implemented ASTM and HL7 message parsing, and resolved production issues affecting clinical workflows.',
+    highlights: ['ASTM and HL7 parsing', 'WildFly deployments', 'Clinical workflow support'],
+    date: '01/2024 - 10/2025',
+    characterReaction: 'presenting',
+    guide: {
+      kicker: 'Clinical systems',
+      message: 'Production discipline shows up through lab instruments, ASTM, HL7, and workflow support.',
+    },
+  },
+  {
+    id: 'experience-optum',
+    type: 'experience',
+    icon: 'work',
+    title: 'Optum Global Solutions (UnitedHealth Group)',
+    role: 'Full Stack Developer',
+    location: 'Minnesota, United States',
+    description:
+      'Led development of claim amount calculation microservices using Java Spring Boot, PostgreSQL, TensorFlow, Golang, and REST/gRPC APIs. Deployed containerized services to AWS with Docker, Kubernetes, EKS, and ECS, built CI/CD pipelines, and led a team of five developers through delivery and production support.',
+    highlights: ['Spring Boot microservices', 'AWS EKS and ECS', 'Team leadership'],
+    date: '01/2023 - 12/2024',
+    characterReaction: 'thumbsUp',
+    guide: {
+      kicker: 'Scale moment',
+      message: 'Healthcare microservices, AWS delivery, and team leadership become the story.',
+    },
+  },
+  {
+    id: 'education-umkc',
+    type: 'education',
+    icon: 'school',
+    title: 'University of Missouri - Kansas City',
+    role: 'Master of Science in Computer Science',
+    location: 'Kansas City, Missouri',
+    description:
+      'Completed graduate coursework in cloud computing, artificial intelligence, machine learning, data structures, algorithms, and advanced software engineering with a 3.5/4.0 GPA.',
+    highlights: ['Cloud computing', 'AI and machine learning', 'Advanced software engineering'],
+    date: '08/2021 - 12/2022',
+    characterReaction: 'curiousProud',
+    guide: {
+      kicker: 'Academic base',
+      message: 'Cloud, AI, algorithms, and advanced engineering practice form the foundation.',
+    },
+    link: {
+      label: 'View GitHub',
+      href: 'https://github.com/nsurya-0698',
+    },
+  },
+  {
+    id: 'experience-hdfc',
+    type: 'experience',
+    icon: 'work',
+    title: 'HDFC Bank Limited',
+    role: 'Software Development Engineer 2',
+    location: 'Hyderabad, India',
+    description:
+      'Built Java APIs with Spring Boot and MongoDB, deployed services through Azure DevOps, implemented JWT-based access control with Spring Security, and supported CI/CD workflows with Jenkins and Terraform. Improved application quality through code reviews, troubleshooting, monitoring with Prometheus and Grafana, and database optimization.',
+    highlights: ['Spring Security and JWT', 'Jenkins and Terraform', 'Prometheus and Grafana'],
+    date: '05/2019 - 08/2021',
+    characterReaction: 'confidentPoint',
+    guide: {
+      kicker: 'Fintech craft',
+      message: 'Security, CI/CD, monitoring, and API quality take focus in banking systems.',
+    },
+  },
+  {
+    id: 'experience-paytm',
+    type: 'experience',
+    icon: 'work',
+    title: 'Paytm',
+    role: 'Software Engineer',
+    location: 'Hyderabad, India',
+    description:
+      'Designed, tested, and debugged Java-based applications using MySQL, Spring Boot, Kubernetes, Docker, and Gradle. Improved transaction-processing reliability, supported Agile delivery, and developed optimized data pipelines that reduced processing time for large datasets.',
+    highlights: ['Transaction reliability', 'Docker and Kubernetes', 'Data pipeline optimization'],
+    date: '02/2018 - 04/2019',
+    characterReaction: 'waving',
+    guide: {
+      kicker: 'Payment flow',
+      message: 'Transaction reliability, containers, and faster data pipelines enter the path.',
+    },
+  },
+  {
+    id: 'education-aditya',
+    type: 'education',
+    icon: 'school',
+    title: 'Aditya Engineering University',
+    role: 'Bachelor of Technology in Electrical and Electronics Engineering',
+    location: 'Andhra Pradesh, India',
+    description:
+      'Completed undergraduate studies in electrical and electronics engineering, building foundations in circuits, electronics, control systems, and electrical machines, with introductory computer science coursework in C programming, data structures, and software fundamentals.',
+    highlights: ['Electrical and electronics engineering', 'C programming basics', 'Computer science fundamentals'],
+    date: '05/2015 - 06/2019',
+    characterReaction: 'proudCelebrate',
+    guide: {
+      kicker: 'Origin story',
+      message: 'Electrical and electronics fundamentals came first, with basic computer science as the bridge into software.',
+    },
+    link: {
+      label: 'View GitHub',
+      href: 'https://github.com/nsurya-0698',
+    },
   },
 ];
 

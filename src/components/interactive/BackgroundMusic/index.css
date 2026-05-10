@@ -1,208 +1,46 @@
 .music-toggle-button {
-    position: fixed;
-    bottom: 380px;
-    left: 94.2%;
-    z-index: 1001;
-    width: 45px;
-    height: 45px;
-    background-color: rgba(10, 25, 47, 0.85);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(100, 255, 218, 0.2);
-    border-radius: 50%;
-    color: #64ffda;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-    animation: slideInUp 0.5s ease-out 0.2s;
-    animation-fill-mode: backwards;
-  }
-  
-  .music-toggle-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
-  }
-  
-  .music-toggle-button svg {
-    transition: transform 0.5s ease-in-out;
-  }
-  
-  .music-toggle-button:hover:not(.playing) svg {
-    transform: rotate(360deg);
-  }
-  
-  /* --- Communicative Animations --- */
-  @keyframes musicBeat {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-  }
-  
-  .music-toggle-button.playing svg {
-    animation: musicBeat 1.5s ease-in-out infinite;
-    color: #ff4d6d; /* Change color to indicate active state */
-  }
-  
-  /* --- Music Prompt Overlay --- */
-  .music-prompt-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(10, 25, 47, 0.8);
-    backdrop-filter: blur(5px);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: fadeIn 0.5s ease-out;
-  }
+  position: fixed;
+  right: 5.5rem;
+  bottom: 2rem;
+  z-index: 80;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(100, 255, 218, 0.22);
+  border-radius: var(--radius-full);
+  background-color: rgba(10, 25, 47, 0.9);
+  color: var(--primary-color);
+  cursor: pointer;
+  transition: border-color var(--transition-normal), box-shadow var(--transition-normal), transform var(--transition-normal);
+}
 
-  .music-prompt {
-    background: linear-gradient(135deg, rgba(10, 25, 47, 0.95), rgba(20, 35, 57, 0.95));
-    backdrop-filter: blur(15px);
-    border: 2px solid rgba(100, 255, 218, 0.3);
-    border-radius: 20px;
-    padding: 30px 40px;
-    text-align: center;
-    color: #64ffda;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    animation: slideInUp 0.6s ease-out;
-    transition: transform 0.3s, box-shadow 0.3s;
+.music-toggle-button:hover,
+.music-toggle-button:focus-visible {
+  border-color: rgba(100, 255, 218, 0.45);
+  box-shadow: 0 0 18px rgba(100, 255, 218, 0.22);
+  transform: translateY(-2px);
+}
+
+.music-toggle-button.playing {
+  color: var(--error-color);
+}
+
+.music-toggle-button.playing svg {
+  animation: musicBeat 1.5s ease-in-out infinite;
+}
+
+@keyframes musicBeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+
+@media (max-width: 1023px) {
+  .music-toggle-button {
+    right: 1rem;
+    bottom: 1rem;
+    width: 42px;
+    height: 42px;
   }
-
-  .music-prompt:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-    border-color: rgba(100, 255, 218, 0.5);
-  }
-
-  .music-prompt svg {
-    margin-bottom: 15px;
-    animation: musicBeat 2s ease-in-out infinite;
-    color: #64ffda;
-  }
-
-  .music-prompt p {
-    margin: 0 0 20px 0;
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    color: #8892b0;
-  }
-
-  .music-prompt-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 10px;
-  }
-
-  .music-prompt-button {
-    padding: 12px 30px;
-    font-size: 16px;
-    font-weight: 600;
-    border: 2px solid;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: transparent;
-    letter-spacing: 0.5px;
-    min-width: 100px;
-  }
-
-  .music-prompt-button-yes {
-    color: #64ffda;
-    border-color: #64ffda;
-    background-color: rgba(100, 255, 218, 0.1);
-  }
-
-  .music-prompt-button-yes:hover {
-    background-color: rgba(100, 255, 218, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
-  }
-
-  .music-prompt-button-no {
-    color: #8892b0;
-    border-color: #8892b0;
-    background-color: rgba(136, 146, 176, 0.1);
-  }
-
-  .music-prompt-button-no:hover {
-    background-color: rgba(136, 146, 176, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(136, 146, 176, 0.3);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  @keyframes slideInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @media (max-width: 1024px) {
-      .music-toggle-button {
-          bottom: 10px;
-          right: 10px;
-          left: auto;
-          width: 40px;
-          height: 40px;
-      }
-
-      .music-prompt {
-        padding: 25px 30px;
-        margin: 20px;
-      }
-
-      .music-prompt p {
-        font-size: 14px;
-      }
-
-      .music-prompt-button {
-        padding: 10px 25px;
-        font-size: 14px;
-        min-width: 80px;
-      }
-  }
-  
-  @media (max-width: 768px) {
-      .music-toggle-button {
-          bottom: 10px;
-          right: 10px;
-          left: auto;
-          width: 40px;
-          height: 40px;
-      }
-
-      .music-prompt {
-        padding: 20px 25px;
-        margin: 15px;
-      }
-
-      .music-prompt p {
-        font-size: 13px;
-      }
-
-      .music-prompt-buttons {
-        gap: 10px;
-      }
-
-      .music-prompt-button {
-        padding: 10px 20px;
-        font-size: 13px;
-        min-width: 70px;
-      }
-  } 
+}

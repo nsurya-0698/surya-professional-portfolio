@@ -1,110 +1,132 @@
-import React, { useState } from 'react'
-import emailjs from '@emailjs/browser';
+import { useState } from 'react';
+import { SITE_META } from '../../../constants/siteMeta';
+
+const isValidEmail = (email) => /^\S+@\S+\.\S+$/.test(email);
 
 const EmailForm = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [message, setMessage] = useState('');
-    const [showNotification, setShowNotification] = useState(false); // State for notification
-    const [error, setError] = useState(''); // Error Message
-  
-    const resetForm = () => {
-      setName('');
-      setEmail('');
-      setPhone('');
-      setMessage('');
-    };
-  
-    const validateEmail = (email) => {
-      // Simple email regex
-      return /^\S+@\S+\.\S+$/.test(email);
-    };
+  const [formValues, setFormValues] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [error, setError] = useState('');
 
-    const handleSubmit = (e) => {
-      e.preventDefault();
-
-      if (name.trim() === '') {
-        setError('Name is required.');
-        return;
-      } else if (email.trim() === '') {
-        setError('Email is required.');
-        return;
-      } else if (!validateEmail(email)) {
-        setError('Please enter a valid email address.');
-        return;
-      }
-
-      setError(''); // Clear any previous error
-  
-      // Your EmailJS service ID, template ID, and Public Key
-      const serviceId = 'service_iv6t5r9';
-      const templateId = 'template_cum0fbe';
-      const publicKey = 'ebINNDIg7FPq8si3c';
-  
-      // Create a new object that contains dynamic template params
-      const templateParams = {
-        from_name: name,
-        from_email: email,
-        from_phone: phone,
-        to_name: 'Surya',
-        message: message,
-      };
-  
-      // Send the email using EmailJS
-      emailjs.send(serviceId, templateId, templateParams, publicKey)
-        .then((response) => {
-          console.log('Email sent successfully!', response);
-          setShowNotification(true);
-          resetForm();
-          setTimeout(() => setShowNotification(false), 3000); // Hide notification after 3 seconds
-        })
-        .catch((error) => {
-          console.error('Error sending email:', error);
-        });
-    };
-  
-    return (
-      <form onSubmit={handleSubmit} className='emailForm'>
-        <div className="formGroup">
-          <input
-            type="text"
-            placeholder="Your Name *"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="formInput nameInput"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Your Email *"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="formInput emailInput"
-            required
-          />
-          <input
-            type="tel"
-            placeholder="Your Phone Number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="formInput phoneInput"
-          />
-        </div>
-        <textarea
-          placeholder="Message"
-          cols="30"
-          rows="10"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="formTextarea"
-        />
-        <button type="submit">Let's Talk</button>
-  
-        {error && <div className="error">{error}</div>}
-        {showNotification && <div className="notification">Form submitted successfully!</div>}
-      </form>
-    );
+  const updateField = (field, value) => {
+    setFormValues((currentValues) => ({
+      ...currentValues,
+      [field]: value,
+    }));
   };
-  
-  export default EmailForm;
+
+  const resetForm = () => {
+    setFormValues({
+      name: '',
+      email: '',
+      phone: '',
+      message: '',
+    });
+  };
+
+  const validateForm = () => {
+    if (!formValues.name.trim()) {
+      return 'Name is required.';
+    }
+
+    if (!formValues.email.trim()) {
+      return 'Email is required.';
+    }
+
+    if (!isValidEmail(formValues.email)) {
+      return 'Please enter a valid email address.';
+    }
+
+    if (!formValues.message.trim()) {
+      return 'Message is required.';
+    }
+
+    return '';
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const validationError = validateForm();
+    if (validationError) {
+      setStatusMessage('');
+      setError(validationError);
+      return;
+    }
+
+    const subject = encodeURIComponent(`Portfolio message from ${formValues.name}`);
+    const body = encodeURIComponent([
+      formValues.message,
+      '',
+      `Name: ${formValues.name}`,
+      `Email: ${formValues.email}`,
+      formValues.phone ? `Phone: ${formValues.phone}` : '',
+    ].filter(Boolean).join('\n'));
+
+    setError('');
+    setStatusMessage('Opening your email client...');
+    setIsSubmitting(true);
+    window.location.href = `mailto:${SITE_META.email}?subject=${subject}&body=${body}`;
+    window.setTimeout(() => {
+      setIsSubmitting(false);
+      resetForm();
+      setStatusMessage('Thanks, your email draft is ready to send.');
+    }, 500);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="emailForm" noValidate>
+      <div className="formGroup">
+        <input
+          type="text"
+          placeholder="Your Name *"
+          value={formValues.name}
+          onChange={(event) => updateField('name', event.target.value)}
+          className="formInput"
+          autoComplete="name"
+          required
+        />
+        <input
+          type="email"
+          placeholder="Your Email *"
+          value={formValues.email}
+          onChange={(event) => updateField('email', event.target.value)}
+          className="formInput"
+          autoComplete="email"
+          aria-invalid={Boolean(error && error.toLowerCase().includes('email'))}
+          required
+        />
+        <input
+          type="tel"
+          placeholder="Your Phone Number"
+          value={formValues.phone}
+          onChange={(event) => updateField('phone', event.target.value)}
+          className="formInput"
+          autoComplete="tel"
+        />
+      </div>
+      <textarea
+        placeholder="Message *"
+        rows="7"
+        value={formValues.message}
+        onChange={(event) => updateField('message', event.target.value)}
+        className="formTextarea"
+        required
+      />
+      <button type="submit" className="formSubmit" disabled={isSubmitting}>
+        {isSubmitting ? 'Sending...' : "Let's Talk"}
+      </button>
+
+      {error && <div className="formMessage formMessage--error">{error}</div>}
+      {statusMessage && <div className="formMessage formMessage--success">{statusMessage}</div>}
+    </form>
+  );
+};
+
+export default EmailForm;

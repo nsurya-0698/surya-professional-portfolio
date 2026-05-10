@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import './ErrorBoundary.css';
 
 /**
@@ -16,21 +16,14 @@ class ErrorBoundary extends Component {
     };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     // Update state so the next render will show the fallback UI
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.error('Error caught by boundary:', error, errorInfo);
-    }
-
-    // Log error to error reporting service in production
-    if (process.env.NODE_ENV === 'production') {
-      // Example: logErrorToService(error, errorInfo);
-      console.error('Production error:', error);
     }
 
     this.setState({
@@ -44,7 +37,7 @@ class ErrorBoundary extends Component {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    window.location.assign(`${import.meta.env.BASE_URL || '/'}#home`);
   };
 
   render() {
@@ -68,11 +61,11 @@ class ErrorBoundary extends Component {
             </h1>
             
             <p className="error-boundary__message">
-              We're sorry, but something unexpected happened. 
+              We&apos;re sorry, but something unexpected happened.
               Please try refreshing the page or contact support if the problem persists.
             </p>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <details className="error-boundary__details">
                 <summary>Error Details (Development Only)</summary>
                 <pre className="error-boundary__error">
@@ -107,4 +100,4 @@ class ErrorBoundary extends Component {
   }
 }
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

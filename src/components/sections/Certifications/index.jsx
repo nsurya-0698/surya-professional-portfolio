@@ -1,139 +1,98 @@
-import React, { useState } from 'react';
-import { CheckCircle, Award, Github } from 'lucide-react';
-import certificate from '../../../assets/documents/AWS_Certified_Solutions_Architect.pdf'; // Import resume PDF
+import { Award, CheckCircle, Github } from 'lucide-react';
+import certificate from '../../../assets/documents/AWS_Certified_Solutions_Architect.pdf';
 import genaiBadge from '../../../assets/icons/genai-badge.svg';
 import './index.css';
 
+const CERTIFICATIONS = [
+  {
+    id: 'aws-solutions-architect',
+    title: 'AWS Certified Solutions Architect - Associate',
+    detail: 'Score: 965/1000',
+    description:
+      'Validated expertise in designing secure, resilient, and distributed applications with AWS technologies and architectural best practices.',
+    badge: 'https://images.credly.com/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png',
+    badgeAlt: 'AWS Solutions Architect badge',
+    links: [
+      {
+        label: 'View Certificate',
+        href: certificate,
+        icon: Award,
+      },
+    ],
+  },
+  {
+    id: 'genai-llms',
+    title: 'Generative AI with Large Language Models',
+    detail: 'DeepLearning.AI & AWS',
+    description:
+      'Completed practical coursework in transformer architecture, prompt engineering, model evaluation, fine-tuning, and deployment patterns for LLM applications.',
+    badge: genaiBadge,
+    badgeAlt: 'Generative AI with Large Language Models badge',
+    links: [
+      {
+        label: 'View Certificate',
+        href: 'https://www.coursera.org/account/accomplishments/verify/5G0I2YX1E2H4?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course',
+        icon: Award,
+      },
+      {
+        label: 'GitHub',
+        href: 'https://github.com/nsurya-0698/genAI-with-Large-Language-Models',
+        icon: Github,
+      },
+    ],
+  },
+];
+
 function Certifications() {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isExpanded2, setIsExpanded2] = useState(false);
-
-  const handleCardClick = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const handleCardClick2 = () => {
-    setIsExpanded2(!isExpanded2);
-  };
-
   return (
     <section id="certifications" className="certifications-section">
       <div className="certifications-container">
-        <h2 className="section-title">
-          <div className="title-icon" />
+        <h2 className="section-heading">
+          <span className="section-heading__line" />
           Certifications
-          <Award className="title-icon" />
+          <Award className="section-heading__icon" size={26} aria-hidden="true" />
         </h2>
 
-        <div className={`certificates-slider ${isExpanded || isExpanded2 ? 'paused' : ''}`}>
-          <div className="slider-track">
-            <div
-              className={`certificate-card ${isExpanded ? 'expanded' : ''}`}
-              onClick={handleCardClick}
-            >
-              <div className="certificate-content">
-                <div className="certificate-image">
-                  <div className="aws-badge">
-                    <div className="badge-front">
-                      <img
-                        src="https://images.credly.com/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png"
-                        alt="AWS Solutions Architect Badge"
-                        className="badge-image"
-                      />
-                    </div>
-                    <div className="badge-glow"></div>
-                    {isExpanded && (
-                      <div className="confetti-container">
-                        {[...Array(30)].map((_, i) => (
-                          <div
-                            key={i}
-                            className="confetti"
-                            style={{
-                              '--delay': `${Math.random() * 2}s`,
-                              '--x': `${Math.random() * 200 - 100}px`,
-                              '--y': `${Math.random() * 200 - 100}px`,
-                              '--rotation': `${Math.random() * 360}deg`,
-                              '--color': `hsl(${Math.random() * 360}, 70%, 50%)`
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="certificate-details">
-                  <h3>AWS Certified Solutions Architect – Associate</h3>
-                  <div className="score">
-                    <CheckCircle className="score-icon" />
-                    <span>Score: 965/1000</span>
-                  </div>
-                  <p>Validated expertise in designing distributed systems and applications using AWS technologies. Demonstrated proficiency in AWS services, architectural best practices, and building secure and reliable applications.</p>
-                  <div className="certificate-buttons">
-                    <a href={certificate} target="_blank" rel="noreferrer" className="view-certificate">
-                      <span>View Certificate</span>
-                      <Award className="view-icon" />
-                    </a>
-                  </div>
-                </div>
+        <div className="certificates-grid">
+          {CERTIFICATIONS.map((certification) => (
+            <article className="certificate-card" key={certification.id}>
+              <div className="certificate-image">
+                <img
+                  src={certification.badge}
+                  alt={certification.badgeAlt}
+                  className="badge-image"
+                  loading="lazy"
+                />
               </div>
-            </div>
 
-            {/* New Certification Card */}
-            <div
-              className={`certificate-card ${isExpanded2 ? 'expanded' : ''}`}
-              onClick={handleCardClick2}
-            >
-              <div className="certificate-content">
-                <div className="certificate-image">
-                  <div className="aws-badge">
-                    <div className="badge-front">
-                      <img
-                        src={genaiBadge}
-                        alt="Generative AI with LLMs Badge"
-                        className="badge-image"
-                      />
-                    </div>
-                    <div className="badge-glow"></div>
-                    {isExpanded2 && (
-                      <div className="confetti-container">
-                        {[...Array(30)].map((_, i) => (
-                          <div
-                            key={i}
-                            className="confetti"
-                            style={{
-                              '--delay': `${Math.random() * 2}s`,
-                              '--x': `${Math.random() * 200 - 100}px`,
-                              '--y': `${Math.random() * 200 - 100}px`,
-                              '--rotation': `${Math.random() * 360}deg`,
-                              '--color': `hsl(${Math.random() * 360}, 70%, 50%)`
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
+              <div className="certificate-details">
+                <h3>{certification.title}</h3>
+                <div className="score">
+                  <CheckCircle className="score-icon" aria-hidden="true" />
+                  <span>{certification.detail}</span>
                 </div>
-                <div className="certificate-details">
-                  <h3>Generative AI with Large Language Models</h3>
-                  <div className="score">
-                    <CheckCircle className="score-icon" />
-                    <span>DeepLearning.AI & AWS</span>
-                  </div>
-                  <p>Mastered the fundamentals of generative AI and LLMs, including transformer architecture, fine-tuning techniques, and deployment strategies. Gained practical skills in prompt engineering and model evaluation.</p>
-                  <div className="certificate-buttons">
-                    <a href="https://www.coursera.org/account/accomplishments/verify/5G0I2YX1E2H4?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" rel="noreferrer" className="view-certificate">
-                      <span>View Certificate</span>
-                      <Award className="view-icon" />
-                    </a>
-                    <a href="https://github.com/nsurya-0698/genAI-with-Large-Language-Models" target="_blank" rel="noreferrer" className="github-button">
-                      <span>GitHub</span>
-                      <Github className="github-icon" />
-                    </a>
-                  </div>
+                <p>{certification.description}</p>
+
+                <div className="certificate-buttons">
+                  {certification.links.map((link) => {
+                    const LinkIcon = link.icon;
+                    return (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="certificate-link"
+                      >
+                        <span>{link.label}</span>
+                        <LinkIcon className="certificate-link-icon" aria-hidden="true" />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
-            </div>
-          </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>

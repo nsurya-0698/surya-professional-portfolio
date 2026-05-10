@@ -1,5 +1,4 @@
-import React, { forwardRef, memo } from 'react';
-import PropTypes from 'prop-types';
+import { forwardRef, memo } from 'react';
 import './Button.css';
 
 /**
@@ -72,18 +71,6 @@ const Button = forwardRef(({
   );
 });
 
-Button.propTypes = {
-  children: PropTypes.node.isRequired,
-  variant: PropTypes.oneOf(['primary', 'secondary', 'outline', 'ghost', 'danger']),
-  size: PropTypes.oneOf(['small', 'medium', 'large']),
-  disabled: PropTypes.bool,
-  loading: PropTypes.bool,
-  fullWidth: PropTypes.bool,
-  className: PropTypes.string,
-  onClick: PropTypes.func,
-  type: PropTypes.oneOf(['button', 'submit', 'reset'])
-};
-
 Button.displayName = 'Button';
 
-export default memo(Button); 
+export default memo(Button);

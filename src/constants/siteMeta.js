@@ -62,6 +62,24 @@ export const NAVIGATION_ITEMS = [
     icon: 'FiAward'
   },
   {
+    id: 'projects',
+    label: 'Projects',
+    href: '#projects',
+    icon: 'FiCode'
+  },
+  {
+    id: 'appreciations',
+    label: 'Appreciations',
+    href: '#appreciations',
+    icon: 'FiStar'
+  },
+  {
+    id: 'skills',
+    label: 'Skills',
+    href: '#skills',
+    icon: 'FiTool'
+  },
+  {
     id: 'contact',
     label: 'Contact',
     href: '#contact',
@@ -90,4 +108,4 @@ export const ANIMATION_CONFIG = {
     animate: { opacity: 1, scale: 1 },
     transition: { duration: 0.5, ease: 'easeOut' }
   }
-}; 
+};

@@ -1,53 +1,15 @@
-import React from 'react';
-import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css';
-import { ReactComponent as WorkIcon } from '../../../assets/icons/work.svg';
-import { ReactComponent as SchoolIcon } from '../../../assets/icons/school.svg';
+import TreeTimelineSection from './TreeTimelineSection';
 import timelineElements from './timelineElements';
 import './index.css';
 
 function Experience() {
-  const workIconStyles = { background: '#06D6A0' };
-  const schoolIconStyles = { background: '#f9c74f' };
-
   return (
-    <div id="exp">
-      <VerticalTimeline>
-        {timelineElements.map((element) => {
-          const isWorkIcon = element.icon === 'work';
-          const showButton = element.buttonText !== undefined && element.buttonText !== null && element.buttonText !== '';
-
-          return (
-            <VerticalTimelineElement
-              key={element.id}
-              date={element.date}
-              dateClassName="date"
-              iconStyle={isWorkIcon ? workIconStyles : schoolIconStyles}
-              icon={isWorkIcon ? <WorkIcon /> : <SchoolIcon />}
-            >
-              <h3 className="vertical-timeline-element-title">
-                {element.title}
-              </h3>
-              {element.role && (
-                <h5 className="vertical-timeline-element-subtitle">
-                  {element.role}
-                </h5>
-              )}
-              <span className="location">{element.location}</span>
-              <p id="description">{element.description}</p>
-{showButton && (
-  <a
-    className={`button ${isWorkIcon ? 'workButton' : 'schoolButton'}`}
-    href={isWorkIcon ? "https://nsurya-0698.github.io/surya-professional-portfolio/" : "https://github.com/nsurya-0698"}
-  >
-    {element.buttonText}
-  </a>
-)}
-            </VerticalTimelineElement>
-          );
-        })}
-      </VerticalTimeline>
-    </div>
+    <TreeTimelineSection
+      id="exp"
+      title="Experience & Education"
+      summary="A career path across enterprise GenAI, clinical diagnostics, healthcare platforms, fintech systems, and computer science foundations."
+      items={timelineElements}
+    />
   );
 }
 

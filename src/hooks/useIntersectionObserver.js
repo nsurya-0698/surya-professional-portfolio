@@ -24,10 +24,10 @@ export const useIntersectionObserver = (options = {}) => {
       if (!hasIntersected) {
         setHasIntersected(true);
       }
-    } else {
+    } else if (!triggerOnce) {
       setIsIntersecting(false);
     }
-  }, [hasIntersected]);
+  }, [hasIntersected, triggerOnce]);
 
   useEffect(() => {
     const element = elementRef.current;
@@ -46,12 +46,5 @@ export const useIntersectionObserver = (options = {}) => {
     };
   }, [callback, threshold, root, rootMargin]);
 
-  // Reset intersection state if triggerOnce is false
-  useEffect(() => {
-    if (!triggerOnce && !isIntersecting) {
-      setHasIntersected(false);
-    }
-  }, [isIntersecting, triggerOnce]);
-
   return [elementRef, isIntersecting, hasIntersected];
-}; 
+};

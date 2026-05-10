@@ -1,5 +1,4 @@
-import React, { forwardRef, memo } from 'react';
-import PropTypes from 'prop-types';
+import { forwardRef, memo } from 'react';
 import { useIntersectionObserver } from '../../../hooks/useIntersectionObserver';
 import './Card.css';
 
@@ -63,15 +62,6 @@ const Card = forwardRef(({
   );
 });
 
-Card.propTypes = {
-  children: PropTypes.node.isRequired,
-  variant: PropTypes.oneOf(['default', 'outlined', 'elevated', 'interactive']),
-  elevation: PropTypes.oneOf(['none', 'low', 'medium', 'high']),
-  animate: PropTypes.bool,
-  className: PropTypes.string,
-  onClick: PropTypes.func
-};
-
 Card.displayName = 'Card';
 
-export default memo(Card); 
+export default memo(Card);

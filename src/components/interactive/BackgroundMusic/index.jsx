@@ -1,10 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Music2, Music3 } from 'lucide-react';
 import './index.css';
 
-// Pleasant, royalty-free background music
-// Note: If this URL doesn't work, you can host the music file locally in the public folder
-// and use: '/music/your-music-file.mp3'
 const MUSIC_URL = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
 
 const BackgroundMusic = () => {
@@ -13,131 +10,54 @@ const BackgroundMusic = () => {
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio) return undefined;
 
-    // Initialize audio volume
-    audio.volume = 0.3;
+    audio.volume = 0.25;
 
-    // Sync state with actual audio playback state
-    const handlePlay = () => {
-      console.log('Audio started playing');
-      setIsPlaying(true);
-    };
-    const handlePause = () => {
-      console.log('Audio paused');
-      setIsPlaying(false);
-    };
-    const handleEnded = () => {
-      console.log('Audio ended');
-      setIsPlaying(false);
-    };
-    const handleError = (e) => {
-      console.error("Audio error:", e);
-      console.error("Audio error details:", audio.error);
-      if (audio.error) {
-        switch (audio.error.code) {
-          case audio.error.MEDIA_ERR_ABORTED:
-            console.error("The user aborted the audio");
-            break;
-          case audio.error.MEDIA_ERR_NETWORK:
-            console.error("A network error occurred");
-            break;
-          case audio.error.MEDIA_ERR_DECODE:
-            console.error("An error occurred while decoding the audio");
-            break;
-          case audio.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-            console.error("The audio source is not supported or CORS blocked");
-            break;
-          default:
-            console.error("An unknown error occurred");
-        }
-      }
-      setIsPlaying(false);
-    };
-    const handleCanPlay = () => {
-      console.log('Audio can play');
-    };
-    const handleLoadedData = () => {
-      console.log('Audio data loaded');
-    };
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => setIsPlaying(false);
+    const handleError = () => setIsPlaying(false);
 
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('error', handleError);
-    audio.addEventListener('canplay', handleCanPlay);
-    audio.addEventListener('loadeddata', handleLoadedData);
-
-    // Check initial state
-    setIsPlaying(!audio.paused);
 
     return () => {
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
-      audio.removeEventListener('canplay', handleCanPlay);
-      audio.removeEventListener('loadeddata', handleLoadedData);
     };
   }, []);
 
   const togglePlay = async () => {
     const audio = audioRef.current;
-    if (!audio) {
-      console.error("Audio element not found");
-      return;
-    }
+    if (!audio) return;
 
     try {
       if (isPlaying) {
         audio.pause();
-      } else {
-        // Check if audio is ready
-        if (audio.readyState >= 2) { // HAVE_CURRENT_DATA or higher
-          const playPromise = audio.play();
-          if (playPromise !== undefined) {
-            await playPromise;
-            console.log("Music started successfully");
-          }
-        } else {
-          // Wait for audio to be ready
-          audio.load(); // Reload the audio
-          await new Promise((resolve) => {
-            const handleCanPlay = () => {
-              audio.removeEventListener('canplay', handleCanPlay);
-              resolve();
-            };
-            audio.addEventListener('canplay', handleCanPlay);
-          });
-          const playPromise = audio.play();
-          if (playPromise !== undefined) {
-            await playPromise;
-            console.log("Music started successfully after loading");
-          }
-        }
+        return;
       }
-    } catch (error) {
-      console.error("Error toggling music:", error);
-      console.error("Audio readyState:", audio.readyState);
-      console.error("Audio networkState:", audio.networkState);
+
+      await audio.play();
+    } catch {
       setIsPlaying(false);
     }
   };
 
   return (
     <>
-      <audio 
-        ref={audioRef} 
-        src={MUSIC_URL} 
-        loop 
-        preload="auto"
-        crossOrigin="anonymous"
-      />
-      
-      <button 
-        onClick={togglePlay} 
-        className={`music-toggle-button ${isPlaying ? 'playing' : ''}`} 
-        aria-label="Toggle Music"
+      <audio ref={audioRef} src={MUSIC_URL} loop preload="none" />
+
+      <button
+        onClick={togglePlay}
+        className={`music-toggle-button ${isPlaying ? 'playing' : ''}`}
+        type="button"
+        aria-label={isPlaying ? 'Pause background music' : 'Play background music'}
+        title={isPlaying ? 'Pause music' : 'Play music'}
       >
         {isPlaying ? <Music3 size={20} /> : <Music2 size={20} />}
       </button>
@@ -145,4 +65,4 @@ const BackgroundMusic = () => {
   );
 };
 
-export default BackgroundMusic; 
+export default BackgroundMusic;

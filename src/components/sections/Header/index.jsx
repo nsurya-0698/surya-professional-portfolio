@@ -1,72 +1,71 @@
-import React, { Component } from 'react';
-import resume from '../../../assets/documents/Surya.pdf'; // Import resume PDF
-import logo from '../../../assets/icons/logo.svg'; // Import logo SVG
+import { useCallback, useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import resume from '../../../assets/documents/Surya.pdf';
+import logo from '../../../assets/icons/logo.svg';
+import { NAVIGATION_ITEMS } from '../../../constants/siteMeta';
 import './index.css';
 
-class Header extends Component {
-    state = {
-        hamburgerClicked: false,
-        makeBlur: true,
-        hideHam: false,
-        prevPos: window.pageYOffset,
-        topVal: 0
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const closeMenu = useCallback(() => setIsMenuOpen(false), []);
+
+  useEffect(() => {
+    document.body.classList.toggle('nav-open', isMenuOpen);
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
     };
 
-    hamClicked = () => {
-        this.setState({ hamburgerClicked: true, makeBlur: false, hideHam: true });
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.classList.remove('nav-open');
+      document.removeEventListener('keydown', handleKeyDown);
     };
+  }, [closeMenu, isMenuOpen]);
 
-    closeHam = () => {
-        this.setState({ hamburgerClicked: false, makeBlur: true, hideHam: false });
-    };
+  return (
+    <header className={`header-container ${isMenuOpen ? 'menu-open' : ''}`}>
+      <a className="site-logo-link" href="#home" aria-label="Go to home">
+        <img className="site-logo animate-float hover-scale" src={logo} alt="Surya Teja Nammi logo" />
+      </a>
 
-    scrolled = event => {
-        console.log('scrolled');
-    };
+      <button
+        className="menu-button"
+        type="button"
+        aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={isMenuOpen}
+        aria-controls="primary-navigation"
+        onClick={() => setIsMenuOpen((currentValue) => !currentValue)}
+      >
+        {isMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+      </button>
 
-    render() {
-        const { hamburgerClicked, makeBlur, hideHam, topVal } = this.state;
-
-        return (
-            <div className={`header-container ${topVal !== 0 ? 'updatetop' : ''}`} onScroll={this.scrolled}>
-                <a href="https://nsurya-0698.github.io/surya-professional-portfolio/">
-                    <img className="site-logo animate-float hover-scale" src={logo} alt="logo" />
-                </a>
-                <div className={`overlay ${hamburgerClicked ? "" : "burger-data"} ${makeBlur ? "" : "hider"}`}>
-                    <span className="closing animate-fade-up" onClick={this.closeHam}>&times;</span>
-                    <ul className="header-list overlay-content">
-                        {/* <a href="#about" className="nav-things">
-                            <li className="header-content about">About</li>
-                        </a> */}
-                        {/* <a href="#Education" className="nav-things">
-                            <li className="header-content exp">Education</li>
-                        </a> */}
-                        <a href="#exp" className="nav-things">
-                            <li className="header-content exp animate-slide-left hover-glow">Experience</li>
-                        </a>
-                        <a href="#certifications" className="nav-things">
-                            <li className="header-content work animate-slide-left hover-glow">Certifications</li>
-                        </a>
-                        <a href="#projects" className="nav-things">
-                            <li className="header-content projects animate-slide-left hover-glow">Projects</li>
-                        </a>
-                        <a href="#appreciations" className="nav-things">
-                            <li className="header-content appreciations animate-slide-left hover-glow">Appreciations</li>
-                        </a>
-                        <a href="#contact" className="nav-things">
-                            <li className="header-content contact animate-slide-left hover-glow">Contact</li>
-                        </a>
-                        <li>
-                            <a href={resume} target="_blank" rel="noreferrer">
-                                <button className="btn resume animate-slide-right hover-lift animate-glow">Resume</button>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <span className={`burger ${hideHam ? "hamhider" : ""} animate-pulse`} onClick={this.hamClicked}>&#9776;</span>
-            </div>
-        );
-    }
-}
+      <nav
+        id="primary-navigation"
+        className={`header-nav ${isMenuOpen ? 'is-open' : ''}`}
+        aria-label="Primary navigation"
+      >
+        <ul className="header-list">
+          {NAVIGATION_ITEMS.map((item) => (
+            <li key={item.id}>
+              <a className="nav-things" href={item.href} onClick={closeMenu}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a className="resume-link hover-lift" href={resume} target="_blank" rel="noreferrer">
+              Resume
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  );
+};
 
 export default Header;

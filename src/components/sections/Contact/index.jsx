@@ -1,20 +1,22 @@
-import './index.css'
-import EmailForm from './EmailForm'
+import './index.css';
+import EmailForm from './EmailForm';
 
 const Contact = () => {
-    return(
-        <div className="contact-container" id="contact">
-            <h1 className="contact-header animate-fade-up">
-                <span className="title-icon" />
-                Get In Touch
-                <span className="title-icon" />
-            </h1>
-            <p className="contact-content animate-slide-left">Thanks for checking out my profile! Feel free to drop me a message if you have any questions or if you'd like to connect.</p>
-            <div className="animate-fade-up">
-                <EmailForm />
-            </div>
-        </div>
-    )
-}
+  return (
+    <section className="contact-container" id="contact">
+      <h2 className="section-heading contact-header animate-fade-up">
+        <span className="section-heading__line" />
+        Get In Touch
+        <span className="section-heading__line" />
+      </h2>
+      <p className="contact-content animate-slide-left">
+        Thanks for checking out my profile! Feel free to drop me a message if you have any questions or if you&apos;d like to connect.
+      </p>
+      <div className="animate-fade-up">
+        <EmailForm />
+      </div>
+    </section>
+  );
+};
 
-export default Contact
+export default Contact;

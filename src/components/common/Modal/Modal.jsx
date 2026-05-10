@@ -1,5 +1,4 @@
-import React, { forwardRef, memo, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
+import { forwardRef, memo, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import './Modal.css';
 
@@ -92,17 +91,6 @@ const Modal = forwardRef(({
   return createPortal(modalContent, document.body);
 });
 
-Modal.propTypes = {
-  children: PropTypes.node.isRequired,
-  isOpen: PropTypes.bool,
-  onClose: PropTypes.func,
-  title: PropTypes.string,
-  size: PropTypes.oneOf(['small', 'medium', 'large', 'full']),
-  closeOnBackdrop: PropTypes.bool,
-  closeOnEscape: PropTypes.bool,
-  className: PropTypes.string
-};
-
 Modal.displayName = 'Modal';
 
-export default memo(Modal); 
+export default memo(Modal);
