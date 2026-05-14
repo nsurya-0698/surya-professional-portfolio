@@ -6,10 +6,13 @@ import schoolIcon from '../../../assets/icons/school.svg';
 // Timeline spacing knobs:
 // - STOP_SPACING controls vertical distance between cards/stops on desktop.
 // - PATH_* padding keeps route stops centered with each card row.
-const STOP_SPACING = 430;
-const PATH_TOP_PADDING = 260;
-const PATH_BOTTOM_PADDING = 260;
+// - TWIG_LENGTH controls how far the visual branches reach toward each card.
+const STOP_SPACING = 410;
+const PATH_TOP_PADDING = 250;
+const PATH_BOTTOM_PADDING = 250;
 const PATH_VIEWBOX_WIDTH = 1000;
+const PATH_CENTER_X = 500;
+const TWIG_LENGTH = 150;
 
 const TYPE_META = {
   certification: {
@@ -37,18 +40,28 @@ function buildTimelineGeometry(itemCount) {
   const stopPositions = Array.from({ length: itemCount }, (_, index) => PATH_TOP_PADDING + index * STOP_SPACING);
   const viewBoxHeight = PATH_TOP_PADDING + Math.max(itemCount - 1, 0) * STOP_SPACING + PATH_BOTTOM_PADDING;
   const firstStop = stopPositions[0] ?? PATH_TOP_PADDING;
+  const lastStop = stopPositions.at(-1) ?? firstStop;
 
   // Tune the branch path here. More timeline items automatically add curve segments and stop points.
-  const pathSegments = [`M 500 ${firstStop}`];
+  const pathSegments = [
+    `M ${PATH_CENTER_X} ${Math.max(36, firstStop - 135)}`,
+    `C ${PATH_CENTER_X + 18} ${firstStop - 92}, ${PATH_CENTER_X - 18} ${firstStop - 42}, ${PATH_CENTER_X} ${firstStop}`,
+  ];
 
   stopPositions.forEach((stopY, index) => {
     const nextY = stopPositions[index + 1];
-    const sway = index % 2 === 0 ? -64 : 64;
+    const sway = index % 2 === 0 ? -46 : 46;
 
     if (nextY) {
-      pathSegments.push(`C ${500 - sway} ${stopY + 110}, ${500 + sway} ${nextY - 112}, 500 ${nextY}`);
+      pathSegments.push(
+        `C ${PATH_CENTER_X - sway} ${stopY + 112}, ${PATH_CENTER_X + sway} ${nextY - 112}, ${PATH_CENTER_X} ${nextY}`
+      );
     }
   });
+
+  pathSegments.push(
+    `C ${PATH_CENTER_X + 20} ${lastStop + 48}, ${PATH_CENTER_X - 20} ${lastStop + 92}, ${PATH_CENTER_X} ${Math.min(viewBoxHeight - 36, lastStop + 136)}`
+  );
 
   return {
     branchPath: pathSegments.join(' '),
@@ -181,8 +194,8 @@ function TreeTimelineSection({ id, title, summary, items }) {
 
           {geometry.stopPositions.map((stopY, index) => {
             const side = index % 2 === 0 ? -1 : 1;
-            const twigEnd = 500 + side * 245;
-            const control = 500 + side * 122;
+            const twigEnd = PATH_CENTER_X + side * TWIG_LENGTH;
+            const control = PATH_CENTER_X + side * 78;
 
             // These branch twigs are visual only. Add more cards in timelineElements.js;
             // the path and twigs regenerate automatically for the new stop count.
@@ -190,9 +203,8 @@ function TreeTimelineSection({ id, title, summary, items }) {
               <g key={stopY}>
                 <path
                   className="career-route-branch"
-                  d={`M 500 ${stopY} C ${control} ${stopY - 24}, ${control} ${stopY + 24}, ${twigEnd} ${stopY}`}
+                  d={`M ${PATH_CENTER_X} ${stopY} C ${control} ${stopY - 22}, ${control} ${stopY + 22}, ${twigEnd} ${stopY}`}
                 />
-                <circle className="career-route-stop" cx="500" cy={stopY} r="13" />
               </g>
             );
           })}

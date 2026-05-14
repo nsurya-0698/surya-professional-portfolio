@@ -51,6 +51,7 @@ function Certifications() {
           <span className="section-heading__line" />
           Certifications
           <Award className="section-heading__icon" size={26} aria-hidden="true" />
+          <span className="section-heading__line" />
         </h2>
 
         <div className="certificates-grid">

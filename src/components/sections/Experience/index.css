@@ -14,10 +14,10 @@
 }
 
 .career-tree {
-  --branch-gap: clamp(1.2rem, 2vw, 1.8rem);
-  --connector-width: calc(var(--node-half) + var(--branch-gap));
-  --node-half: 35px;
-  --node-size: 70px;
+  --branch-gap: clamp(1rem, 1.8vw, 1.45rem);
+  --connector-width: calc(var(--node-half) + var(--branch-gap) + 0.55rem);
+  --node-half: 27px;
+  --node-size: 54px;
   --tree-y-padding: clamp(1rem, 3vw, 2rem);
 
   position: relative;
@@ -45,26 +45,20 @@
 
 .career-route-shadow {
   stroke: rgba(100, 255, 218, 0.12);
-  stroke-width: 24;
-  filter: drop-shadow(0 0 18px rgba(100, 255, 218, 0.22));
+  stroke-width: 22;
+  filter: drop-shadow(0 0 20px rgba(100, 255, 218, 0.2));
 }
 
 .career-route-main {
   stroke: url("#timelineRouteGradient");
-  stroke-width: 5;
+  stroke-width: 6;
 }
 
 .career-route-branch {
   fill: none;
-  stroke: rgba(160, 132, 238, 0.64);
+  stroke: rgba(160, 132, 238, 0.56);
   stroke-linecap: round;
-  stroke-width: 4;
-}
-
-.career-route-stop {
-  fill: #020617;
-  stroke: rgba(100, 255, 218, 0.8);
-  stroke-width: 5;
+  stroke-width: 3;
 }
 
 .career-branches {
@@ -77,7 +71,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--node-size) minmax(0, 1fr);
   align-items: center;
-  min-height: clamp(330px, 44vw, 430px);
+  min-height: clamp(320px, 42vw, 410px);
   gap: var(--branch-gap);
   opacity: 1;
   transition: opacity 700ms ease;
@@ -99,21 +93,43 @@
 .career-node::before {
   content: '';
   position: absolute;
-  inset: -11px;
-  border: 1px solid rgba(100, 255, 218, 0.18);
+  top: -26px;
+  bottom: -26px;
+  left: 50%;
+  z-index: 0;
+  width: 8px;
   border-radius: var(--radius-full);
-  animation: nodeBreath 4.5s ease-in-out infinite;
+  background: linear-gradient(180deg, #64ffda, #64ffda 55%, #a084ee);
+  box-shadow: 0 0 18px rgba(100, 255, 218, 0.28);
+  transform: translateX(-50%);
+}
+
+.career-node::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  z-index: 0;
+  border: 1px solid rgba(100, 255, 218, 0.15);
+  border-radius: var(--radius-full);
+  opacity: 0;
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.career-branch.is-active .career-node::after {
+  opacity: 0.85;
+  transform: scale(1.08);
 }
 
 .career-node-ring {
   position: relative;
+  z-index: 1;
   display: grid;
-  width: calc(var(--node-size) - 6px);
-  height: calc(var(--node-size) - 6px);
+  width: var(--node-size);
+  height: var(--node-size);
   place-items: center;
-  border: 1px solid rgba(248, 250, 252, 0.28);
+  border: 1px solid rgba(248, 250, 252, 0.24);
   border-radius: var(--radius-full);
-  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
   overflow: hidden;
   transform: scale(0.92);
   transform-origin: 50% 50%;
@@ -121,8 +137,8 @@
 }
 
 .career-branch.is-active .career-node-ring {
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34), 0 0 30px rgba(100, 255, 218, 0.42);
-  transform: scale(1);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.34), 0 0 26px rgba(100, 255, 218, 0.4);
+  transform: scale(1.04);
 }
 
 .career-node-ring--work,
@@ -157,7 +173,7 @@
     rgba(10, 25, 47, 0.92);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
   color: var(--text-secondary);
-  opacity: 0.68;
+  opacity: 0.74;
   transition:
     opacity 420ms ease,
     transform 620ms cubic-bezier(0.2, 0.9, 0.25, 1),
@@ -168,7 +184,7 @@
 .career-card::before {
   content: '';
   position: absolute;
-  top: 2.65rem;
+  top: 2.58rem;
   width: var(--connector-width);
   height: 2px;
   background: linear-gradient(90deg, rgba(100, 255, 218, 0.05), rgba(100, 255, 218, 0.78));
@@ -188,14 +204,14 @@
   grid-column: 1;
   grid-row: 1;
   justify-self: end;
-  transform: translate3d(-22px, 14px, 0) rotate(-0.5deg);
+  transform: translate3d(-16px, 12px, 0) rotate(-0.35deg);
 }
 
 .career-branch--right .career-card {
   grid-column: 3;
   grid-row: 1;
   justify-self: start;
-  transform: translate3d(22px, 14px, 0) rotate(0.5deg);
+  transform: translate3d(16px, 12px, 0) rotate(0.35deg);
 }
 
 .career-branch--left .career-card::before {

@@ -16,6 +16,7 @@ const Certifications = lazy(() => import('./components/sections/Certifications')
 const Projects = lazy(() => import('./components/sections/Projects'));
 const Appreciations = lazy(() => import('./components/sections/Appreciations'));
 const BackgroundMusic = lazy(() => import('./components/interactive/BackgroundMusic'));
+const PersonalAssistantChat = lazy(() => import('./components/interactive/PersonalAssistantChat'));
 const SkillsMatrix = lazy(() => import('./components/sections/SkillsMatrix'));
 
 const LoadingSpinner = () => (
@@ -153,6 +154,7 @@ function App() {
                 <SkillsMatrix />
                 <Contact />
                 <Footer />
+                <PersonalAssistantChat />
                 <HashScroller />
               </Suspense>
             </div>

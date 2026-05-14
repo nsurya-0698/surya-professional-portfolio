@@ -1,18 +1,45 @@
-<svg width="153" height="141" viewBox="0 0 153 141" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M76.5 24.7548L118.5 44.1963V98.4073L76.5 117.26L34.5 98.4073V44.1963L76.5 24.7548Z" stroke="#64FFDA" stroke-width="5"/>
-<g filter="url(#filter0_d)">
-<path d="M57.225 51.1V49.28H70.225L95.315 92.115V94H82.38L57.225 51.1ZM82.965 65.595V49.28H95.315V86.72L82.965 65.595ZM57.225 56.495L69.575 77.62V94H57.225V56.495Z" fill="#64FFDA"/>
-</g>
-<defs>
-<filter id="filter0_d" x="53.2251" y="49.28" width="46.09" height="52.72" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
-</filter>
-</defs>
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle">
+  <title id="logoTitle">NST classic monogram</title>
+  <defs>
+    <linearGradient id="nstFrame" x1="16" y1="12" x2="80" y2="84" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#64FFDA"/>
+      <stop offset="1" stop-color="#A7F3D0"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M48 7.5L83.1 27.75V68.25L48 88.5L12.9 68.25V27.75L48 7.5Z" fill="#020617" stroke="url(#nstFrame)" stroke-width="3.5"/>
+  <path d="M48 16.5L75.31 32.25V63.75L48 79.5L20.69 63.75V32.25L48 16.5Z" stroke="#64FFDA" stroke-opacity="0.18" stroke-width="1.6"/>
+
+  <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" text-anchor="middle">
+    <text
+      x="34"
+      y="62"
+      font-size="43"
+      fill="none"
+      stroke="#64FFDA"
+      stroke-width="1.6"
+      stroke-linejoin="round"
+    >N</text>
+    <text
+      x="49"
+      y="65"
+      font-size="45"
+      font-style="italic"
+      fill="#E5FFF8"
+      stroke="#020617"
+      stroke-width="0.9"
+      paint-order="stroke fill"
+    >S</text>
+    <text
+      x="63"
+      y="62"
+      font-size="43"
+      fill="none"
+      stroke="#A7F3D0"
+      stroke-width="1.6"
+      stroke-linejoin="round"
+    >T</text>
+  </g>
+
+  <path d="M28 71.5H68" stroke="#64FFDA" stroke-width="2.4" stroke-linecap="round" stroke-opacity="0.7"/>
 </svg>

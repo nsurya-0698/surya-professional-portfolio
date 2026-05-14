@@ -31,9 +31,25 @@
 
 .passion-header {
   max-width: 920px;
+  min-height: calc(clamp(2rem, 6vw, 4.35rem) * 2.12);
   margin-top: 0.35rem;
   color: var(--text-muted);
   font-size: clamp(2rem, 6vw, 4.35rem);
+}
+
+.typewriter-text {
+  display: inline;
+}
+
+.typewriter-caret {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.88em;
+  margin-left: 0.12em;
+  border-radius: var(--radius-full);
+  background: var(--primary-color);
+  transform: translateY(0.09em);
+  animation: typewriterCaretBlink 900ms steps(2, start) infinite;
 }
 
 .main-content-wrapper {
@@ -107,6 +123,16 @@
   transition: transform var(--transition-normal);
 }
 
+@keyframes typewriterCaretBlink {
+  0%, 46% {
+    opacity: 1;
+  }
+
+  47%, 100% {
+    opacity: 0;
+  }
+}
+
 @media (max-width: 900px) {
   .opening-container {
     min-height: auto;
@@ -127,6 +153,10 @@
   .opening-content {
     text-align: center;
   }
+
+  .passion-header {
+    min-height: calc(clamp(2rem, 6vw, 4.35rem) * 2.5);
+  }
 }
 
 @media (max-width: 520px) {
@@ -136,5 +166,12 @@
 
   .personal-image-container::after {
     inset: 12px -12px -12px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-caret {
+    animation: none;
+    opacity: 0.7;
   }
 }
