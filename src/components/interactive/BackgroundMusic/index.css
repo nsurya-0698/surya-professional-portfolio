@@ -24,7 +24,9 @@
 }
 
 .music-toggle-button.playing {
-  color: var(--error-color);
+  border-color: rgba(100, 255, 218, 0.56);
+  color: var(--primary-color);
+  box-shadow: 0 0 18px rgba(100, 255, 218, 0.2);
 }
 
 .music-toggle-button.playing svg {

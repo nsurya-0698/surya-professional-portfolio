@@ -41,6 +41,14 @@
   line-height: 1.7;
 }
 
+.services-heading-block .services-note {
+  max-width: 640px;
+  margin-top: 0.75rem;
+  color: rgba(136, 146, 176, 0.72);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
 .services-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));

@@ -7,7 +7,7 @@ const serviceIcons = {
   career: GraduationCap,
 };
 
-const emailSubject = encodeURIComponent('Service Inquiry from Portfolio');
+const emailSubject = encodeURIComponent('Guidance Inquiry from Portfolio');
 const encodedWhatsappMessage = encodeURIComponent(whatsappMessage);
 const emailHref = `mailto:${contactEmail}?subject=${emailSubject}`;
 const whatsappAppHref = `whatsapp://send?phone=${whatsappNumber}&text=${encodedWhatsappMessage}`;
@@ -49,20 +49,19 @@ const ServicesSection = () => {
   const handleWhatsAppClick = (event) => {
     event.preventDefault();
 
-    const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(window.navigator.userAgent);
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      window.navigator.userAgent
+    );
 
     if (isMobileDevice) {
-      window.location.href = whatsappAppHref;
-      window.setTimeout(() => {
-        window.location.href = whatsappWebHref;
-      }, 700);
+      window.location.assign(whatsappAppHref);
       return;
     }
 
-    const whatsappWindow = window.open(whatsappWebHref, '_blank', 'noopener,noreferrer');
+    const whatsappWindow = window.open(whatsappWebHref, '_blank');
 
-    if (!whatsappWindow) {
-      window.location.href = whatsappWebHref;
+    if (whatsappWindow) {
+      whatsappWindow.opener = null;
     }
   };
 
@@ -72,11 +71,16 @@ const ServicesSection = () => {
         <div className="services-heading-block animate-fade-up">
           <h2 className="section-heading">
             <span className="section-heading__line" />
-            Services I Offer
+            Ways I Can Help
             <span className="section-heading__line" />
           </h2>
           <p>
-            I help people and businesses build a stronger digital presence and grow their tech careers.
+            I occasionally share guidance and feedback to help people improve their digital presence and grow
+            with more clarity in tech.
+          </p>
+          <p className="services-note">
+            This section is for informal, non-commercial guidance only. It is not a paid service offering,
+            freelance business, or consulting solicitation.
           </p>
         </div>
 
@@ -88,11 +92,11 @@ const ServicesSection = () => {
 
         <div className="services-cta animate-fade-up">
           <div>
-            <span className="services-cta__eyebrow">Let&apos;s talk</span>
-            <h3>Have an idea or need guidance?</h3>
+            <span className="services-cta__eyebrow">Informal support</span>
+            <h3>Have a question or need direction?</h3>
             <p>
-              Whether you need a modern website or support growing your IT career, feel free to reach out.
-              I&apos;d be happy to help.
+              If you are looking for general feedback on a portfolio, website idea, resume, or IT career path,
+              feel free to reach out. This is informal and non-commercial.
             </p>
           </div>
 

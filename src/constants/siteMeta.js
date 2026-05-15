@@ -82,7 +82,7 @@ export const NAVIGATION_ITEMS = [
   },
   {
     id: 'services',
-    label: 'Services',
+    label: 'Support',
     href: '#services',
     icon: 'FiBriefcase'
   },

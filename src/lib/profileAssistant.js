@@ -122,7 +122,22 @@ const TOPIC_KEYWORDS = {
   contact: ['contact', 'email', 'linkedin', 'github', 'reach', 'connect', 'phone', 'call', 'number'],
   resume: ['resume', 'cv', 'download'],
   hire: ['why hire', 'hire him', 'good hire', 'why should', 'fit for', 'candidate', 'role fit', 'strong fit'],
-  services: ['service', 'services', 'offer', 'offers', 'help me', 'help with', 'coaching', 'website development'],
+  services: [
+    'service',
+    'services',
+    'paid service',
+    'paid services',
+    'freelance',
+    'consulting',
+    'offer',
+    'offers',
+    'help me',
+    'help with',
+    'coaching',
+    'guidance',
+    'support',
+    'website development',
+  ],
   projects: ['project', 'projects', 'built', 'build', 'portfolio work', 'app', 'application'],
   skills: ['skill', 'skills', 'technology', 'technologies', 'tech stack', 'stack', 'strongest'],
   certifications: ['certification', 'certifications', 'certified', 'aws certified', 'certificate', 'score'],
@@ -383,12 +398,12 @@ const createHireReply = () =>
   `Surya would be a strong fit for teams that need practical, reliable engineering across backend systems, cloud delivery, and full-stack applications. His portfolio shows experience in healthcare, fintech, cloud platforms, and GenAI applications, with strengths in ownership, debugging, APIs, and end-to-end implementation.\n\n${FOLLOW_UPS.default}`;
 
 const createServicesReply = () =>
-  `Surya currently offers:\n${SERVICES.map((service) => `- ${service.title}: ${service.description}`).join('\n')}\n\nFor service inquiries, email ${contactEmail}, call ${PROFILE_KNOWLEDGE.contact.phone}, message on WhatsApp at +${whatsappNumber}, or use the Contact section: #contact.`;
+  `Surya can share informal guidance in these areas:\n${SERVICES.map((service) => `- ${service.title}: ${service.description}`).join('\n')}\n\nFor general questions, email ${contactEmail}, call ${PROFILE_KNOWLEDGE.contact.phone}, message on WhatsApp at +${whatsappNumber}, or use the Contact section: #contact.`;
 
 const createServiceReply = (service) =>
   `${service.title}: ${service.description}\n\nHighlights:\n${service.highlights
     .map((highlight) => `- ${highlight}`)
-    .join('\n')}\n\nTo discuss this service, email ${contactEmail}, call ${PROFILE_KNOWLEDGE.contact.phone}, message on WhatsApp at +${whatsappNumber}, or use the Contact section: #contact.`;
+    .join('\n')}\n\nFor general questions, email ${contactEmail}, call ${PROFILE_KNOWLEDGE.contact.phone}, message on WhatsApp at +${whatsappNumber}, or use the Contact section: #contact.`;
 
 const createTargetRolesReply = () =>
   `Based on the portfolio, Surya appears strongest for roles such as:\n- Backend Engineer / Java Spring Boot Engineer\n- Full Stack Engineer with React or Angular\n- Cloud-native Software Engineer across AWS, Azure, or OCI\n- AI Application Engineer working with LLM-enabled products\n- DevOps-aware Software Engineer who can work with CI/CD, Docker, Kubernetes, and observability\n\n${FOLLOW_UPS.default}`;
