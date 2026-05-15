@@ -81,6 +81,12 @@ export const NAVIGATION_ITEMS = [
     icon: 'FiTool'
   },
   {
+    id: 'services',
+    label: 'Services',
+    href: '#services',
+    icon: 'FiBriefcase'
+  },
+  {
     id: 'contact',
     label: 'Contact',
     href: '#contact',

@@ -1,4 +1,5 @@
 import { PROFILE_KNOWLEDGE } from '../data/profileKnowledge.js';
+import { SERVICES, contactEmail, whatsappNumber } from '../data/services.js';
 
 const FOLLOW_UPS = {
   default: 'Would you like me to connect that to a specific role?',
@@ -54,6 +55,33 @@ const PROJECT_ALIASES = [
   { title: 'Personalized Yoga Plan Generator', aliases: ['yoga plan', 'plan generator', 'personalized yoga'] },
 ];
 
+const SERVICE_ALIASES = [
+  {
+    id: 'website-development',
+    aliases: ['website', 'web site', 'web development', 'website development', 'portfolio website', 'landing page'],
+  },
+  {
+    id: 'career-coaching',
+    aliases: [
+      'career coaching',
+      'career guidance',
+      'resume review',
+      'review my resume',
+      'resume help',
+      'improve my resume',
+      'linkedin improvement',
+      'linkedin optimization',
+      'improve linkedin',
+      'linkedin profile',
+      'interview preparation',
+      'prepare for interview',
+      'job search',
+      'help with job search',
+      'career roadmap',
+    ],
+  },
+];
+
 const ROLE_FIT_ALIASES = [
   {
     label: 'Backend Engineer',
@@ -94,6 +122,7 @@ const TOPIC_KEYWORDS = {
   contact: ['contact', 'email', 'linkedin', 'github', 'reach', 'connect', 'phone', 'call', 'number'],
   resume: ['resume', 'cv', 'download'],
   hire: ['why hire', 'hire him', 'good hire', 'why should', 'fit for', 'candidate', 'role fit', 'strong fit'],
+  services: ['service', 'services', 'offer', 'offers', 'help me', 'help with', 'coaching', 'website development'],
   projects: ['project', 'projects', 'built', 'build', 'portfolio work', 'app', 'application'],
   skills: ['skill', 'skills', 'technology', 'technologies', 'tech stack', 'stack', 'strongest'],
   certifications: ['certification', 'certifications', 'certified', 'aws certified', 'certificate', 'score'],
@@ -222,6 +251,12 @@ const findProject = (text) => {
   return match ? PROFILE_KNOWLEDGE.projects.find((item) => item.title === match.title) : null;
 };
 
+const findService = (text) => {
+  const match = SERVICE_ALIASES.find((item) => item.aliases.some((alias) => text.includes(alias)));
+
+  return match ? SERVICES.find((service) => service.id === match.id) : null;
+};
+
 const findRelatedProjects = (text) => {
   if (!text.includes('yoga')) {
     return [];
@@ -304,8 +339,14 @@ const isGreetingPrompt = (text) => {
   );
 };
 
-const isHelpPrompt = (text) =>
-  hasAny(normalizeText(text), ['what can you do', 'help', 'how does this work', 'what should i ask']);
+const isHelpPrompt = (text) => {
+  const normalizedText = normalizeText(text);
+
+  return (
+    normalizedText === 'help' ||
+    hasAny(normalizedText, ['what can you do', 'how does this work', 'what should i ask'])
+  );
+};
 
 const isThanksPrompt = (text) => /^(thanks|thank you|thx|appreciate it|cool|nice|great)\.?$/i.test(text.trim());
 
@@ -340,6 +381,14 @@ const createAchievementsReply = () =>
 
 const createHireReply = () =>
   `Surya would be a strong fit for teams that need practical, reliable engineering across backend systems, cloud delivery, and full-stack applications. His portfolio shows experience in healthcare, fintech, cloud platforms, and GenAI applications, with strengths in ownership, debugging, APIs, and end-to-end implementation.\n\n${FOLLOW_UPS.default}`;
+
+const createServicesReply = () =>
+  `Surya currently offers:\n${SERVICES.map((service) => `- ${service.title}: ${service.description}`).join('\n')}\n\nFor service inquiries, email ${contactEmail}, call ${PROFILE_KNOWLEDGE.contact.phone}, message on WhatsApp at +${whatsappNumber}, or use the Contact section: #contact.`;
+
+const createServiceReply = (service) =>
+  `${service.title}: ${service.description}\n\nHighlights:\n${service.highlights
+    .map((highlight) => `- ${highlight}`)
+    .join('\n')}\n\nTo discuss this service, email ${contactEmail}, call ${PROFILE_KNOWLEDGE.contact.phone}, message on WhatsApp at +${whatsappNumber}, or use the Contact section: #contact.`;
 
 const createTargetRolesReply = () =>
   `Based on the portfolio, Surya appears strongest for roles such as:\n- Backend Engineer / Java Spring Boot Engineer\n- Full Stack Engineer with React or Angular\n- Cloud-native Software Engineer across AWS, Azure, or OCI\n- AI Application Engineer working with LLM-enabled products\n- DevOps-aware Software Engineer who can work with CI/CD, Docker, Kubernetes, and observability\n\n${FOLLOW_UPS.default}`;
@@ -462,6 +511,8 @@ const createReplyByTopic = (topic) => {
       return createResumeReply();
     case 'hire':
       return createHireReply();
+    case 'services':
+      return createServicesReply();
     case 'projects':
       return createProjectsReply();
     case 'skills':
@@ -544,6 +595,12 @@ export const createLocalAssistantReply = (message, messages = []) => {
 
   if (project) {
     return createProjectReply(project);
+  }
+
+  const service = findService(normalizedText);
+
+  if (service) {
+    return createServiceReply(service);
   }
 
   const relatedProjects = findRelatedProjects(normalizedText);

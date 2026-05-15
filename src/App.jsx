@@ -18,6 +18,7 @@ const Appreciations = lazy(() => import('./components/sections/Appreciations'));
 const BackgroundMusic = lazy(() => import('./components/interactive/BackgroundMusic'));
 const PersonalAssistantChat = lazy(() => import('./components/interactive/PersonalAssistantChat'));
 const SkillsMatrix = lazy(() => import('./components/sections/SkillsMatrix'));
+const ServicesSection = lazy(() => import('./components/sections/ServicesSection'));
 
 const LoadingSpinner = () => (
   <div className="loading-spinner" role="status" aria-live="polite">
@@ -152,6 +153,7 @@ function App() {
                 <Projects />
                 <Appreciations />
                 <SkillsMatrix />
+                <ServicesSection />
                 <Contact />
                 <Footer />
                 <PersonalAssistantChat />
