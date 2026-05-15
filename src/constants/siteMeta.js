@@ -8,6 +8,7 @@ export const SITE_META = {
   description: 'AWS-Certified Full Stack Developer with 6+ years of experience in building enterprise-grade solutions for healthcare and fintech domains.',
   author: 'Surya Teja Nammi',
   email: 'nammiteja087@gmail.com',
+  phone: '+1 8167156330',
   github: 'https://github.com/nsurya-0698',
   linkedin: 'https://www.linkedin.com/in/tejanammi/',
   resume: '/Surya.pdf',

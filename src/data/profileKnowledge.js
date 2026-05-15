@@ -5,11 +5,11 @@ import { SITE_META, SOCIAL_LINKS } from '../constants/siteMeta.js';
 export const ASSISTANT_SYSTEM_PROMPT = `You are the AI assistant on Surya's personal portfolio website. Your job is to help recruiters, hiring managers, and visitors understand Surya's professional background using only the provided portfolio and resume context. Answer in a polished, concise, confident, and professional tone. Focus on Surya's skills, experience, projects, strengths, and fit for roles. Do not invent facts. If something is not in the context, say that it is not listed in the portfolio and suggest a relevant follow-up. Keep answers easy to scan. When useful, use short bullets. Always invite one helpful follow-up question at the end. Do not discuss unrelated topics.`;
 
 export const SUGGESTED_QUESTIONS = [
-  'Tell me about Surya',
+  'What does Surya do?',
   'Top skills',
+  'Is he a good hire?',
   'Projects',
-  'Why hire him?',
-  'Contact',
+  'Contact Surya',
 ];
 
 export const PROFILE_KNOWLEDGE = {
@@ -154,6 +154,7 @@ export const PROFILE_KNOWLEDGE = {
   ],
   contact: {
     email: SITE_META.email,
+    phone: SITE_META.phone,
     github: SOCIAL_LINKS.github.url,
     linkedin: SOCIAL_LINKS.linkedin.url,
     resume: 'Resume button in the portfolio header',
@@ -195,6 +196,7 @@ ${PROFILE_KNOWLEDGE.projects
 
 Contact:
 - Email: ${PROFILE_KNOWLEDGE.contact.email}
+- Phone: ${PROFILE_KNOWLEDGE.contact.phone}
 - GitHub: ${PROFILE_KNOWLEDGE.contact.github}
 - LinkedIn: ${PROFILE_KNOWLEDGE.contact.linkedin}
 - Resume: ${PROFILE_KNOWLEDGE.contact.resume}

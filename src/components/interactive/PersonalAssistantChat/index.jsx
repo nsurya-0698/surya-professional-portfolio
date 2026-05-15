@@ -54,21 +54,52 @@ const AIAgentAvatar = ({ state = 'idle', compact = false }) => (
 );
 
 const linkifyText = (text) => {
-  const linkPattern = /(https?:\/\/[^\s]+|mailto:[^\s]+|\/[^\s]+)/g;
+  const linkPattern =
+    /(https?:\/\/[^\s]+|mailto:[^\s]+|tel:[^\s]+|#[a-z][\w-]*|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|\+?\d[\d\s().-]{7,}\d)/gi;
   const parts = text.split(linkPattern);
 
   return parts.map((part) => {
-    const isLink = /^(https?:\/\/[^\s]+|mailto:[^\s]+|\/[^\s]+)$/.test(part);
+    const isLink =
+      /^(https?:\/\/[^\s]+|mailto:[^\s]+|tel:[^\s]+|#[a-z][\w-]*|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|\+?\d[\d\s().-]{7,}\d)$/i.test(
+        part
+      );
 
     if (!isLink) {
       return part;
     }
 
-    const href = part.startsWith('/') ? `${import.meta.env.BASE_URL}${part.slice(1)}` : part;
+    const isEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(part);
+    const isPhone = /^\+?\d[\d\s().-]{7,}\d$/.test(part);
+    const href = (() => {
+      if (part.startsWith('/')) {
+        return `${import.meta.env.BASE_URL}${part.slice(1)}`;
+      }
+
+      if (part.startsWith('#')) {
+        return `${import.meta.env.BASE_URL}${part}`;
+      }
+
+      if (isEmail) {
+        return `mailto:${part}`;
+      }
+
+      if (isPhone) {
+        return `tel:${part.replace(/(?!^\+)[^\d]/g, '')}`;
+      }
+
+      return part;
+    })();
+    const label = part.replace(/^mailto:/, '').replace(/^tel:/, '');
+    const opensNewTab = href.startsWith('http');
 
     return (
-      <a key={`${part}-${href}`} href={href} target="_blank" rel="noreferrer">
-        {part}
+      <a
+        key={`${part}-${href}`}
+        href={href}
+        target={opensNewTab ? '_blank' : undefined}
+        rel={opensNewTab ? 'noreferrer' : undefined}
+      >
+        {label}
       </a>
     );
   });

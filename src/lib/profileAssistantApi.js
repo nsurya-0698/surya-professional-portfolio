@@ -1,6 +1,6 @@
 import { createLocalAssistantReply } from './profileAssistant.js';
 
-const API_URL = import.meta.env.VITE_PROFILE_ASSISTANT_API_URL || '/api/chat';
+const API_URL = (import.meta.env?.VITE_PROFILE_ASSISTANT_API_URL || '').trim();
 const MAX_HISTORY_MESSAGES = 6;
 
 export const getAssistantReply = async ({ message, messages }) => {
@@ -9,9 +9,16 @@ export const getAssistantReply = async ({ message, messages }) => {
     .slice(-MAX_HISTORY_MESSAGES)
     .map(({ role, content }) => ({ role, content }));
 
+  if (!API_URL) {
+    return {
+      content: createLocalAssistantReply(message, recentMessages),
+      source: 'local',
+    };
+  }
+
   try {
-    // Static hosts such as GitHub Pages will not have this route.
-    // In that case the UI falls back to the curated local responder below.
+    // Optional hosted API path. Static GitHub Pages builds skip this unless
+    // VITE_PROFILE_ASSISTANT_API_URL is configured at build time.
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
@@ -40,12 +47,12 @@ export const getAssistantReply = async ({ message, messages }) => {
       source: 'api',
     };
   } catch (error) {
-    if (import.meta.env.DEV) {
+    if (import.meta.env?.DEV) {
       console.info('Portfolio assistant using local response fallback:', error.message);
     }
 
     return {
-      content: createLocalAssistantReply(message),
+      content: createLocalAssistantReply(message, recentMessages),
       source: 'local',
     };
   }
