@@ -8,10 +8,12 @@ import './index.css';
 const STORAGE_KEY = 'surya-portfolio-assistant-open';
 const POSITION_STORAGE_KEY = 'surya-portfolio-byte-position';
 const TYPING_DELAY_MS = 420;
-const SCROLL_STOP_DELAY_MS = 850;
+const SCROLL_STOP_DELAY_MS = 950;
 const MIN_SCROLL_DISTANCE = 140;
-const ROAM_COOLDOWN_MS = 24000;
-const GESTURE_STATES = ['waving', 'jumping', 'waiting', 'reviewing'];
+const ROAM_COOLDOWN_MS = 28000;
+const BYTE_TRAVEL_SPEED_PX_PER_SECOND = 165;
+const MIN_TRAVEL_DURATION_MS = 1700;
+const MAX_TRAVEL_DURATION_MS = 5200;
 const DRAG_THRESHOLD = 5;
 const VIEWPORT_MARGIN = 8;
 
@@ -74,20 +76,26 @@ const BYTE_ANIMATIONS = {
   idle: { row: 0, frames: 7, interval: 360 },
   'running-right': { row: 1, frames: 8, interval: 125 },
   'running-left': { row: 2, frames: 8, interval: 125 },
-  waving: { row: 3, frames: 4, interval: 190 },
-  jumping: { row: 4, frames: 5, interval: 135 },
-  waiting: { row: 6, frames: 6, interval: 330 },
-  reviewing: { row: 8, frames: 6, interval: 340 },
-  hover: { row: 3, frames: 4, interval: 190 },
+  settling: { row: 6, frames: 6, interval: 300 },
+  hover: { row: 6, frames: 6, interval: 320 },
   open: { row: 6, frames: 6, interval: 330 },
   thinking: { row: 7, frames: 6, interval: 145 },
-  responding: { row: 4, frames: 5, interval: 135 },
+  responding: { row: 0, frames: 7, interval: 190 },
 };
 
-const getNextRoamStop = () => 2 + Math.floor(Math.random() * 3);
-
-const getRandomGesture = () =>
-  GESTURE_STATES[Math.floor(Math.random() * GESTURE_STATES.length)];
+const getByteTravelDuration = () => {
+  const isCompactViewport = window.innerWidth <= 1023;
+  const edgeInset = isCompactViewport ? 16 : 88;
+  const byteWidth = isCompactViewport ? 42 : 50;
+  const travelDistance = Math.max(0, window.innerWidth - edgeInset * 2 - byteWidth);
+  return Math.min(
+    Math.max(
+      (travelDistance / BYTE_TRAVEL_SPEED_PX_PER_SECOND) * 1000,
+      MIN_TRAVEL_DURATION_MS
+    ),
+    MAX_TRAVEL_DURATION_MS
+  );
+};
 
 const usePrefersReducedMotion = () => {
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -274,18 +282,16 @@ const PersonalAssistantChat = () => {
     initialBytePosition?.x < window.innerWidth / 2 ? 'left' : 'right'
   );
   const [roamPhase, setRoamPhase] = useState('resting');
-  const [roamGesture, setRoamGesture] = useState('waiting');
+  const [travelDurationMs, setTravelDurationMs] = useState(getByteTravelDuration);
   const reduceMotion = usePrefersReducedMotion();
   const inputRef = useRef(null);
   const launcherRef = useRef(null);
   const messagesEndRef = useRef(null);
   const responseTimerRef = useRef();
   const scrollStopTimerRef = useRef();
-  const gestureTimerRef = useRef();
+  const settleTimerRef = useRef();
   const lastScrollYRef = useRef(window.scrollY);
   const scrollDistanceRef = useRef(0);
-  const scrollStopsRef = useRef(0);
-  const nextRoamStopRef = useRef(getNextRoamStop());
   const lastRoamAtRef = useRef(0);
   const roamSideRef = useRef(roamSide);
   const roamPhaseRef = useRef(roamPhase);
@@ -308,7 +314,7 @@ const PersonalAssistantChat = () => {
 
     if (isOpen) {
       window.clearTimeout(scrollStopTimerRef.current);
-      window.clearTimeout(gestureTimerRef.current);
+      window.clearTimeout(settleTimerRef.current);
       roamPhaseRef.current = 'resting';
       setRoamPhase('resting');
     }
@@ -348,7 +354,7 @@ const PersonalAssistantChat = () => {
   useEffect(() => {
     if (reduceMotion) {
       window.clearTimeout(scrollStopTimerRef.current);
-      window.clearTimeout(gestureTimerRef.current);
+      window.clearTimeout(settleTimerRef.current);
       roamPhaseRef.current = 'resting';
       setRoamPhase('resting');
       return undefined;
@@ -372,17 +378,14 @@ const PersonalAssistantChat = () => {
         }
 
         scrollDistanceRef.current = 0;
-        scrollStopsRef.current += 1;
-
         const cooldownComplete = Date.now() - lastRoamAtRef.current >= ROAM_COOLDOWN_MS;
-        if (scrollStopsRef.current < nextRoamStopRef.current || !cooldownComplete) {
+        if (!cooldownComplete) {
           return;
         }
 
-        scrollStopsRef.current = 0;
-        nextRoamStopRef.current = getNextRoamStop();
         lastRoamAtRef.current = Date.now();
         roamPhaseRef.current = 'running';
+        setTravelDurationMs(getByteTravelDuration());
         setRoamPhase('running');
         setRoamSide(roamSideRef.current === 'right' ? 'left' : 'right');
       }, SCROLL_STOP_DELAY_MS);
@@ -437,7 +440,7 @@ const PersonalAssistantChat = () => {
       }
 
       window.clearTimeout(scrollStopTimerRef.current);
-      window.clearTimeout(gestureTimerRef.current);
+      window.clearTimeout(settleTimerRef.current);
     };
   }, []);
 
@@ -512,21 +515,19 @@ const PersonalAssistantChat = () => {
       return;
     }
 
-    const nextGesture = getRandomGesture();
-    roamPhaseRef.current = 'gesturing';
-    setRoamGesture(nextGesture);
-    setRoamPhase('gesturing');
-    window.clearTimeout(gestureTimerRef.current);
-    gestureTimerRef.current = window.setTimeout(() => {
+    roamPhaseRef.current = 'settling';
+    setRoamPhase('settling');
+    window.clearTimeout(settleTimerRef.current);
+    settleTimerRef.current = window.setTimeout(() => {
       roamPhaseRef.current = 'resting';
       setRoamPhase('resting');
-    }, 5200 + Math.floor(Math.random() * 2800));
+    }, 1800);
   };
 
   const placeByte = (position, width, height) => {
     const nextPosition = clampBytePosition(position, width, height);
     window.clearTimeout(scrollStopTimerRef.current);
-    window.clearTimeout(gestureTimerRef.current);
+    window.clearTimeout(settleTimerRef.current);
     roamPhaseRef.current = 'resting';
     isManuallyPlacedRef.current = true;
     manualPositionRef.current = nextPosition;
@@ -588,6 +589,13 @@ const PersonalAssistantChat = () => {
 
     if (dragState.dragging) {
       saveBytePosition(manualPositionRef.current);
+      roamPhaseRef.current = 'settling';
+      setRoamPhase('settling');
+      window.clearTimeout(settleTimerRef.current);
+      settleTimerRef.current = window.setTimeout(() => {
+        roamPhaseRef.current = 'resting';
+        setRoamPhase('resting');
+      }, 1200);
       suppressLauncherClickRef.current = true;
       window.setTimeout(() => {
         suppressLauncherClickRef.current = false;
@@ -630,12 +638,10 @@ const PersonalAssistantChat = () => {
 
   const resetBytePosition = () => {
     clearSavedBytePosition();
-    window.clearTimeout(gestureTimerRef.current);
+    window.clearTimeout(settleTimerRef.current);
     isManuallyPlacedRef.current = false;
     manualPositionRef.current = null;
     roamPhaseRef.current = 'resting';
-    scrollStopsRef.current = 0;
-    nextRoamStopRef.current = getNextRoamStop();
     setIsManuallyPlaced(false);
     setManualPosition(null);
     setRoamPhase('resting');
@@ -653,21 +659,24 @@ const PersonalAssistantChat = () => {
           ? roamSide === 'left'
             ? 'running-left'
             : 'running-right'
-          : roamPhase === 'gesturing'
-            ? roamGesture
+          : roamPhase === 'settling'
+            ? 'settling'
             : isHoveringAvatar
               ? 'hover'
               : 'idle';
+
+  const shellStyle = {
+    '--byte-travel-duration': `${travelDurationMs}ms`,
+    ...(isManuallyPlaced && manualPosition
+      ? { left: `${manualPosition.x}px`, top: `${manualPosition.y}px`, right: 'auto', bottom: 'auto' }
+      : {}),
+  };
 
   return (
     <div
       className={`assistant-shell assistant-shell--${avatarState} assistant-shell--side-${roamSide} assistant-shell--roam-${roamPhase} ${isOpen ? 'assistant-shell--open' : ''} ${isManuallyPlaced ? 'assistant-shell--manually-placed' : ''}`}
       onTransitionEnd={handleRoamTransitionEnd}
-      style={
-        isManuallyPlaced && manualPosition
-          ? { left: `${manualPosition.x}px`, top: `${manualPosition.y}px`, right: 'auto', bottom: 'auto' }
-          : undefined
-      }
+      style={shellStyle}
     >
       {isOpen && (
         <section className="assistant-panel" aria-label="Personal Portfolio AI Assistant">
@@ -741,7 +750,7 @@ const PersonalAssistantChat = () => {
       >
         <AIAgentAvatar state={avatarState} />
         <span className="assistant-tooltip" role="presentation">
-          {isOpen ? 'I am ready' : 'Ask me about Surya'}
+          {isOpen ? 'I am ready' : 'Hi! Ask me about Surya.'}
         </span>
       </button>
       {isManuallyPlaced && (

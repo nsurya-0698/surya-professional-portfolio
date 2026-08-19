@@ -4,7 +4,7 @@
   bottom: calc(2rem + 58px);
   z-index: 1200;
   font-family: var(--font-family-primary);
-  transition: right 2400ms cubic-bezier(0.32, 0.72, 0.18, 1);
+  transition: right var(--byte-travel-duration, 3200ms) cubic-bezier(0.4, 0, 0.2, 1);
   will-change: right;
 }
 
@@ -47,13 +47,11 @@
 
 .assistant-launcher:hover,
 .assistant-launcher:focus-visible {
-  filter: drop-shadow(0 18px 34px rgba(100, 255, 218, 0.16));
-  transform: translateY(-3px) scale(1.03);
+  filter: drop-shadow(0 15px 26px rgba(100, 255, 218, 0.14));
 }
 
 .assistant-shell--open .assistant-launcher {
-  opacity: 0.92;
-  transform: scale(0.9);
+  opacity: 1;
 }
 
 .assistant-tooltip {
@@ -109,15 +107,12 @@
   border-color: rgba(100, 255, 218, 0.42);
   opacity: 1;
   transform: translate(0, -50%);
+  transition-delay: 360ms;
 }
 
 .assistant-shell--side-left .assistant-launcher:hover .assistant-tooltip,
 .assistant-shell--side-left .assistant-launcher:focus-visible .assistant-tooltip {
   transform: translate(0, -50%);
-}
-
-.assistant-shell:not(.assistant-shell--open) .assistant-tooltip {
-  animation: assistantTooltipIntro 6s ease 1.15s 1;
 }
 
 .assistant-position-reset {
@@ -182,8 +177,7 @@
 
 .assistant-launcher:hover .byte-mascot,
 .assistant-launcher:focus-visible .byte-mascot {
-  filter: drop-shadow(0 7px 11px rgba(100, 255, 218, 0.24));
-  transform: translateY(-2px) scale(1.04);
+  filter: drop-shadow(0 6px 9px rgba(100, 255, 218, 0.18));
 }
 
 .ai-agent-avatar--thinking .byte-mascot {
@@ -516,22 +510,8 @@
 
 @keyframes byteMascotReply {
   0%, 100% { transform: translateY(0) scale(1); }
-  38% { transform: translateY(-3px) scale(1.04); }
-  72% { transform: translateY(1px) scale(0.99); }
-}
-
-@keyframes assistantTooltipIntro {
-  0%,
-  72%,
-  100% {
-    opacity: 0;
-    transform: translate(6px, -50%);
-  }
-  12%,
-  55% {
-    opacity: 1;
-    transform: translate(0, -50%);
-  }
+  42% { transform: translateY(-2px) scale(1.015); }
+  74% { transform: translateY(0) scale(0.995); }
 }
 
 @keyframes assistantPanelIn {
