@@ -8,10 +8,10 @@ const timelineElements = [
     icon: 'work',
     title: 'Oracle',
     role: 'Software Developer 3 - Generative AI',
-    location: 'United States',
+    location: 'Tennessee, United States',
     description:
-      'Building and operationalizing Agent Gateway and Services, a greenfield AI platform spanning OCI deployment workflows, environment provisioning, integration and canary testing, observability, security, and on-call readiness. Delivered WebSearch for Oracle\'s internal GenAI platform and strengthened production reliability through metrics, alarms, dashboards, service probes, and cross-team release execution.',
-    highlights: ['Agent Gateway and Services', 'WebSearch and GenAI delivery', 'Production reliability'],
+      'Building and operationalizing Agent Gateway and Services, a greenfield AI platform spanning OCI deployment workflows, environment provisioning, integration and canary testing, observability, security, and on-call readiness. Delivered WebSearch for Oracle\'s internal GenAI platform. Built Codex skills that correlate logs, alarm timelines, tickets, and code context to reduce on-call investigation time by approximately 70%, and automated local end-to-end integration testing across four dependent services.',
+    highlights: ['Agent Gateway and Services', 'WebSearch and GenAI delivery', 'Codex RCA automation'],
     date: '11/2025 - Present',
     characterReaction: 'confidentPoint',
     guide: {
@@ -40,7 +40,7 @@ const timelineElements = [
     id: 'experience-optum',
     type: 'experience',
     icon: 'work',
-    title: 'Optum Global Solutions (UnitedHealth Group)',
+    title: 'Optum - UnitedHealth Group',
     role: 'Software Development Engineer II',
     location: 'Minnesota, United States',
     description:
@@ -101,7 +101,7 @@ const timelineElements = [
     description:
       'Designed, tested, and debugged Java-based applications using MySQL, Spring Boot, Kubernetes, Docker, and Gradle. Improved transaction-processing reliability, supported Agile delivery, and developed optimized data pipelines that reduced processing time for large datasets.',
     highlights: ['Transaction reliability', 'Docker and Kubernetes', 'Data pipeline optimization'],
-    date: '02/2018 - 04/2019',
+    date: '02/2019 - 05/2020',
     characterReaction: 'waving',
     guide: {
       kicker: 'Payment flow',

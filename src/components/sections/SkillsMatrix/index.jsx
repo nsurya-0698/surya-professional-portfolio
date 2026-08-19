@@ -1,12 +1,13 @@
 import './index.css';
 
 const SKILL_GROUPS = [
-  { name: 'AI & Application Engineering', skills: ['GenAI applications', 'LLM orchestration', 'WebSearch', 'RAG', 'Prompt engineering'] },
-  { name: 'Backend & APIs', skills: ['Java', 'Python', 'Spring Boot', 'FastAPI', 'Helidon', 'REST APIs', 'Microservices'] },
-  { name: 'Cloud & Infrastructure', skills: ['OCI', 'AWS', 'Azure', 'Kubernetes', 'Docker', 'Terraform'] },
-  { name: 'Reliability & Delivery', skills: ['CI/CD', 'Canary testing', 'Integration testing', 'Load testing', 'On-call readiness'] },
-  { name: 'Observability & Data', skills: ['OpenTelemetry', 'Prometheus', 'Grafana', 'CloudWatch', 'SQL Server', 'PostgreSQL', 'MongoDB'] },
-  { name: 'Security & Engineering Practice', skills: ['IAM', 'JWT', 'KMS', 'Security remediation', 'Compliance', 'Cross-functional delivery'] },
+  { name: 'Languages', skills: ['Java', 'Python', 'SQL', 'JavaScript', 'Shell scripting'] },
+  { name: 'AI & Agentic Engineering', skills: ['GenAI applications', 'LLM orchestration', 'RAG', 'MCP', 'Codex skills', 'Agent workflows', 'Prompt engineering', 'Tool integration'] },
+  { name: 'Backend & Architecture', skills: ['FastAPI', 'Helidon', 'Spring Boot', 'REST APIs', 'Microservices', 'Event-driven systems'] },
+  { name: 'Cloud & Platform', skills: ['OCI', 'AWS', 'Azure', 'Kubernetes', 'Docker', 'API Gateway', 'Infrastructure provisioning'] },
+  { name: 'Delivery & Automation', skills: ['Jenkins', 'Terraform', 'GitHub/GitLab', 'CI/CD', 'Deployment automation', 'Integration testing', 'Canary testing'] },
+  { name: 'Observability & Incident Response', skills: ['OpenTelemetry', 'Prometheus', 'Grafana', 'CloudWatch', 'Alarms', 'Log analysis', 'RCA automation', 'On-call readiness'] },
+  { name: 'Data', skills: ['PostgreSQL', 'SQL Server', 'MySQL', 'MongoDB', 'Redis'] },
 ];
 
 const SkillsMatrix = () => (

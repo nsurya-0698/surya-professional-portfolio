@@ -9,7 +9,7 @@ const CERTIFICATIONS = [
     title: 'AWS Certified Solutions Architect - Associate',
     detail: 'Score: 965/1000',
     description:
-      'Validated expertise in designing secure, resilient, and distributed applications with AWS technologies and architectural best practices.',
+      'Designed resilient cloud architectures using EC2, VPC, S3, RDS, IAM, Lambda, API Gateway, CloudFormation, and CloudWatch.',
     badge: 'https://images.credly.com/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png',
     badgeAlt: 'AWS Solutions Architect badge',
     links: [
@@ -25,7 +25,7 @@ const CERTIFICATIONS = [
     title: 'Generative AI with Large Language Models',
     detail: 'DeepLearning.AI & AWS',
     description:
-      'Completed practical coursework in transformer architecture, prompt engineering, model evaluation, fine-tuning, and deployment patterns for LLM applications.',
+      'Applied transformer architecture, prompt engineering, and model fine-tuning with Hugging Face FLAN-T5 and OpenAI APIs.',
     badge: genaiBadge,
     badgeAlt: 'Generative AI with Large Language Models badge',
     links: [

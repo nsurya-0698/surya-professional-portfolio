@@ -37,12 +37,17 @@ const TECH_ALIASES = [
   { label: 'OpenCV', aliases: ['opencv'] },
   { label: 'REST/gRPC APIs', aliases: ['api', 'apis', 'rest', 'grpc', 'rest api', 'restful'] },
   { label: 'CI/CD', aliases: ['ci cd', 'ci/cd', 'cicd', 'devops'] },
+  { label: 'MCP', aliases: ['mcp', 'model context protocol'] },
+  { label: 'Codex skills', aliases: ['codex', 'codex skill', 'codex skills'] },
+  { label: 'OpenTelemetry', aliases: ['opentelemetry', 'otel'] },
+  { label: 'CloudWatch', aliases: ['cloudwatch', 'aws cloudwatch'] },
+  { label: 'Redis', aliases: ['redis'] },
 ];
 
 const COMPANY_ALIASES = [
-  { company: 'Oracle - OCI', aliases: ['oracle', 'oci'] },
+  { company: 'Oracle', aliases: ['oracle', 'oci'] },
   { company: 'Quest Diagnostics', aliases: ['quest', 'quest diagnostics'] },
-  { company: 'Optum Global Solutions (UnitedHealth Group)', aliases: ['optum', 'unitedhealth', 'united health', 'uhg'] },
+  { company: 'Optum - UnitedHealth Group', aliases: ['optum', 'unitedhealth', 'united health', 'uhg'] },
   { company: 'HDFC Bank Limited', aliases: ['hdfc', 'hdfc bank'] },
   { company: 'Paytm', aliases: ['paytm'] },
 ];
@@ -386,13 +391,13 @@ const createResumeReply = () =>
   `Surya's resume is available from the Resume button in the site header.\n\n${FOLLOW_UPS.default}`;
 
 const createSummaryReply = () =>
-  `${PROFILE_KNOWLEDGE.summary}\n\nHis strongest areas include backend engineering, cloud-native systems, full-stack product work, and practical AI application development.\n\n${FOLLOW_UPS.default}`;
+  `${PROFILE_KNOWLEDGE.summary}\n\nHis strongest areas include AI platform engineering, cloud-native backend systems, agentic workflows, production reliability, and delivery automation.\n\n${FOLLOW_UPS.default}`;
 
 const createStrengthsReply = () =>
   `Surya's strongest visible strengths are:\n${formatList(PROFILE_KNOWLEDGE.strengths.slice(0, 5))}\n\n${FOLLOW_UPS.default}`;
 
 const createAchievementsReply = () =>
-  `A few portfolio highlights stand out:\n- Current GenAI enterprise chat work at Oracle OCI\n- Clinical/lab instrument integration experience at Quest Diagnostics\n- Claim calculation microservices and team leadership at Optum\n- Fintech API, authentication, CI/CD, and monitoring work at HDFC Bank\n- AWS Solutions Architect certification with a listed score of 965/1000\n\n${FOLLOW_UPS.default}`;
+  `A few portfolio highlights stand out:\n- Built and operationalized Agent Gateway and Services at Oracle\n- Delivered WebSearch for Oracle's internal GenAI platform\n- Built Codex RCA automation that reduced on-call investigation time by approximately 70%\n- Automated local end-to-end integration testing across four dependent services\n- Built clinical instrument integrations at Quest Diagnostics and high-scale healthcare services at Optum\n\n${FOLLOW_UPS.default}`;
 
 const createHireReply = () =>
   `Surya would be a strong fit for teams that need practical, reliable engineering across backend systems, cloud delivery, and full-stack applications. His portfolio shows experience in healthcare, fintech, cloud platforms, and GenAI applications, with strengths in ownership, debugging, APIs, and end-to-end implementation.\n\n${FOLLOW_UPS.default}`;
@@ -406,7 +411,7 @@ const createServiceReply = (service) =>
     .join('\n')}\n\nFor general questions, email ${contactEmail}, call ${PROFILE_KNOWLEDGE.contact.phone}, message on WhatsApp at +${whatsappNumber}, or use the Contact section: #contact.`;
 
 const createTargetRolesReply = () =>
-  `Based on the portfolio, Surya appears strongest for roles such as:\n- Backend Engineer / Java Spring Boot Engineer\n- Full Stack Engineer with React or Angular\n- Cloud-native Software Engineer across AWS, Azure, or OCI\n- AI Application Engineer working with LLM-enabled products\n- DevOps-aware Software Engineer who can work with CI/CD, Docker, Kubernetes, and observability\n\n${FOLLOW_UPS.default}`;
+  `Based on the portfolio, Surya appears strongest for roles such as:\n- AI Platform Engineer\n- Backend Software Engineer\n- Cloud-native Software Engineer across OCI, AWS, or Azure\n- AI Application Engineer working with LLM and agentic systems\n- Production-minded Software Engineer focused on delivery automation, observability, and reliability\n\n${FOLLOW_UPS.default}`;
 
 const createRoleFitReply = (roleFit) => {
   const roleDetails = {
@@ -440,7 +445,7 @@ const createRelatedProjectsReply = (projects) =>
     .join('\n')}\n\n${FOLLOW_UPS.projects}`;
 
 const createSkillsReply = () =>
-  `Based on the portfolio, Surya's strongest technical areas are ${makeSkillLine(PROFILE_KNOWLEDGE.skills)}. He applies these across Spring Boot microservices, React applications, cloud deployments, APIs, and AI-enabled tools.\n\n${FOLLOW_UPS.skills}`;
+  `Based on the portfolio, Surya's strongest technical areas are ${makeSkillLine(PROFILE_KNOWLEDGE.skills)}. He applies these across GenAI applications, backend services, cloud platforms, agent workflows, deployment automation, observability, and incident response.\n\n${FOLLOW_UPS.skills}`;
 
 const createSkillReply = (skill) => {
   const evidence = findSkillEvidence(skill);
@@ -483,7 +488,7 @@ const createLongestCompanyReply = () => {
 };
 
 const createYearsReply = () =>
-  `The portfolio summarizes Surya as having 5+ years of software engineering experience across backend, full-stack, cloud, healthcare, fintech, and AI-enabled applications.\n\n${FOLLOW_UPS.experience}`;
+  `The portfolio summarizes Surya as having 6+ years of software engineering experience across AI applications, backend platforms, cloud systems, healthcare, fintech, and production engineering.\n\n${FOLLOW_UPS.experience}`;
 
 const createDomainReply = () =>
   `Surya's visible domain experience includes:\n- Healthcare and clinical systems through Quest Diagnostics and Optum\n- Fintech and banking through HDFC Bank and Paytm\n- Cloud and GenAI platform work through Oracle OCI\n- Portfolio projects involving AI, e-commerce, health Q&A, and yoga planning\n\n${FOLLOW_UPS.default}`;
