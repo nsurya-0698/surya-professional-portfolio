@@ -4,22 +4,25 @@
  */
 
 export const SITE_META = {
-  title: 'Surya Teja Nammi - Full Stack Developer',
-  description: 'AWS-Certified Full Stack Developer with 6+ years of experience in building enterprise-grade solutions for healthcare and fintech domains.',
+  title: 'Surya Teja Nammi - AI Platform & Backend Engineer',
+  description: 'Software engineer building AI applications, cloud-native backend services, and reliable production platforms across OCI, AWS, and Azure.',
   author: 'Surya Teja Nammi',
   email: 'nammiteja087@gmail.com',
   phone: '+1 8167156330',
   github: 'https://github.com/nsurya-0698',
-  linkedin: 'https://www.linkedin.com/in/tejanammi/',
+  linkedin: 'https://www.linkedin.com/in/suryanst/',
   resume: '/Surya.pdf',
   keywords: [
-    'Full Stack Developer',
+    'AI Platform Engineer',
+    'Backend Software Engineer',
+    'Generative AI',
+    'Oracle Cloud Infrastructure',
     'AWS Certified',
-    'React',
     'Spring Boot',
-    'Angular',
     'Microservices',
     'Cloud Architecture',
+    'Production Reliability',
+    'Observability',
     'Healthcare',
     'Fintech'
   ]
@@ -32,7 +35,7 @@ export const SOCIAL_LINKS = {
     icon: 'VscGithubAlt'
   },
   linkedin: {
-    url: 'https://www.linkedin.com/in/tejanammi/',
+    url: 'https://www.linkedin.com/in/suryanst/',
     label: 'LinkedIn Profile',
     icon: 'FiLinkedin'
   },

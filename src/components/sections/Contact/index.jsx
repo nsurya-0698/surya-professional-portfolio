@@ -10,7 +10,7 @@ const Contact = () => {
         <span className="section-heading__line" />
       </h2>
       <p className="contact-content animate-slide-left">
-        Thanks for checking out my profile! Feel free to drop me a message if you have any questions or if you&apos;d like to connect.
+        Interested in AI platform, backend, cloud, or reliability engineering opportunities? I&apos;d be glad to connect.
       </p>
       <div className="animate-fade-up">
         <EmailForm />

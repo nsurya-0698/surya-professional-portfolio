@@ -1,43 +1,32 @@
 import './index.css';
 
-const SKILLS = [
-  { name: 'Java', confidence: 95 },
-  { name: 'JavaScript', confidence: 94 },
-  { name: 'Spring Boot', confidence: 93 },
-  { name: 'React', confidence: 92 },
-  { name: 'Python', confidence: 90 },
-  { name: 'SQL', confidence: 89 },
-  { name: 'AWS', confidence: 88 },
-  { name: 'Docker', confidence: 87 },
-  { name: 'Node.js', confidence: 85 },
-  { name: 'Kubernetes', confidence: 80 },
-  { name: 'AI/LLM Research', confidence: 70 },
+const SKILL_GROUPS = [
+  { name: 'AI & Application Engineering', skills: ['GenAI applications', 'LLM orchestration', 'WebSearch', 'RAG', 'Prompt engineering'] },
+  { name: 'Backend & APIs', skills: ['Java', 'Python', 'Spring Boot', 'FastAPI', 'Helidon', 'REST APIs', 'Microservices'] },
+  { name: 'Cloud & Infrastructure', skills: ['OCI', 'AWS', 'Azure', 'Kubernetes', 'Docker', 'Terraform'] },
+  { name: 'Reliability & Delivery', skills: ['CI/CD', 'Canary testing', 'Integration testing', 'Load testing', 'On-call readiness'] },
+  { name: 'Observability & Data', skills: ['OpenTelemetry', 'Prometheus', 'Grafana', 'CloudWatch', 'SQL Server', 'PostgreSQL', 'MongoDB'] },
+  { name: 'Security & Engineering Practice', skills: ['IAM', 'JWT', 'KMS', 'Security remediation', 'Compliance', 'Cross-functional delivery'] },
 ];
 
-const SkillsMatrix = () => {
-  return (
-    <section id="skills" className="skills-matrix-section">
-      <h2 className="section-heading">
-        <span className="section-heading__line" />
-        Top Skills
-        <span className="section-heading__line" />
-      </h2>
-
-      <div className="skills-grid">
-        {SKILLS.map((skill) => (
-          <article className="skill-card" key={skill.name}>
-            <div className="skill-card-header">
-              <h3>{skill.name}</h3>
-              <span>{skill.confidence}%</span>
-            </div>
-            <div className="skill-meter" aria-hidden="true">
-              <span style={{ width: `${skill.confidence}%` }} />
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-};
+const SkillsMatrix = () => (
+  <section id="skills" className="skills-matrix-section">
+    <h2 className="section-heading">
+      <span className="section-heading__line" />
+      Technical Expertise
+      <span className="section-heading__line" />
+    </h2>
+    <div className="skills-grid">
+      {SKILL_GROUPS.map((group) => (
+        <article className="skill-card" key={group.name}>
+          <h3>{group.name}</h3>
+          <div className="skill-tags" aria-label={`${group.name} skills`}>
+            {group.skills.map((skill) => <span className="skill-tag" key={skill}>{skill}</span>)}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+);
 
 export default SkillsMatrix;

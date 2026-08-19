@@ -1,4 +1,4 @@
-import { Quote, Star, Users } from 'lucide-react';
+import { Quote, Users } from 'lucide-react';
 import './index.css';
 
 const APPRECIATIONS = [
@@ -9,7 +9,6 @@ const APPRECIATIONS = [
     company: 'Quest Diagnostics',
     feedback:
       'Surya’s dedication on the Elisa project has been outstanding. His prompt responses, self-motivation, and ability to stay on top of every detail have been a huge asset. Both Patrick and I truly value his contributions and appreciate the quality he brings to the team.',
-    rating: 5,
     category: 'Reliability & Ownership',
   },
   {
@@ -19,21 +18,9 @@ const APPRECIATIONS = [
     company: 'Optum Global Solutions',
     feedback:
       'Surya’s ability to understand business requirements and translate them into technical solutions is remarkable. He is proactive in learning new technologies, shares his knowledge generously, and brings strong AI/ML and full-stack engineering expertise to the team.',
-    rating: 5,
     category: 'Technical Excellence',
   },
 ];
-
-const renderStars = (rating) =>
-  Array.from({ length: 5 }, (_, index) => (
-    <Star
-      key={index}
-      size={16}
-      className={`appreciation-star ${index < rating ? 'filled' : 'empty'}`}
-      fill={index < rating ? 'currentColor' : 'none'}
-      aria-hidden="true"
-    />
-  ));
 
 const Appreciations = () => {
   return (
@@ -42,7 +29,7 @@ const Appreciations = () => {
         <h2 className="section-heading">
           <span className="section-heading__line" />
           <Users size={24} className="section-heading__icon" aria-hidden="true" />
-          Appreciations & Feedback
+          Professional Feedback
           <span className="section-heading__line" />
         </h2>
 
@@ -52,11 +39,6 @@ const Appreciations = () => {
               <Quote className="quote-icon" size={32} aria-hidden="true" />
 
               <p className="feedback-text">&ldquo;{appreciation.feedback}&rdquo;</p>
-
-              <div className="rating-container" aria-label={`${appreciation.rating} out of 5 stars`}>
-                <div className="stars">{renderStars(appreciation.rating)}</div>
-                <span className="rating-text">{appreciation.rating}/5</span>
-              </div>
 
               <div className="person-info">
                 <div className="person-details">
