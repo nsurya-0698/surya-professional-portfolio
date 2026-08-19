@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Bot, Send, X } from 'lucide-react';
 import { SUGGESTED_QUESTIONS } from '../../../data/profileKnowledge.js';
 import { getAssistantReply } from '../../../lib/profileAssistantApi.js';
+import byteSpritesheet from './assets/byte-spritesheet.webp';
 import './index.css';
 
 const STORAGE_KEY = 'surya-portfolio-assistant-open';
@@ -22,36 +23,55 @@ const createMessage = (role, content) => ({
 
 const delay = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
 
-const AIAgentAvatar = ({ state = 'idle', compact = false }) => (
-  <span
-    className={`ai-agent-avatar ai-agent-avatar--${state} ${compact ? 'ai-agent-avatar--compact' : ''}`}
-    aria-hidden="true"
-  >
-    <span className="ai-agent-shadow" />
-    <span className="ai-agent-halo" />
-    <span className="ai-agent-shell">
-      <span className="ai-agent-scan" />
-      <span className="ai-agent-core-glow" />
-      <span className="ai-agent-network">
-        <span />
-        <span />
-        <span />
-      </span>
-      <span className="ai-agent-eyes">
-        <span className="ai-agent-eye" />
-        <span className="ai-agent-eye" />
-      </span>
-      <span className="ai-agent-smile" />
-      <span className="ai-agent-thinking-dots">
-        <span />
-        <span />
-        <span />
-      </span>
+const BYTE_ANIMATIONS = {
+  idle: { row: 0, frames: 7, interval: 360 },
+  hover: { row: 3, frames: 4, interval: 190 },
+  open: { row: 6, frames: 6, interval: 330 },
+  thinking: { row: 7, frames: 6, interval: 145 },
+  responding: { row: 4, frames: 5, interval: 135 },
+};
+
+const AIAgentAvatar = ({ state = 'idle', compact = false }) => {
+  const [frame, setFrame] = useState(0);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const animation = BYTE_ANIMATIONS[state] ?? BYTE_ANIMATIONS.idle;
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updatePreference = () => setReduceMotion(mediaQuery.matches);
+    updatePreference();
+    mediaQuery.addEventListener?.('change', updatePreference);
+    return () => mediaQuery.removeEventListener?.('change', updatePreference);
+  }, []);
+
+  useEffect(() => {
+    setFrame(0);
+    if (reduceMotion || animation.frames <= 1) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setFrame((currentFrame) => (currentFrame + 1) % animation.frames);
+    }, animation.interval);
+
+    return () => window.clearInterval(timer);
+  }, [animation.frames, animation.interval, animation.row, reduceMotion]);
+
+  return (
+    <span
+      className={`ai-agent-avatar ai-agent-avatar--${state} ${compact ? 'ai-agent-avatar--compact' : ''}`}
+      aria-hidden="true"
+    >
+      <span
+        className="byte-mascot"
+        style={{
+          backgroundImage: `url(${byteSpritesheet})`,
+          backgroundPosition: `${frame * (100 / 7)}% ${animation.row * 10}%`,
+        }}
+      />
     </span>
-    <span className="ai-agent-status-dot" />
-    <span className="ai-agent-spark" />
-  </span>
-);
+  );
+};
 
 const linkifyText = (text) => {
   const linkPattern =

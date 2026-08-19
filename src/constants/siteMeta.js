@@ -49,7 +49,7 @@ export const SOCIAL_LINKS = {
 export const NAVIGATION_ITEMS = [
   {
     id: 'projects',
-    label: 'Work',
+    label: 'Projects',
     href: '#projects',
     icon: 'FiCode'
   },

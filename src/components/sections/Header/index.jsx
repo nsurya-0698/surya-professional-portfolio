@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import resume from '../../../assets/documents/Surya.pdf';
 import logo from '../../../assets/icons/logo.svg';
 import { NAVIGATION_ITEMS } from '../../../constants/siteMeta';
@@ -65,21 +65,27 @@ const Header = () => {
         className={`header-nav ${isMenuOpen ? 'is-open' : ''}`}
         aria-label="Primary navigation"
       >
+        <div className="nav-menu-ambient" aria-hidden="true"><span /><span /></div>
+        <div className="nav-menu-intro">
+          <span className="nav-menu-eyebrow">Navigate / Portfolio</span>
+          <strong>AI Platform &amp; Backend Engineer</strong>
+        </div>
         <ul className="header-list">
-          {NAVIGATION_ITEMS.map((item) => (
-            <li key={item.id}>
+          {NAVIGATION_ITEMS.map((item, index) => (
+            <li key={item.id} style={{ '--nav-order': index }}>
               <a
                 className={`nav-things ${activeSection === item.href.slice(1) ? 'is-active' : ''}`}
                 href={item.href}
                 onClick={closeMenu}
               >
-                {item.label}
+                <span className="nav-sequence" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <span className="nav-label">{item.label}</span>
               </a>
             </li>
           ))}
-          <li>
+          <li className="resume-list-item" style={{ '--nav-order': NAVIGATION_ITEMS.length }}>
             <a className="resume-link hover-lift" href={resume} target="_blank" rel="noreferrer">
-              Resume
+              <span>View Resume</span><ArrowUpRight size={18} aria-hidden="true" />
             </a>
           </li>
         </ul>

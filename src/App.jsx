@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect } from 'react';
-import { Github, Linkedin } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 import { ThemeProvider } from './context/ThemeContext';
 import ErrorBoundary from './components/common/ErrorBoundary/ErrorBoundary';
 import { SOCIAL_LINKS, SITE_META } from './constants/siteMeta';
@@ -181,10 +181,10 @@ function App() {
               <Suspense fallback={<LoadingSpinner />}>
                 <Header />
                 <Hero />
-                <RevealShell><Projects /></RevealShell>
                 <RevealShell><Experience /></RevealShell>
                 <RevealShell><SkillsMatrix /></RevealShell>
                 <RevealShell><Certifications /></RevealShell>
+                <RevealShell><Projects /></RevealShell>
                 <RevealShell><Appreciations /></RevealShell>
                 <RevealShell><Contact /></RevealShell>
                 <Footer />
@@ -199,10 +199,16 @@ function App() {
                 href={SOCIAL_LINKS.email.url}
                 aria-label={SOCIAL_LINKS.email.label}
               >
-                <p className="mail">{SITE_META.email}</p>
+                <Mail className="mail-icon" aria-hidden="true" />
               </a>
               <span className="v-line" aria-hidden="true" />
             </div>
+
+            <nav className="mobile-contact-dock" aria-label="Social and contact links">
+              <a href={SOCIAL_LINKS.github.url} target="_blank" rel="noopener noreferrer" aria-label={SOCIAL_LINKS.github.label} title={SOCIAL_LINKS.github.label}><Github aria-hidden="true" /></a>
+              <a href={SOCIAL_LINKS.linkedin.url} target="_blank" rel="noopener noreferrer" aria-label={SOCIAL_LINKS.linkedin.label} title={SOCIAL_LINKS.linkedin.label}><Linkedin aria-hidden="true" /></a>
+              <a href={SOCIAL_LINKS.email.url} aria-label={SOCIAL_LINKS.email.label} title={SITE_META.email}><Mail aria-hidden="true" /></a>
+            </nav>
           </div>
         </div>
       </ThemeProvider>

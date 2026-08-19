@@ -158,15 +158,14 @@ a {
 
 .reveal-shell.is-visible .project-card,
 .reveal-shell.is-visible .skill-card,
-.reveal-shell.is-visible .certificate-card,
-.reveal-shell.is-visible .appreciation-card {
+.reveal-shell.is-visible .certificate-card {
   animation: cinematicCardIn 720ms cubic-bezier(.18,.8,.2,1) both;
 }
 
-.reveal-shell.is-visible :is(.project-card,.skill-card,.certificate-card,.appreciation-card):nth-child(2) { animation-delay: 90ms; }
-.reveal-shell.is-visible :is(.project-card,.skill-card,.certificate-card,.appreciation-card):nth-child(3) { animation-delay: 180ms; }
-.reveal-shell.is-visible :is(.project-card,.skill-card,.certificate-card,.appreciation-card):nth-child(4) { animation-delay: 270ms; }
-.reveal-shell.is-visible :is(.skill-card,.certificate-card,.appreciation-card):nth-child(5) { animation-delay: 360ms; }
+.reveal-shell.is-visible :is(.project-card,.skill-card,.certificate-card):nth-child(2) { animation-delay: 90ms; }
+.reveal-shell.is-visible :is(.project-card,.skill-card,.certificate-card):nth-child(3) { animation-delay: 180ms; }
+.reveal-shell.is-visible :is(.project-card,.skill-card,.certificate-card):nth-child(4) { animation-delay: 270ms; }
+.reveal-shell.is-visible :is(.skill-card,.certificate-card):nth-child(5) { animation-delay: 360ms; }
 .reveal-shell.is-visible .skill-card:nth-child(6) { animation-delay: 450ms; }
 
 .main-container {
@@ -272,8 +271,8 @@ section[id] {
 
 .social-icons:hover,
 .social-icons:focus-visible,
-.mail:hover,
-.mail-anchor:focus-visible .mail {
+.mail-icon:hover,
+.mail-anchor:focus-visible .mail-icon {
   color: var(--primary-color);
   transform: translateY(-3px);
 }
@@ -282,14 +281,15 @@ section[id] {
   text-decoration: none;
 }
 
-.mail {
-  writing-mode: vertical-rl;
+.mail-icon {
+  width: 25px;
+  height: 25px;
   margin: 0 0 20px;
   color: var(--text-muted);
-  font-size: 0.95rem;
-  letter-spacing: 0.08em;
   transition: color var(--transition-normal), transform var(--transition-normal);
 }
+
+.mobile-contact-dock { display: none; }
 
 .v-line {
   width: 1px;
@@ -311,6 +311,42 @@ section[id] {
   .mail-container {
     display: none;
   }
+
+  .mobile-contact-dock {
+    position: fixed;
+    right: 50%;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .45rem;
+    border: 1px solid rgba(100,255,218,.2);
+    border-radius: var(--radius-full);
+    background: rgba(4,12,28,.86);
+    box-shadow: 0 16px 40px rgba(0,0,0,.34),0 0 24px rgba(100,255,218,.08);
+    backdrop-filter: blur(16px);
+    transform: translateX(50%);
+  }
+
+  .mobile-contact-dock a {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--text-muted);
+    transition: color var(--transition-normal),background-color var(--transition-normal),transform var(--transition-normal);
+  }
+
+  .mobile-contact-dock a:hover,
+  .mobile-contact-dock a:focus-visible {
+    background: rgba(100,255,218,.1);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  .mobile-contact-dock svg { width: 21px; height: 21px; }
 }
 
 @media (max-width: 560px) {
@@ -332,6 +368,5 @@ section[id] {
   .reveal-shell { opacity: 1; transform: none; }
   .reveal-shell.is-visible .project-card,
   .reveal-shell.is-visible .skill-card,
-  .reveal-shell.is-visible .certificate-card,
-  .reveal-shell.is-visible .appreciation-card { animation: none; }
+  .reveal-shell.is-visible .certificate-card { animation: none; }
 }

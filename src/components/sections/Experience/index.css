@@ -51,9 +51,8 @@
 
 .career-route-main {
   stroke: url("#timelineRouteGradient");
-  stroke-width: 6;
-  stroke-dasharray: 18 7;
-  animation: routeFlow 12s linear infinite;
+  stroke-width: 4;
+  opacity: 0.86;
 }
 
 .career-route-branch {
@@ -368,10 +367,6 @@
   }
 }
 
-@keyframes routeFlow {
-  to { stroke-dashoffset: -250; }
-}
-
 @media (max-width: 900px) {
   .experience-summary {
     margin-bottom: 2.4rem;
@@ -479,8 +474,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .career-node::before,
-  .career-route-main {
+  .career-node::before {
     animation: none;
   }
 }
