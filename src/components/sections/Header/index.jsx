@@ -46,7 +46,7 @@ const Header = () => {
   return (
     <header className={`header-container ${isMenuOpen ? 'menu-open' : ''}`}>
       <a className="site-logo-link" href="#home" aria-label="Go to home">
-        <img className="site-logo animate-float hover-scale" src={logo} alt="Surya Teja Nammi logo" />
+        <img className="site-logo hover-scale" src={logo} alt="Surya Teja Nammi — NST logo" />
       </a>
 
       <button

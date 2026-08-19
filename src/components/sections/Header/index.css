@@ -25,6 +25,13 @@ body.nav-open {
   width: 48px;
   height: 48px;
   object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(2, 6, 23, 0.58));
+  transition: filter 220ms ease, transform 220ms ease;
+}
+
+.site-logo-link:hover .site-logo,
+.site-logo-link:focus-visible .site-logo {
+  filter: drop-shadow(0 5px 9px rgba(2, 6, 23, 0.72));
 }
 
 .header-nav {

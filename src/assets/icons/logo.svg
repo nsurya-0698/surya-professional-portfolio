@@ -1,45 +1,27 @@
-<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle">
-  <title id="logoTitle">NST classic monogram</title>
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle logoDescription">
+  <title id="logoTitle">NST signature ligature</title>
+  <desc id="logoDescription">A platinum NST brand mark with a carved central S.</desc>
   <defs>
-    <linearGradient id="nstFrame" x1="16" y1="12" x2="80" y2="84" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#64FFDA"/>
-      <stop offset="1" stop-color="#A7F3D0"/>
+    <linearGradient id="nstPlatinum" x1="12" y1="17" x2="88" y2="79" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FAFC"/>
+      <stop offset="0.48" stop-color="#D8E1EA"/>
+      <stop offset="1" stop-color="#8596A8"/>
     </linearGradient>
+    <mask id="nstCarve" maskUnits="userSpaceOnUse" x="7" y="13" width="84" height="70">
+      <rect x="7" y="13" width="84" height="70" fill="white"/>
+      <path d="M61 28C54 22 42 22 37 31C31 42 40 47 49 49C59 51 64 55 60 63C56 72 44 74 35 67" stroke="black" stroke-width="14" stroke-linecap="round"/>
+    </mask>
   </defs>
 
-  <path d="M48 7.5L83.1 27.75V68.25L48 88.5L12.9 68.25V27.75L48 7.5Z" fill="#020617" stroke="url(#nstFrame)" stroke-width="3.5"/>
-  <path d="M48 16.5L75.31 32.25V63.75L48 79.5L20.69 63.75V32.25L48 16.5Z" stroke="#64FFDA" stroke-opacity="0.18" stroke-width="1.6"/>
-
-  <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" text-anchor="middle">
-    <text
-      x="34"
-      y="62"
-      font-size="43"
-      fill="none"
-      stroke="#64FFDA"
-      stroke-width="1.6"
-      stroke-linejoin="round"
-    >N</text>
-    <text
-      x="49"
-      y="65"
-      font-size="45"
-      font-style="italic"
-      fill="#E5FFF8"
-      stroke="#020617"
-      stroke-width="0.9"
-      paint-order="stroke fill"
-    >S</text>
-    <text
-      x="63"
-      y="62"
-      font-size="43"
-      fill="none"
-      stroke="#A7F3D0"
-      stroke-width="1.6"
-      stroke-linejoin="round"
-    >T</text>
-  </g>
-
-  <path d="M28 71.5H68" stroke="#64FFDA" stroke-width="2.4" stroke-linecap="round" stroke-opacity="0.7"/>
+  <path
+    d="M11 77V19H25L59 60V19H89V31H76V77H61L28 37V77H11Z"
+    fill="url(#nstPlatinum)"
+    mask="url(#nstCarve)"
+  />
+  <path
+    d="M62 24C54 18 40 20 34 30C28 41 36 48 48 51C57 53 62 56 59 63C56 70 45 72 36 65L32 71C43 81 60 77 65 65C71 51 61 45 49 42C40 40 35 37 39 31C43 25 53 25 59 30L62 24Z"
+    fill="url(#nstPlatinum)"
+  />
+  <path d="M80 19H89V28" stroke="#F8FAFC" stroke-width="2.5" stroke-linecap="square" opacity="0.72"/>
+  <rect x="11" y="19" width="3" height="3" fill="#F8FAFC" opacity="0.78"/>
 </svg>

@@ -6,15 +6,15 @@ Replace the current framed NST monogram with a distinctive, navigation-scale bra
 
 ## Approved direction
 
-Use a frameless continuous-line monogram. The `N` flows into an `S` and resolves into a `T`, creating one compact visual gesture rather than three overlapping type characters.
+Use a frameless, proprietary NST ligature. The `N` provides the architectural structure, a custom tapered ribbon forms the `S`, and the `T` resolves the upper-right silhouette.
 
 ## Visual system
 
-- Preserve the portfolio's teal-to-violet accent palette.
-- Use bold geometric strokes that remain legible at 40–48 px.
+- Use a restrained monochrome platinum treatment. Depth should come from value and negative space rather than accent color.
+- Use a solid asymmetric silhouette and deliberate negative space that remain legible at 40–48 px.
 - Avoid hexagons, shields, fine outlines, serif lettering, and decorative underlines.
 - Keep the silhouette compact and balanced for desktop and mobile navigation.
-- Add only a restrained light sweep; the mark must remain clear without animation.
+- Avoid internal looping animation. Use only restrained hover feedback around the complete mark.
 
 ## Interaction and accessibility
 
