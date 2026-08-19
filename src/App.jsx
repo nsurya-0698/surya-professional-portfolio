@@ -17,7 +17,8 @@ const Projects = lazy(() => import('./components/sections/Projects'));
 const Appreciations = lazy(() => import('./components/sections/Appreciations'));
 const PersonalAssistantChat = lazy(() => import('./components/interactive/PersonalAssistantChat'));
 const SkillsMatrix = lazy(() => import('./components/sections/SkillsMatrix'));
-const ServicesSection = lazy(() => import('./components/sections/ServicesSection'));
+
+const RevealShell = ({ children }) => <div className="reveal-shell">{children}</div>;
 
 const LoadingSpinner = () => (
   <div className="loading-spinner" role="status" aria-live="polite">
@@ -117,10 +118,44 @@ const HashScroller = () => {
 };
 
 function App() {
+  useEffect(() => {
+    const revealObserver = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add('is-visible')),
+      { rootMargin: '0px 0px -12%', threshold: 0.08 }
+    );
+
+    const observeRevealElements = () => {
+      document.querySelectorAll('.reveal-shell:not([data-reveal-ready])').forEach((element) => {
+        element.dataset.revealReady = 'true';
+        revealObserver.observe(element);
+      });
+    };
+
+    observeRevealElements();
+    const revealMutationObserver = new MutationObserver(observeRevealElements);
+    revealMutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    const updateScrollProgress = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+      document.documentElement.style.setProperty('--page-progress', progress);
+    };
+    updateScrollProgress();
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+    return () => {
+      revealObserver.disconnect();
+      revealMutationObserver.disconnect();
+      window.removeEventListener('scroll', updateScrollProgress);
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <ThemeProvider>
         <div className="App">
+          <div className="page-progress" aria-hidden="true" />
+          <div className="cinematic-backdrop" aria-hidden="true"><span /><span /><span /></div>
           <div className="main-container">
             <div className="social-icons-container">
               <a 
@@ -146,13 +181,12 @@ function App() {
               <Suspense fallback={<LoadingSpinner />}>
                 <Header />
                 <Hero />
-                <Experience />
-                <Certifications />
-                <Projects />
-                <Appreciations />
-                <SkillsMatrix />
-                <ServicesSection />
-                <Contact />
+                <RevealShell><Projects /></RevealShell>
+                <RevealShell><Experience /></RevealShell>
+                <RevealShell><SkillsMatrix /></RevealShell>
+                <RevealShell><Certifications /></RevealShell>
+                <RevealShell><Appreciations /></RevealShell>
+                <RevealShell><Contact /></RevealShell>
                 <Footer />
                 <PersonalAssistantChat />
                 <HashScroller />

@@ -52,6 +52,8 @@
 .career-route-main {
   stroke: url("#timelineRouteGradient");
   stroke-width: 6;
+  stroke-dasharray: 18 7;
+  animation: routeFlow 12s linear infinite;
 }
 
 .career-route-branch {
@@ -71,7 +73,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) var(--node-size) minmax(0, 1fr);
   align-items: center;
-  min-height: clamp(320px, 42vw, 410px);
+  min-height: clamp(300px, 36vw, 350px);
   gap: var(--branch-gap);
   opacity: 1;
   transition: opacity 700ms ease;
@@ -366,6 +368,10 @@
   }
 }
 
+@keyframes routeFlow {
+  to { stroke-dashoffset: -250; }
+}
+
 @media (max-width: 900px) {
   .experience-summary {
     margin-bottom: 2.4rem;
@@ -473,7 +479,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .career-node::before {
+  .career-node::before,
+  .career-route-main {
     animation: none;
   }
 }

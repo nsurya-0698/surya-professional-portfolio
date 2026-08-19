@@ -48,10 +48,10 @@ export const SOCIAL_LINKS = {
 
 export const NAVIGATION_ITEMS = [
   {
-    id: 'home',
-    label: 'Home',
-    href: '#home',
-    icon: 'FiHome'
+    id: 'projects',
+    label: 'Work',
+    href: '#projects',
+    icon: 'FiCode'
   },
   {
     id: 'experience',
@@ -60,34 +60,16 @@ export const NAVIGATION_ITEMS = [
     icon: 'FiBriefcase'
   },
   {
-    id: 'certifications',
-    label: 'Certifications',
-    href: '#certifications',
-    icon: 'FiAward'
-  },
-  {
-    id: 'projects',
-    label: 'Projects',
-    href: '#projects',
-    icon: 'FiCode'
-  },
-  {
-    id: 'appreciations',
-    label: 'Appreciations',
-    href: '#appreciations',
-    icon: 'FiStar'
-  },
-  {
     id: 'skills',
     label: 'Skills',
     href: '#skills',
     icon: 'FiTool'
   },
   {
-    id: 'services',
-    label: 'Support',
-    href: '#services',
-    icon: 'FiBriefcase'
+    id: 'appreciations',
+    label: 'Feedback',
+    href: '#appreciations',
+    icon: 'FiStar'
   },
   {
     id: 'contact',

@@ -7,9 +7,9 @@ import schoolIcon from '../../../assets/icons/school.svg';
 // - STOP_SPACING controls vertical distance between cards/stops on desktop.
 // - PATH_* padding keeps route stops centered with each card row.
 // - TWIG_LENGTH controls how far the visual branches reach toward each card.
-const STOP_SPACING = 410;
-const PATH_TOP_PADDING = 250;
-const PATH_BOTTOM_PADDING = 250;
+const STOP_SPACING = 350;
+const PATH_TOP_PADDING = 215;
+const PATH_BOTTOM_PADDING = 215;
 const PATH_VIEWBOX_WIDTH = 1000;
 const PATH_CENTER_X = 500;
 const TWIG_LENGTH = 150;
