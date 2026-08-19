@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import { Bot, Send, X } from 'lucide-react';
+import { Bot, RotateCcw, Send, X } from 'lucide-react';
 import { SUGGESTED_QUESTIONS } from '../../../data/profileKnowledge.js';
 import { getAssistantReply } from '../../../lib/profileAssistantApi.js';
 import byteSpritesheet from './assets/byte-spritesheet.webp';
 import './index.css';
 
 const STORAGE_KEY = 'surya-portfolio-assistant-open';
+const POSITION_STORAGE_KEY = 'surya-portfolio-byte-position';
 const TYPING_DELAY_MS = 420;
+const SCROLL_STOP_DELAY_MS = 850;
+const MIN_SCROLL_DISTANCE = 140;
+const ROAM_COOLDOWN_MS = 24000;
+const GESTURE_STATES = ['waving', 'jumping', 'waiting', 'reviewing'];
+const DRAG_THRESHOLD = 5;
+const VIEWPORT_MARGIN = 8;
 
 const welcomeMessage = {
   id: 'welcome',
@@ -23,18 +30,67 @@ const createMessage = (role, content) => ({
 
 const delay = (duration) => new Promise((resolve) => window.setTimeout(resolve, duration));
 
+const readSavedBytePosition = () => {
+  try {
+    const savedPosition = JSON.parse(window.localStorage.getItem(POSITION_STORAGE_KEY));
+    if (Number.isFinite(savedPosition?.x) && Number.isFinite(savedPosition?.y)) {
+      return savedPosition;
+    }
+  } catch {
+    // Ignore unavailable storage or malformed visitor data.
+  }
+
+  return null;
+};
+
+const saveBytePosition = (position) => {
+  try {
+    window.localStorage.setItem(POSITION_STORAGE_KEY, JSON.stringify(position));
+  } catch {
+    // localStorage may be unavailable in private browsing.
+  }
+};
+
+const clearSavedBytePosition = () => {
+  try {
+    window.localStorage.removeItem(POSITION_STORAGE_KEY);
+  } catch {
+    // localStorage may be unavailable in private browsing.
+  }
+};
+
+const clampBytePosition = (position, width = 50, height = 54) => ({
+  x: Math.min(
+    Math.max(position.x, VIEWPORT_MARGIN),
+    Math.max(VIEWPORT_MARGIN, window.innerWidth - width - VIEWPORT_MARGIN)
+  ),
+  y: Math.min(
+    Math.max(position.y, VIEWPORT_MARGIN),
+    Math.max(VIEWPORT_MARGIN, window.innerHeight - height - VIEWPORT_MARGIN)
+  ),
+});
+
 const BYTE_ANIMATIONS = {
   idle: { row: 0, frames: 7, interval: 360 },
+  'running-right': { row: 1, frames: 8, interval: 125 },
+  'running-left': { row: 2, frames: 8, interval: 125 },
+  waving: { row: 3, frames: 4, interval: 190 },
+  jumping: { row: 4, frames: 5, interval: 135 },
+  waiting: { row: 6, frames: 6, interval: 330 },
+  reviewing: { row: 8, frames: 6, interval: 340 },
   hover: { row: 3, frames: 4, interval: 190 },
   open: { row: 6, frames: 6, interval: 330 },
   thinking: { row: 7, frames: 6, interval: 145 },
   responding: { row: 4, frames: 5, interval: 135 },
 };
 
-const AIAgentAvatar = ({ state = 'idle', compact = false }) => {
-  const [frame, setFrame] = useState(0);
+const getNextRoamStop = () => 2 + Math.floor(Math.random() * 3);
+
+const getRandomGesture = () =>
+  GESTURE_STATES[Math.floor(Math.random() * GESTURE_STATES.length)];
+
+const usePrefersReducedMotion = () => {
   const [reduceMotion, setReduceMotion] = useState(false);
-  const animation = BYTE_ANIMATIONS[state] ?? BYTE_ANIMATIONS.idle;
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -43,6 +99,14 @@ const AIAgentAvatar = ({ state = 'idle', compact = false }) => {
     mediaQuery.addEventListener?.('change', updatePreference);
     return () => mediaQuery.removeEventListener?.('change', updatePreference);
   }, []);
+
+  return reduceMotion;
+};
+
+const AIAgentAvatar = ({ state = 'idle', compact = false }) => {
+  const [frame, setFrame] = useState(0);
+  const reduceMotion = usePrefersReducedMotion();
+  const animation = BYTE_ANIMATIONS[state] ?? BYTE_ANIMATIONS.idle;
 
   useEffect(() => {
     setFrame(0);
@@ -203,9 +267,133 @@ const PersonalAssistantChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
   const [isResponding, setIsResponding] = useState(false);
+  const [initialBytePosition] = useState(readSavedBytePosition);
+  const [manualPosition, setManualPosition] = useState(initialBytePosition);
+  const [isManuallyPlaced, setIsManuallyPlaced] = useState(Boolean(initialBytePosition));
+  const [roamSide, setRoamSide] = useState(() =>
+    initialBytePosition?.x < window.innerWidth / 2 ? 'left' : 'right'
+  );
+  const [roamPhase, setRoamPhase] = useState('resting');
+  const [roamGesture, setRoamGesture] = useState('waiting');
+  const reduceMotion = usePrefersReducedMotion();
   const inputRef = useRef(null);
+  const launcherRef = useRef(null);
   const messagesEndRef = useRef(null);
   const responseTimerRef = useRef();
+  const scrollStopTimerRef = useRef();
+  const gestureTimerRef = useRef();
+  const lastScrollYRef = useRef(window.scrollY);
+  const scrollDistanceRef = useRef(0);
+  const scrollStopsRef = useRef(0);
+  const nextRoamStopRef = useRef(getNextRoamStop());
+  const lastRoamAtRef = useRef(0);
+  const roamSideRef = useRef(roamSide);
+  const roamPhaseRef = useRef(roamPhase);
+  const isOpenRef = useRef(isOpen);
+  const isManuallyPlacedRef = useRef(isManuallyPlaced);
+  const manualPositionRef = useRef(manualPosition);
+  const dragStateRef = useRef(null);
+  const suppressLauncherClickRef = useRef(false);
+
+  useEffect(() => {
+    roamSideRef.current = roamSide;
+  }, [roamSide]);
+
+  useEffect(() => {
+    roamPhaseRef.current = roamPhase;
+  }, [roamPhase]);
+
+  useEffect(() => {
+    isOpenRef.current = isOpen;
+
+    if (isOpen) {
+      window.clearTimeout(scrollStopTimerRef.current);
+      window.clearTimeout(gestureTimerRef.current);
+      roamPhaseRef.current = 'resting';
+      setRoamPhase('resting');
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    isManuallyPlacedRef.current = isManuallyPlaced;
+  }, [isManuallyPlaced]);
+
+  useEffect(() => {
+    manualPositionRef.current = manualPosition;
+  }, [manualPosition]);
+
+  useEffect(() => {
+    if (!isManuallyPlaced) {
+      return undefined;
+    }
+
+    const keepByteInView = () => {
+      const launcherBounds = launcherRef.current?.getBoundingClientRect();
+      const nextPosition = clampBytePosition(
+        manualPositionRef.current,
+        launcherBounds?.width,
+        launcherBounds?.height
+      );
+      manualPositionRef.current = nextPosition;
+      setManualPosition(nextPosition);
+      setRoamSide(nextPosition.x < window.innerWidth / 2 ? 'left' : 'right');
+      saveBytePosition(nextPosition);
+    };
+
+    keepByteInView();
+    window.addEventListener('resize', keepByteInView);
+    return () => window.removeEventListener('resize', keepByteInView);
+  }, [isManuallyPlaced]);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      window.clearTimeout(scrollStopTimerRef.current);
+      window.clearTimeout(gestureTimerRef.current);
+      roamPhaseRef.current = 'resting';
+      setRoamPhase('resting');
+      return undefined;
+    }
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      scrollDistanceRef.current += Math.abs(currentScrollY - lastScrollYRef.current);
+      lastScrollYRef.current = currentScrollY;
+
+      window.clearTimeout(scrollStopTimerRef.current);
+      scrollStopTimerRef.current = window.setTimeout(() => {
+        if (
+          isOpenRef.current ||
+          isManuallyPlacedRef.current ||
+          roamPhaseRef.current !== 'resting' ||
+          scrollDistanceRef.current < MIN_SCROLL_DISTANCE
+        ) {
+          scrollDistanceRef.current = 0;
+          return;
+        }
+
+        scrollDistanceRef.current = 0;
+        scrollStopsRef.current += 1;
+
+        const cooldownComplete = Date.now() - lastRoamAtRef.current >= ROAM_COOLDOWN_MS;
+        if (scrollStopsRef.current < nextRoamStopRef.current || !cooldownComplete) {
+          return;
+        }
+
+        scrollStopsRef.current = 0;
+        nextRoamStopRef.current = getNextRoamStop();
+        lastRoamAtRef.current = Date.now();
+        roamPhaseRef.current = 'running';
+        setRoamPhase('running');
+        setRoamSide(roamSideRef.current === 'right' ? 'left' : 'right');
+      }, SCROLL_STOP_DELAY_MS);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.clearTimeout(scrollStopTimerRef.current);
+    };
+  }, [reduceMotion]);
 
   useEffect(() => {
     try {
@@ -247,6 +435,9 @@ const PersonalAssistantChat = () => {
       if (responseTimerRef.current) {
         window.clearTimeout(responseTimerRef.current);
       }
+
+      window.clearTimeout(scrollStopTimerRef.current);
+      window.clearTimeout(gestureTimerRef.current);
     };
   }, []);
 
@@ -312,6 +503,145 @@ const PersonalAssistantChat = () => {
     }
   };
 
+  const handleRoamTransitionEnd = (event) => {
+    if (
+      event.target !== event.currentTarget ||
+      event.propertyName !== 'right' ||
+      roamPhaseRef.current !== 'running'
+    ) {
+      return;
+    }
+
+    const nextGesture = getRandomGesture();
+    roamPhaseRef.current = 'gesturing';
+    setRoamGesture(nextGesture);
+    setRoamPhase('gesturing');
+    window.clearTimeout(gestureTimerRef.current);
+    gestureTimerRef.current = window.setTimeout(() => {
+      roamPhaseRef.current = 'resting';
+      setRoamPhase('resting');
+    }, 5200 + Math.floor(Math.random() * 2800));
+  };
+
+  const placeByte = (position, width, height) => {
+    const nextPosition = clampBytePosition(position, width, height);
+    window.clearTimeout(scrollStopTimerRef.current);
+    window.clearTimeout(gestureTimerRef.current);
+    roamPhaseRef.current = 'resting';
+    isManuallyPlacedRef.current = true;
+    manualPositionRef.current = nextPosition;
+    setRoamPhase('resting');
+    setIsManuallyPlaced(true);
+    setManualPosition(nextPosition);
+    setRoamSide(nextPosition.x < window.innerWidth / 2 ? 'left' : 'right');
+    return nextPosition;
+  };
+
+  const handleLauncherPointerDown = (event) => {
+    if (event.button !== 0) {
+      return;
+    }
+
+    const bounds = event.currentTarget.getBoundingClientRect();
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: bounds.left,
+      originY: bounds.top,
+      width: bounds.width,
+      height: bounds.height,
+      dragging: false,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleLauncherPointerMove = (event) => {
+    const dragState = dragStateRef.current;
+    if (!dragState || dragState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    const deltaX = event.clientX - dragState.startX;
+    const deltaY = event.clientY - dragState.startY;
+    if (!dragState.dragging && Math.hypot(deltaX, deltaY) < DRAG_THRESHOLD) {
+      return;
+    }
+
+    dragState.dragging = true;
+    placeByte(
+      { x: dragState.originX + deltaX, y: dragState.originY + deltaY },
+      dragState.width,
+      dragState.height
+    );
+  };
+
+  const finishLauncherPointerGesture = (event) => {
+    const dragState = dragStateRef.current;
+    if (!dragState || dragState.pointerId !== event.pointerId) {
+      return;
+    }
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (dragState.dragging) {
+      saveBytePosition(manualPositionRef.current);
+      suppressLauncherClickRef.current = true;
+      window.setTimeout(() => {
+        suppressLauncherClickRef.current = false;
+      }, 0);
+    }
+
+    dragStateRef.current = null;
+  };
+
+  const handleLauncherClick = () => {
+    if (suppressLauncherClickRef.current) {
+      return;
+    }
+
+    setIsOpen((currentValue) => !currentValue);
+  };
+
+  const handleLauncherKeyDown = (event) => {
+    const directionByKey = {
+      ArrowUp: [0, -16],
+      ArrowRight: [16, 0],
+      ArrowDown: [0, 16],
+      ArrowLeft: [-16, 0],
+    };
+    const direction = directionByKey[event.key];
+    if (!event.shiftKey || !direction) {
+      return;
+    }
+
+    event.preventDefault();
+    const bounds = launcherRef.current?.getBoundingClientRect();
+    const origin = manualPositionRef.current ?? { x: bounds.left, y: bounds.top };
+    const nextPosition = placeByte(
+      { x: origin.x + direction[0], y: origin.y + direction[1] },
+      bounds.width,
+      bounds.height
+    );
+    saveBytePosition(nextPosition);
+  };
+
+  const resetBytePosition = () => {
+    clearSavedBytePosition();
+    window.clearTimeout(gestureTimerRef.current);
+    isManuallyPlacedRef.current = false;
+    manualPositionRef.current = null;
+    roamPhaseRef.current = 'resting';
+    scrollStopsRef.current = 0;
+    nextRoamStopRef.current = getNextRoamStop();
+    setIsManuallyPlaced(false);
+    setManualPosition(null);
+    setRoamPhase('resting');
+    setRoamSide('right');
+  };
+
   const showSuggestions = messages.length === 1;
   const avatarState = isLoading
     ? 'thinking'
@@ -319,12 +649,26 @@ const PersonalAssistantChat = () => {
       ? 'responding'
       : isOpen
         ? 'open'
-        : isHoveringAvatar
-          ? 'hover'
-          : 'idle';
+        : roamPhase === 'running'
+          ? roamSide === 'left'
+            ? 'running-left'
+            : 'running-right'
+          : roamPhase === 'gesturing'
+            ? roamGesture
+            : isHoveringAvatar
+              ? 'hover'
+              : 'idle';
 
   return (
-    <div className={`assistant-shell assistant-shell--${avatarState} ${isOpen ? 'assistant-shell--open' : ''}`}>
+    <div
+      className={`assistant-shell assistant-shell--${avatarState} assistant-shell--side-${roamSide} assistant-shell--roam-${roamPhase} ${isOpen ? 'assistant-shell--open' : ''} ${isManuallyPlaced ? 'assistant-shell--manually-placed' : ''}`}
+      onTransitionEnd={handleRoamTransitionEnd}
+      style={
+        isManuallyPlaced && manualPosition
+          ? { left: `${manualPosition.x}px`, top: `${manualPosition.y}px`, right: 'auto', bottom: 'auto' }
+          : undefined
+      }
+    >
       {isOpen && (
         <section className="assistant-panel" aria-label="Personal Portfolio AI Assistant">
           <header className="assistant-header">
@@ -379,20 +723,38 @@ const PersonalAssistantChat = () => {
 
       <button
         className="assistant-launcher"
-        onClick={() => setIsOpen((currentValue) => !currentValue)}
+        onClick={handleLauncherClick}
         onMouseEnter={() => setIsHoveringAvatar(true)}
         onMouseLeave={() => setIsHoveringAvatar(false)}
         onFocus={() => setIsHoveringAvatar(true)}
         onBlur={() => setIsHoveringAvatar(false)}
+        onKeyDown={handleLauncherKeyDown}
+        onPointerCancel={finishLauncherPointerGesture}
+        onPointerDown={handleLauncherPointerDown}
+        onPointerMove={handleLauncherPointerMove}
+        onPointerUp={finishLauncherPointerGesture}
+        ref={launcherRef}
         type="button"
         aria-label={isOpen ? "Close Surya's AI portfolio assistant" : "Open Surya's AI portfolio assistant"}
         aria-expanded={isOpen}
+        aria-keyshortcuts="Shift+ArrowUp Shift+ArrowRight Shift+ArrowDown Shift+ArrowLeft"
       >
         <AIAgentAvatar state={avatarState} />
         <span className="assistant-tooltip" role="presentation">
           {isOpen ? 'I am ready' : 'Ask me about Surya'}
         </span>
       </button>
+      {isManuallyPlaced && (
+        <button
+          className="assistant-position-reset"
+          onClick={resetBytePosition}
+          type="button"
+          aria-label="Return Byte to the bottom-right corner"
+          title="Return Byte to corner"
+        >
+          <RotateCcw size={12} aria-hidden="true" />
+        </button>
+      )}
     </div>
   );
 };
