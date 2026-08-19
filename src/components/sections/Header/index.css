@@ -9,7 +9,6 @@
   padding: 0.8rem 0;
   border-bottom: 1px solid transparent;
   background: transparent;
-  backdrop-filter: blur(10px) saturate(115%);
 }
 
 body.nav-open {

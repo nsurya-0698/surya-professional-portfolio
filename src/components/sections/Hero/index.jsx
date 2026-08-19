@@ -99,8 +99,6 @@ const Hero = () => {
         <p className="hero-proof">Enterprise GenAI • Cloud platforms • Production engineering</p>
       </div>
       <div className="hero-visual" aria-label="Professional portrait of Surya Teja Nammi" onPointerMove={updatePortraitTilt} onPointerLeave={resetPortraitTilt}>
-        <div className="portrait-aura" aria-hidden="true" />
-        <div className="portrait-sweep" aria-hidden="true" />
         <div className="portrait-float"><div className="portrait-tilt"><img className="personalpic" src={proPic} alt="Surya Teja Nammi" /></div></div>
         <div className="hero-status hero-status--top"><span>Current focus</span><strong>Enterprise GenAI</strong></div>
         <div className="hero-status hero-status--bottom"><span className="hero-status__dot" aria-hidden="true" />Production-minded engineering</div>
