@@ -48,31 +48,6 @@
   line-height: 1.75;
 }
 
-.rating-container {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.stars {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.appreciation-star.filled {
-  color: #fbbf24;
-}
-
-.appreciation-star.empty {
-  color: rgba(255, 255, 255, 0.28);
-}
-
-.rating-text {
-  color: var(--text-muted);
-  font-weight: 700;
-}
-
 .person-info {
   display: flex;
   align-items: flex-start;

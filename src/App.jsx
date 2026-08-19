@@ -15,7 +15,6 @@ const Footer = lazy(() => import('./components/layout/Footer'));
 const Certifications = lazy(() => import('./components/sections/Certifications'));
 const Projects = lazy(() => import('./components/sections/Projects'));
 const Appreciations = lazy(() => import('./components/sections/Appreciations'));
-const BackgroundMusic = lazy(() => import('./components/interactive/BackgroundMusic'));
 const PersonalAssistantChat = lazy(() => import('./components/interactive/PersonalAssistantChat'));
 const SkillsMatrix = lazy(() => import('./components/sections/SkillsMatrix'));
 const ServicesSection = lazy(() => import('./components/sections/ServicesSection'));
@@ -145,7 +144,6 @@ function App() {
 
             <div className="content-container">
               <Suspense fallback={<LoadingSpinner />}>
-                <BackgroundMusic />
                 <Header />
                 <Hero />
                 <Experience />
