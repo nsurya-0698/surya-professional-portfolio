@@ -20,6 +20,24 @@ const APPRECIATIONS = [
       'Surya’s ability to understand business requirements and translate them into technical solutions is remarkable. He is proactive in learning new technologies, shares his knowledge generously, and brings strong AI/ML and full-stack engineering expertise to the team.',
     category: 'Technical Excellence',
   },
+  {
+    id: 3,
+    name: 'Sandeep Chinamanagonda',
+    role: 'Senior Teammate, GenAI Chat',
+    company: 'Oracle',
+    feedback:
+      'What made our collaboration particularly meaningful is how quickly it evolved from a mentoring dynamic into genuine peer collaboration. That transition happened faster with Surya than with almost any engineer I have worked alongside.',
+    category: 'Rapid Growth & Ownership',
+  },
+  {
+    id: 4,
+    name: 'Prudhvi Vajja',
+    role: 'Engineering Teammate, AI Apps',
+    company: 'Oracle',
+    feedback:
+      'Overall, Surya is someone who can pick up a problem, learn what is needed, and drive it to completion.',
+    category: 'Execution & Reliability',
+  },
 ];
 
 const Appreciations = () => {
