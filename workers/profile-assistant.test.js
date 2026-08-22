@@ -199,7 +199,7 @@ test('reports a public health response without running inference', async () => {
   assert.equal(payload.status, 'ok');
   assert.equal(payload.model, '@cf/qwen/qwen3-30b-a3b-fp8');
   assert.equal(payload.profileModel, '@cf/qwen/qwen3-30b-a3b-fp8');
-  assert.equal(payload.generalModel, '@cf/qwen/qwen3.8-27b');
+  assert.equal(payload.generalModel, '@cf/zai-org/glm-4.7-flash');
 });
 
 test('rejects browser origins outside the portfolio and local preview', async () => {
@@ -407,6 +407,8 @@ test('answers grounded profile questions and forwards only bounded same-mode use
   );
   assert.equal(modelInput.messages.at(-1).content, 'What did Surya do at Oracle?\n\n/no_think');
   assert.equal(modelInput.max_tokens, 520);
+  assert.equal(modelInput.temperature, 0.2);
+  assert.equal(modelInput.top_p, 0.85);
   assert.equal(modelInput.repetition_penalty, 1.08);
   assert.equal('max_completion_tokens' in modelInput, false);
   assert.equal('chat_template_kwargs' in modelInput, false);
@@ -434,7 +436,9 @@ test('does not carry profile history into a general answer', async () => {
     false
   );
   assert.equal(modelInput.messages.at(-1).content, 'Explain recursion in one sentence.');
-  assert.equal(modelInput.max_completion_tokens, 240);
+  assert.equal(modelInput.max_completion_tokens, 800);
+  assert.equal(modelInput.temperature, 0.3);
+  assert.equal(modelInput.top_p, 0.8);
   assert.equal('max_tokens' in modelInput, false);
   assert.equal('repetition_penalty' in modelInput, false);
   assert.deepEqual(modelInput.chat_template_kwargs, { enable_thinking: false });
@@ -497,7 +501,7 @@ test('never forwards a forged client message with the assistant role', async () 
   assert.doesNotMatch(modelInput.messages[2].content, /\b(?:citizen|Rust)\b/i);
 });
 
-test('accepts Qwen 3.8 chat-completions output for general answers', async () => {
+test('accepts GLM-4.7-Flash chat-completions output for general answers', async () => {
   const env = createEnv({
     choices: [
       {
@@ -519,7 +523,7 @@ test('accepts Qwen 3.8 chat-completions output for general answers', async () =>
   assert.match(payload.reply, /function solves a problem/);
 });
 
-test('accepts a valid short alphanumeric answer from Qwen 3.8', async () => {
+test('accepts a valid short alphanumeric answer from GLM-4.7-Flash', async () => {
   const env = createEnv({
     choices: [{ finish_reason: 'stop', message: { content: '4' } }],
   });
@@ -535,12 +539,12 @@ test('accepts a valid short alphanumeric answer from Qwen 3.8', async () => {
   assert.equal(env.calls.length, 1);
 });
 
-test('retries a failed Qwen 3.8 general request once on the Qwen3 fallback', async () => {
+test('retries a failed GLM general request once on the Qwen3 fallback', async () => {
   const env = createEnv();
   env.AI.run = async (...args) => {
     env.calls.push(args);
     if (args[0] === GENERAL_MODEL) {
-      throw new Error('Qwen 3.8 unavailable');
+      throw new Error('GLM unavailable');
     }
     return { response: 'The fallback model completed the answer.\nBYTE_RESPONSE_COMPLETE' };
   };
@@ -556,6 +560,9 @@ test('retries a failed Qwen 3.8 general request once on the Qwen3 fallback', asy
   assert.deepEqual(env.calls.map(([model]) => model), [GENERAL_MODEL, PROFILE_MODEL]);
   const fallbackInput = env.calls[1][1];
   assert.equal(fallbackInput.max_tokens, 240);
+  assert.equal(fallbackInput.temperature, 0.2);
+  assert.equal(fallbackInput.top_p, 0.85);
+  assert.equal(fallbackInput.repetition_penalty, 1.08);
   assert.equal('max_completion_tokens' in fallbackInput, false);
   assert.equal('chat_template_kwargs' in fallbackInput, false);
   assert.equal(fallbackInput.messages.at(-1).content, 'Explain recursion.\n\n/no_think');
@@ -566,7 +573,7 @@ test('retries a failed Qwen 3.8 general request once on the Qwen3 fallback', asy
   );
 });
 
-test('rejects a truncated Qwen 3.8 answer and uses the Qwen3 fallback', async () => {
+test('rejects a truncated GLM answer and uses the Qwen3 fallback', async () => {
   const env = createEnv();
   env.AI.run = async (...args) => {
     env.calls.push(args);
@@ -594,7 +601,7 @@ test('rejects a truncated Qwen 3.8 answer and uses the Qwen3 fallback', async ()
   assert.deepEqual(env.calls.map(([model]) => model), [GENERAL_MODEL, PROFILE_MODEL]);
 });
 
-test('retries an invalid Qwen 3.8 answer once on the Qwen3 fallback', async () => {
+test('retries an invalid GLM answer once on the Qwen3 fallback', async () => {
   const env = createEnv();
   env.AI.run = async (...args) => {
     env.calls.push(args);

@@ -123,6 +123,25 @@ test('distinguishes a request timeout from provider and network failures', async
   assert.doesNotMatch(result.content, /private timeout detail/i);
 });
 
+test('uses a 20-second browser timeout by default', async () => {
+  let scheduledDelay = null;
+  const result = await getAssistantReply(
+    { message: 'Explain idempotency.', messages: [] },
+    {
+      setTimeoutImpl: (_callback, delay) => {
+        scheduledDelay = delay;
+        return 1;
+      },
+      clearTimeoutImpl: () => {},
+      fetchImpl: async () => jsonResponse({ reply: 'Idempotency makes retries safe.' }),
+    }
+  );
+
+  assert.equal(scheduledDelay, 20_000);
+  assert.equal(result.content, 'Idempotency makes retries safe.');
+  assert.equal(result.source, 'api');
+});
+
 test('distinguishes a network failure for a general question', async () => {
   const result = await getAssistantReply(
     { message: 'Explain idempotency.', messages: [] },

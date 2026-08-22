@@ -6,7 +6,7 @@ const DEFAULT_API_URL =
   'https://surya-portfolio-assistant.surya-professional-portfolio.workers.dev/api/chat';
 const API_URL = (import.meta.env?.VITE_PROFILE_ASSISTANT_API_URL || DEFAULT_API_URL).trim();
 const MAX_HISTORY_MESSAGES = 6;
-const REQUEST_TIMEOUT_MS = 12_000;
+const REQUEST_TIMEOUT_MS = 20_000;
 const PROFILE_ROUTES = new Set(['profile', 'profile-unknown', 'mixed']);
 const PROJECTS_CLARIFICATION =
   "Do you mean Surya's projects from this portfolio, or projects in general?";

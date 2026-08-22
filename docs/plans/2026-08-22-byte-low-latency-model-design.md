@@ -20,7 +20,7 @@ Use `@cf/zai-org/glm-4.7-flash` as the primary model for general questions. Clou
 
 ## Reliability and Quota Controls
 
-- Increase the browser request timeout from 12 to 15 seconds to provide modest fallback headroom without making visitors wait excessively.
+- Increase the browser request timeout from 12 to 20 seconds. Canary testing showed normal answers in 1–4 seconds but one correct multilingual response at 16.8 seconds, so the larger cutoff prevents a false failure without slowing typical responses.
 - Do not race models or retry automatically in parallel; speculative calls would waste the shared free allocation.
 - Preserve the shared visitor, general-global, and weather-specific rate limits.
 - Keep output concise and bounded.
@@ -35,7 +35,7 @@ GLM uses the OpenAI-style chat-completions response shape already supported by B
 - Unit tests must verify exact model selection and model-specific payloads.
 - Existing routing, grounding, injection, weather, arithmetic, fallback, rate-limit, and frontend tests must remain green.
 - Run live GLM canaries covering short answers, lists, explanations, coding, and conversation context.
-- Acceptance requires no schema errors, no hidden reasoning, no truncated output, accurate concise answers, and responses comfortably below the 15-second browser cutoff.
+- Acceptance requires no schema errors, no hidden reasoning, no truncated output, accurate concise answers, and typical responses comfortably below the browser cutoff.
 - Run full ESLint, production build, Wrangler dry-run, and deployed endpoint smoke tests.
 - Publish only after the canary passes; rollback is a one-constant model restoration plus redeployment.
 

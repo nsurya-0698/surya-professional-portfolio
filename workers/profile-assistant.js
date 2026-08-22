@@ -24,7 +24,8 @@ const MAX_MESSAGE_LENGTH = 1_200;
 const MAX_HISTORY_MESSAGES = 6;
 const MAX_USER_HISTORY_MESSAGES = 3;
 const MAX_PROFILE_OUTPUT_TOKENS = 520;
-const MAX_GENERAL_OUTPUT_TOKENS = 240;
+const MAX_GENERAL_PRIMARY_OUTPUT_TOKENS = 800;
+const MAX_GENERAL_FALLBACK_OUTPUT_TOKENS = 240;
 const WEATHER_TIMEOUT_MS = 5_000;
 const OPEN_METEO_ATTRIBUTION = 'Weather data by Open-Meteo: https://open-meteo.com/';
 const GENERAL_FALLBACK_MARKER = 'BYTE_RESPONSE_COMPLETE';
@@ -308,7 +309,7 @@ const getGeneralModelInput = (history, message) => ({
     ...history,
     { role: 'user', content: message },
   ],
-  max_completion_tokens: MAX_GENERAL_OUTPUT_TOKENS,
+  max_completion_tokens: MAX_GENERAL_PRIMARY_OUTPUT_TOKENS,
   temperature: 0.3,
   top_p: 0.8,
   chat_template_kwargs: {
@@ -322,7 +323,7 @@ const getGeneralFallbackModelInput = (history, message) => ({
     ...history,
     { role: 'user', content: `${message}\n\n/no_think` },
   ],
-  max_tokens: MAX_GENERAL_OUTPUT_TOKENS,
+  max_tokens: MAX_GENERAL_FALLBACK_OUTPUT_TOKENS,
   temperature: 0.2,
   top_p: 0.85,
   repetition_penalty: 1.08,
