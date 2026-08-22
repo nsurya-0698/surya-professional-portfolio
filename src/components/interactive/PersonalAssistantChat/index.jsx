@@ -21,7 +21,7 @@ const welcomeMessage = {
   id: 'welcome',
   role: 'assistant',
   content:
-    "Hi, I'm Byte—Surya's personal AI assistant. Ask about his résumé and experience, or ask me a general question, including live weather.",
+    "Hi, I'm Byte—Surya's personal AI assistant. Ask me anything, or ask about Surya's experience, skills, projects, and résumé. I can also check live weather.",
 };
 
 const createMessage = (role, content) => ({
@@ -485,7 +485,7 @@ const PersonalAssistantChat = () => {
         ...currentMessages,
         createMessage(
           'assistant',
-          "Sorry, I had trouble answering that. Please try again, or ask about Surya's skills, projects, or experience."
+          'Sorry, I had trouble answering that. Please try again in a moment.'
         ),
       ]);
     } finally {
@@ -685,7 +685,7 @@ const PersonalAssistantChat = () => {
               <AIAgentAvatar state={avatarState} compact />
               <div>
                 <h2>Surya&apos;s AI Assistant</h2>
-                <p>Résumé-grounded • General AI • Live weather</p>
+                <p>General AI • Surya knowledge • Live weather</p>
               </div>
             </div>
             <button

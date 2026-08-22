@@ -6,7 +6,7 @@ export const ASSISTANT_SYSTEM_PROMPT = `You are the AI assistant on Surya's pers
 
 export const SUGGESTED_QUESTIONS = [
   'What does Surya do?',
-  'Top skills',
+  "What are Surya's top skills?",
   'Is Surya a good hire?',
   'Weather in Nashville',
   'Explain the CAP theorem',
