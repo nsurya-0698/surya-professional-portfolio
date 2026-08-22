@@ -25,6 +25,22 @@
       }
     },
     {
+      "name": "GENERAL_VISITOR_RATE_LIMITER",
+      "namespace_id": "10431",
+      "simple": {
+        "limit": 4,
+        "period": 60
+      }
+    },
+    {
+      "name": "GENERAL_GLOBAL_RATE_LIMITER",
+      "namespace_id": "10432",
+      "simple": {
+        "limit": 8,
+        "period": 60
+      }
+    },
+    {
       "name": "WEATHER_RATE_LIMITER",
       "namespace_id": "10429",
       "simple": {

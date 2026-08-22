@@ -1,12 +1,15 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  GENERAL_MODEL,
+  PROFILE_MODEL,
+  UNKNOWN_REPLY,
+} from '../src/lib/assistantConfig.js';
+import {
   classifyQuestion,
   fetchWeatherReply,
   handleRequest,
-  MODEL,
   parseModelReply,
-  UNKNOWN_REPLY,
 } from './profile-assistant.js';
 
 const allowedOrigin = 'https://nsurya-0698.github.io';
@@ -35,13 +38,19 @@ const createEnv = (modelResponse = 'GROUNDED\nSurya builds Generative AI service
     AI: {
       run: async (...args) => {
         calls.push(args);
-        return { response: modelResponse };
+        return typeof modelResponse === 'string' ? { response: modelResponse } : modelResponse;
       },
     },
     VISITOR_RATE_LIMITER: {
       limit: async () => ({ success: true }),
     },
     GLOBAL_RATE_LIMITER: {
+      limit: async () => ({ success: true }),
+    },
+    GENERAL_VISITOR_RATE_LIMITER: {
+      limit: async () => ({ success: true }),
+    },
+    GENERAL_GLOBAL_RATE_LIMITER: {
       limit: async () => ({ success: true }),
     },
     WEATHER_RATE_LIMITER: {
@@ -84,6 +93,18 @@ test('classifies profile, general, weather, mixed, and unsupported-live question
   assert.equal(classifyQuestion('What is a weather forecast?'), 'general');
   assert.equal(classifyQuestion('What is the weather where Surya lives?'), 'mixed');
   assert.equal(classifyQuestion('What is the current stock price of AMD?'), 'live-unsupported');
+  assert.equal(classifyQuestion('Who is the current U.S. president?'), 'live-unsupported');
+  assert.equal(classifyQuestion('What is the latest React version?'), 'live-unsupported');
+  assert.equal(classifyQuestion("Who is Oracle's CEO now?"), 'live-unsupported');
+  assert.equal(classifyQuestion('What happened today?'), 'live-unsupported');
+  assert.equal(classifyQuestion("What's new in React?"), 'live-unsupported');
+  assert.equal(classifyQuestion('Who runs OpenAI?'), 'live-unsupported');
+  assert.equal(classifyQuestion('Who leads Oracle?'), 'live-unsupported');
+  assert.equal(classifyQuestion('Oracle CEO?'), 'live-unsupported');
+  assert.equal(classifyQuestion('Tell me the news about NVIDIA.'), 'live-unsupported');
+  assert.equal(classifyQuestion('How did AMD stock close yesterday?'), 'live-unsupported');
+  assert.equal(classifyQuestion('What was the Lakers score last night?'), 'live-unsupported');
+  assert.equal(classifyQuestion('What is the next NVIDIA earnings date?'), 'live-unsupported');
 });
 
 test('keeps vague and pronoun follow-ups in the prior trust domain', () => {
@@ -155,7 +176,9 @@ test('reports a public health response without running inference', async () => {
 
   assert.equal(response.status, 200);
   assert.equal(payload.status, 'ok');
-  assert.equal(payload.model, MODEL);
+  assert.equal(payload.model, '@cf/qwen/qwen3-30b-a3b-fp8');
+  assert.equal(payload.profileModel, '@cf/qwen/qwen3-30b-a3b-fp8');
+  assert.equal(payload.generalModel, '@cf/qwen/qwen3.8-27b');
 });
 
 test('rejects browser origins outside the portfolio and local preview', async () => {
@@ -185,10 +208,11 @@ test('answers grounded profile questions and forwards only bounded same-mode use
     env
   );
   const payload = await response.json();
-  const [, modelInput] = env.calls[0];
+  const [model, modelInput] = env.calls[0];
 
   assert.equal(response.status, 200);
   assert.equal(payload.source, 'cloudflare-profile-ai');
+  assert.equal(model, PROFILE_MODEL);
   assert.match(payload.reply, /Agent Gateway/);
   assert.equal(modelInput.messages.length, 5);
   assert.equal(modelInput.messages.slice(1).every((message) => message.role === 'user'), true);
@@ -201,6 +225,10 @@ test('answers grounded profile questions and forwards only bounded same-mode use
     false
   );
   assert.equal(modelInput.messages.at(-1).content, 'What did Surya do at Oracle?\n\n/no_think');
+  assert.equal(modelInput.max_tokens, 520);
+  assert.equal(modelInput.repetition_penalty, 1.08);
+  assert.equal('max_completion_tokens' in modelInput, false);
+  assert.equal('chat_template_kwargs' in modelInput, false);
 });
 
 test('does not carry profile history into a general answer', async () => {
@@ -215,14 +243,57 @@ test('does not carry profile history into a general answer', async () => {
     env
   );
   const payload = await response.json();
-  const [, modelInput] = env.calls[0];
+  const [model, modelInput] = env.calls[0];
 
   assert.equal(payload.source, 'cloudflare-general-ai');
+  assert.equal(model, GENERAL_MODEL);
   assert.equal(modelInput.messages.length, 2);
   assert.equal(
     modelInput.messages.slice(1).some((item) => /salary|Surya/i.test(item.content)),
     false
   );
+  assert.equal(modelInput.messages.at(-1).content, 'Explain recursion in one sentence.');
+  assert.equal(modelInput.max_completion_tokens, 240);
+  assert.equal('max_tokens' in modelInput, false);
+  assert.equal('repetition_penalty' in modelInput, false);
+  assert.deepEqual(modelInput.chat_template_kwargs, { enable_thinking: false });
+});
+
+test('accepts Qwen 3.8 chat-completions output for general answers', async () => {
+  const env = createEnv({
+    choices: [
+      {
+        message: {
+          content:
+            'Recursion is a technique where a function solves a problem by calling itself on a smaller input.',
+        },
+      },
+    ],
+  });
+  const response = await handleRequest(
+    createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
+    env
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 200);
+  assert.equal(payload.source, 'cloudflare-general-ai');
+  assert.match(payload.reply, /function solves a problem/);
+});
+
+test('returns a controlled unavailable response when a model call fails', async () => {
+  const env = createEnv();
+  env.AI.run = async () => {
+    throw new Error('Workers AI quota unavailable');
+  };
+  const response = await handleRequest(
+    createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
+    env
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 503);
+  assert.equal(payload.error, 'Assistant model is unavailable');
 });
 
 test('does not let a vague follow-up bypass sensitive profile grounding', async () => {
@@ -241,6 +312,34 @@ test('does not let a vague follow-up bypass sensitive profile grounding', async 
   assert.equal(payload.source, 'cloudflare-profile-unknown');
   assert.equal(payload.reply, UNKNOWN_REPLY);
   assert.equal(env.calls.length, 0);
+});
+
+test('does not ask the static model to answer unsupported current facts', async () => {
+  for (const message of [
+    'Who is the current U.S. president?',
+    'What is the latest React version?',
+    "Who is Oracle's CEO now?",
+    'What happened today?',
+    'Who runs OpenAI?',
+    'Who leads Oracle?',
+    'Oracle CEO?',
+    'Tell me the news about NVIDIA.',
+    'How did AMD stock close yesterday?',
+    'What was the Lakers score last night?',
+    'What is the next NVIDIA earnings date?',
+  ]) {
+    const env = createEnv('A stale answer that must not be shown.');
+    const response = await handleRequest(
+      createRequest({ body: { message, messages: [] } }),
+      env
+    );
+    const payload = await response.json();
+
+    assert.equal(response.status, 200);
+    assert.equal(payload.source, 'cloudflare-live-unavailable');
+    assert.match(payload.reply, /cannot verify.*live information/i);
+    assert.equal(env.calls.length, 0);
+  }
 });
 
 test('uses deterministic resume content when Qwen misses the profile protocol', async () => {
@@ -519,6 +618,26 @@ test('returns a retryable response when the endpoint rate limit is reached', asy
   assert.equal(response.status, 429);
   assert.equal(response.headers.get('retry-after'), '60');
   assert.equal(env.calls.length, 0);
+});
+
+test('applies stricter limits only to the Qwen 3.8 general route', async () => {
+  const generalEnv = createEnv('A general answer that should be rate limited.');
+  generalEnv.GENERAL_VISITOR_RATE_LIMITER.limit = async () => ({ success: false });
+  const generalResponse = await handleRequest(
+    createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
+    generalEnv
+  );
+
+  assert.equal(generalResponse.status, 429);
+  assert.equal(generalEnv.calls.length, 0);
+
+  const profileEnv = createEnv();
+  profileEnv.GENERAL_VISITOR_RATE_LIMITER.limit = async () => ({ success: false });
+  const profileResponse = await handleRequest(createRequest(), profileEnv);
+
+  assert.equal(profileResponse.status, 200);
+  assert.equal(profileEnv.calls.length, 1);
+  assert.equal(profileEnv.calls[0][0], PROFILE_MODEL);
 });
 
 test('uses an independent limiter for weather traffic', async () => {

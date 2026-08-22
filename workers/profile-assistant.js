@@ -1,15 +1,17 @@
 import {
   ASSISTANT_SYSTEM_PROMPT,
   PROFILE_CONTEXT,
-  PROFILE_KNOWLEDGE,
 } from '../src/data/profileKnowledge.js';
+import {
+  GENERAL_MODEL,
+  PROFILE_MODEL,
+  UNKNOWN_REPLY,
+} from '../src/lib/assistantConfig.js';
 import { createLocalAssistantReply } from '../src/lib/profileAssistant.js';
 import {
   classifyAssistantQuestion,
   selectHistoryForRoute,
 } from '../src/lib/assistantRouting.js';
-
-export const MODEL = '@cf/qwen/qwen3-30b-a3b-fp8';
 
 const PRODUCTION_ORIGIN = 'https://nsurya-0698.github.io';
 const LOCAL_ORIGIN_PATTERN = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/;
@@ -17,14 +19,10 @@ const CHAT_PATH = '/api/chat';
 const MAX_BODY_BYTES = 16_000;
 const MAX_MESSAGE_LENGTH = 1_200;
 const MAX_HISTORY_MESSAGES = 3;
-const MAX_OUTPUT_TOKENS = 520;
+const MAX_PROFILE_OUTPUT_TOKENS = 520;
+const MAX_GENERAL_OUTPUT_TOKENS = 240;
 const WEATHER_TIMEOUT_MS = 5_000;
 const OPEN_METEO_ATTRIBUTION = 'Weather data by Open-Meteo: https://open-meteo.com/';
-
-export const UNKNOWN_REPLY =
-  `I don't see that detail in Surya's portfolio, so I don't want to guess. ` +
-  `Please reach out to Surya at ${PROFILE_KNOWLEDGE.contact.email}, connect with him on LinkedIn: ` +
-  `${PROFILE_KNOWLEDGE.contact.linkedin}, or use the Contact section: #contact.`;
 
 const PROFILE_SYSTEM_PROMPT = `${ASSISTANT_SYSTEM_PROMPT}
 
@@ -190,14 +188,25 @@ const parseGeneralReply = (result) => {
 
 export const classifyQuestion = classifyAssistantQuestion;
 
-const checkAiRateLimits = async (request, env) => {
+const checkAiRateLimits = async (request, env, route) => {
   const visitorKey = request.headers.get('cf-connecting-ip') || 'unknown-visitor';
 
   try {
-    const checks = await Promise.all([
+    const limiters = [
       env.VISITOR_RATE_LIMITER?.limit({ key: visitorKey }) ?? { success: true },
       env.GLOBAL_RATE_LIMITER?.limit({ key: 'portfolio-assistant-global' }) ?? { success: true },
-    ]);
+    ];
+
+    if (route === 'general') {
+      limiters.push(
+        env.GENERAL_VISITOR_RATE_LIMITER?.limit({ key: visitorKey }) ?? { success: true },
+        env.GENERAL_GLOBAL_RATE_LIMITER?.limit({ key: 'portfolio-general-global' }) ?? {
+          success: true,
+        }
+      );
+    }
+
+    const checks = await Promise.all(limiters);
 
     return checks.every((result) => result.success);
   } catch (error) {
@@ -223,16 +232,30 @@ const checkWeatherRateLimit = async (request, env) => {
   }
 };
 
-const getModelInput = (systemPrompt, history, message) => ({
+const getProfileModelInput = (history, message) => ({
   messages: [
-    { role: 'system', content: systemPrompt },
+    { role: 'system', content: PROFILE_SYSTEM_PROMPT },
     ...history,
     { role: 'user', content: `${message}\n\n/no_think` },
   ],
-  max_tokens: MAX_OUTPUT_TOKENS,
+  max_tokens: MAX_PROFILE_OUTPUT_TOKENS,
   temperature: 0.2,
   top_p: 0.85,
   repetition_penalty: 1.08,
+});
+
+const getGeneralModelInput = (history, message) => ({
+  messages: [
+    { role: 'system', content: GENERAL_SYSTEM_PROMPT },
+    ...history,
+    { role: 'user', content: message },
+  ],
+  max_completion_tokens: MAX_GENERAL_OUTPUT_TOKENS,
+  temperature: 0.3,
+  top_p: 0.8,
+  chat_template_kwargs: {
+    enable_thinking: false,
+  },
 });
 
 const extractWeatherLocation = (message) => {
@@ -390,7 +413,10 @@ export const fetchWeatherReply = async (message, fetchImpl = fetch) => {
 const runProfileAssistant = async (env, message, history) => {
   const localReply = createLocalAssistantReply(message, history);
 
-  const modelResult = await env.AI.run(MODEL, getModelInput(PROFILE_SYSTEM_PROMPT, history, message));
+  const modelResult = await env.AI.run(
+    PROFILE_MODEL,
+    getProfileModelInput(history, message)
+  );
   const parsedReply = parseModelReply(modelResult);
 
   if (parsedReply.status === 'grounded') {
@@ -405,7 +431,10 @@ const runProfileAssistant = async (env, message, history) => {
 };
 
 const runGeneralAssistant = async (env, message, history) => {
-  const modelResult = await env.AI.run(MODEL, getModelInput(GENERAL_SYSTEM_PROMPT, history, message));
+  const modelResult = await env.AI.run(
+    GENERAL_MODEL,
+    getGeneralModelInput(history, message)
+  );
   const reply = parseGeneralReply(modelResult);
 
   if (!reply) {
@@ -419,7 +448,13 @@ export const handleRequest = async (request, env) => {
   const url = new URL(request.url);
 
   if (request.method === 'GET' && url.pathname === '/health') {
-    return jsonResponse({ status: 'ok', provider: 'cloudflare-workers-ai', model: MODEL });
+    return jsonResponse({
+      status: 'ok',
+      provider: 'cloudflare-workers-ai',
+      model: PROFILE_MODEL,
+      profileModel: PROFILE_MODEL,
+      generalModel: GENERAL_MODEL,
+    });
   }
 
   const origin = request.headers.get('origin') || '';
@@ -503,7 +538,7 @@ export const handleRequest = async (request, env) => {
     return jsonResponse({ reply, source: 'open-meteo' }, 200, origin);
   }
 
-  const rateLimitAllowed = await checkAiRateLimits(request, env);
+  const rateLimitAllowed = await checkAiRateLimits(request, env, route);
   if (rateLimitAllowed === null) {
     return jsonResponse({ error: 'Assistant rate limiter is unavailable' }, 503, origin);
   }

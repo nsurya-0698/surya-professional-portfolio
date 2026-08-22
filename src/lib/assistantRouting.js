@@ -31,6 +31,15 @@ const WEATHER_STATUS_PATTERN =
 
 const CURRENT_DATA_PATTERN =
   /\b(latest news|breaking news|live score|current score|stock price|share price|traffic|flight status|election result|exchange rate)\b/i;
+const CURRENT_TIME_SIGNAL_PATTERN =
+  /\b(latest|newest|current|currently|right now|today|tonight|now|this week|this month|this year|recent|recently|yesterday|last night|next|upcoming)\b|\bwhat(?:'s| is) new\b/i;
+const CURRENT_FACT_SUBJECT_PATTERN =
+  /\b(news|headlines?|updates?|events?|happened|happening|president|prime minister|governor|mayor|ceo|cto|cfo|chief executive|leader|version|release|model|scores?|schedules?|status|outage|prices?|rates?|rankings?|results?|stocks?|market|close|closed|earnings|games?|matches?|date|deadline)\b/i;
+const CURRENT_ROLE_HOLDER_PATTERN =
+  /\b(?:who is|who's|name)\b[^?!.]{0,80}\b(?:president|prime minister|governor|mayor|ceo|cto|cfo|chief executive|leader)\b|\bwho\s+(?:currently\s+)?(?:runs|leads|heads)\b|^[a-z0-9][a-z0-9 .&'-]{0,80}\s+(?:ceo|cto|cfo|chief executive|president|leader)\s*[?!.]*$/i;
+const CURRENT_NEWS_PATTERN =
+  /\b(?:news|headlines?)\s+(?:about|on|for)\b|\b(?:tell|show|give)\s+me\s+(?:the\s+)?(?:news|headlines?)\b/i;
+const WHATS_NEW_PATTERN = /\bwhat(?:'s| is) new\b/i;
 const CONTACT_REQUIRED_PATTERNS = [
   /\b(salary|compensation|total comp|base pay|base salary|pay expectation|expected pay|hourly rate|equity expectation|bonus expectation)\b/i,
   /\b(visa|visa status|sponsorship|work authorization|employment authorization|notice period|availability|start date)\b/i,
@@ -72,6 +81,13 @@ const isPronounProfileQuestion = (message) =>
   PROFILE_PRONOUN_PATTERN.test(message) &&
   (PROFILE_WORK_PATTERN.test(message) || PROFILE_COMPANY_PATTERN.test(message));
 
+const isUnsupportedLiveQuestion = (message) =>
+  CURRENT_DATA_PATTERN.test(message) ||
+  CURRENT_ROLE_HOLDER_PATTERN.test(message) ||
+  CURRENT_NEWS_PATTERN.test(message) ||
+  WHATS_NEW_PATTERN.test(message) ||
+  (CURRENT_TIME_SIGNAL_PATTERN.test(message) && CURRENT_FACT_SUBJECT_PATTERN.test(message));
+
 const classifyStandaloneQuestion = (message) => {
   const profile =
     isExplicitProfileQuestion(message) ||
@@ -83,7 +99,7 @@ const classifyStandaloneQuestion = (message) => {
   if (profile && requiresDirectContact(message)) return 'profile-unknown';
   if (profile) return 'profile';
   if (weather) return 'weather';
-  if (CURRENT_DATA_PATTERN.test(message)) return 'live-unsupported';
+  if (isUnsupportedLiveQuestion(message)) return 'live-unsupported';
   return 'general';
 };
 
