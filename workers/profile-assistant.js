@@ -10,9 +10,12 @@ import {
 import { createLocalAssistantReply } from '../src/lib/profileAssistant.js';
 import {
   classifyAssistantQuestion,
+  createAssistantContext,
+  extractWeatherLocation,
   needsLiveDataCaveat,
   resolveAssistantQuestion,
   selectHistoryForRoute,
+  validateAssistantContext,
 } from '../src/lib/assistantRouting.js';
 import { createArithmeticReply } from '../src/lib/safeArithmetic.js';
 
@@ -329,33 +332,6 @@ const getGeneralFallbackModelInput = (history, message) => ({
   repetition_penalty: 1.08,
 });
 
-const extractWeatherLocation = (message) => {
-  const afterPreposition = message.match(
-    /\b(?:weather|temperature|forecast|conditions?|rain|raining|snow|snowing|humidity|wind|hot|cold)(?:\s+(?:today|now|like))?\s+(?:in|for|at|near)\s+([^?!.]{2,80})/i
-  );
-  const generalPreposition = message.match(/\b(?:in|for|at|near)\s+([^?!.]{2,80})/i);
-  const locationBeforeWeather = message.match(
-    /^\s*([a-z0-9][a-z0-9 .,'-]{1,80}?)\s+(?:weather|forecast|conditions?)(?:\s+(?:today|now|tonight|tomorrow))?\s*[?!.]*$/i
-  );
-  const prefixLocation = /^(?:what|how|is|will|tell|show|check)\b/i.test(
-    locationBeforeWeather?.[1] || ''
-  )
-    ? ''
-    : locationBeforeWeather?.[1];
-  const rawLocation = (
-    afterPreposition?.[1] ||
-    generalPreposition?.[1] ||
-    prefixLocation ||
-    ''
-  )
-    .replace(/\b(today|tonight|tomorrow|right now|currently)\b/gi, '')
-    .replace(/[^a-z0-9,.' -]/gi, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-
-  return rawLocation.slice(0, 80);
-};
-
 const weatherCodeLabel = (code) => {
   if (code === 0) return 'clear skies';
   if (code === 1) return 'mainly clear';
@@ -579,56 +555,94 @@ export const handleRequest = async (request, env) => {
     return jsonResponse({ error: 'Message is required' }, 400, origin);
   }
 
-  const arithmeticReply = createArithmeticReply(message);
-  if (arithmeticReply) {
-    return jsonResponse(
-      { reply: arithmeticReply, source: 'deterministic-arithmetic' },
+  const requestContext = validateAssistantContext(parsedRequest.body.context);
+  const successfulChatResponse = (payload, resolution) =>
+    jsonResponse(
+      {
+        ...payload,
+        context: createAssistantContext(resolution, requestContext),
+      },
       200,
       origin
+    );
+
+  const arithmeticReply = createArithmeticReply(message);
+  if (arithmeticReply) {
+    return successfulChatResponse(
+      { reply: arithmeticReply, source: 'deterministic-arithmetic' },
+      { route: 'general', message }
     );
   }
 
   const history = normalizeMessages(parsedRequest.body.messages);
-  const resolvedQuestion = resolveAssistantQuestion(message, history);
+  const resolvedQuestion = resolveAssistantQuestion(message, history, requestContext);
   const { route } = resolvedQuestion;
   const effectiveMessage = resolvedQuestion.message;
 
   if (route === 'profile-unknown') {
-    return jsonResponse({ reply: UNKNOWN_REPLY, source: 'cloudflare-profile-unknown' }, 200, origin);
+    return successfulChatResponse(
+      { reply: UNKNOWN_REPLY, source: 'cloudflare-profile-unknown' },
+      resolvedQuestion
+    );
   }
 
   if (route === 'mixed') {
-    return jsonResponse(
+    return successfulChatResponse(
       {
         reply:
           'Please split that into two questions: one about Surya and one general or weather question. That helps me keep résumé facts accurate.',
         source: 'cloudflare-mixed',
       },
-      200,
-      origin
+      { route: null, message }
     );
   }
 
   if (route === 'ambiguous-subject') {
-    return jsonResponse(
+    return successfulChatResponse(
       {
-        reply: 'Do you mean Surya, or someone else from the conversation?',
+        reply: 'Do you mean Surya? Reply yes, or ask again with someone else’s name.',
         source: 'assistant-clarification',
       },
-      200,
-      origin
+      {
+        ...resolvedQuestion,
+        pendingClarification: 'profile-subject',
+      }
     );
   }
 
   if (route === 'ambiguous-projects') {
-    return jsonResponse(
+    return successfulChatResponse(
       {
         reply:
-          "Do you mean Surya's projects from this portfolio, or projects in general?",
+          "Are you asking about Surya's portfolio projects? Reply yes for Surya's projects, or no for projects in general.",
         source: 'assistant-clarification',
       },
-      200,
-      origin
+      {
+        ...resolvedQuestion,
+        pendingClarification: 'project-scope',
+      }
+    );
+  }
+
+  if (route === 'clarification-exhausted') {
+    return successfulChatResponse(
+      {
+        reply:
+          'Please ask a complete question, such as “Tell me about Surya’s projects” or “Explain software projects in general.”',
+        source: 'assistant-clarification',
+      },
+      { route: null, message }
+    );
+  }
+
+  if (route === 'ambiguous-confirmation') {
+    return successfulChatResponse(
+      {
+        reply:
+          'I do not have a yes-or-no question pending. Please tell me what you would like to confirm.',
+        source: 'assistant-clarification',
+      },
+      { route: null, message }
     );
   }
 
@@ -647,8 +661,8 @@ export const handleRequest = async (request, env) => {
       );
     }
 
-    const reply = await fetchWeatherReply(message, env.WEATHER_FETCH || fetch);
-    return jsonResponse({ reply, source: 'open-meteo' }, 200, origin);
+    const reply = await fetchWeatherReply(effectiveMessage, env.WEATHER_FETCH || fetch);
+    return successfulChatResponse({ reply, source: 'open-meteo' }, resolvedQuestion);
   }
 
   const rateLimitAllowed = await checkAiRateLimits(request, env, route);
@@ -670,7 +684,7 @@ export const handleRequest = async (request, env) => {
   }
 
   try {
-    const routeHistory = selectHistoryForRoute(history, route);
+    const routeHistory = selectHistoryForRoute(history, route, requestContext);
     const result =
       route === 'profile'
         ? await runProfileAssistant(env, effectiveMessage, routeHistory)
@@ -678,9 +692,9 @@ export const handleRequest = async (request, env) => {
             env,
             effectiveMessage,
             routeHistory,
-            needsLiveDataCaveat(message, history)
+            needsLiveDataCaveat(message, history, requestContext)
           );
-    return jsonResponse(result, 200, origin);
+    return successfulChatResponse(result, resolvedQuestion);
   } catch (error) {
     console.error('Cloudflare portfolio assistant failed', error);
     return jsonResponse({ error: 'Assistant model is unavailable' }, 503, origin);

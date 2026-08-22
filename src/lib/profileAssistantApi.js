@@ -1,5 +1,9 @@
 import { createLocalAssistantReply } from './profileAssistant.js';
-import { classifyAssistantQuestion } from './assistantRouting.js';
+import {
+  classifyAssistantQuestion,
+  createAssistantContext,
+  validateAssistantContext,
+} from './assistantRouting.js';
 import { createArithmeticReply } from './safeArithmetic.js';
 
 const DEFAULT_API_URL =
@@ -8,9 +12,11 @@ const API_URL = (import.meta.env?.VITE_PROFILE_ASSISTANT_API_URL || DEFAULT_API_
 const MAX_HISTORY_MESSAGES = 6;
 const REQUEST_TIMEOUT_MS = 20_000;
 const PROFILE_ROUTES = new Set(['profile', 'profile-unknown', 'mixed']);
-const PROJECTS_CLARIFICATION =
-  "Do you mean Surya's projects from this portfolio, or projects in general?";
-const SUBJECT_CLARIFICATION = 'Do you mean Surya, or someone else from the conversation?';
+const PROJECTS_CLARIFICATION = "Are you asking about Surya's portfolio projects?";
+const SUBJECT_CLARIFICATION = 'Are you asking about Surya?';
+
+const isContextObject = (value) =>
+  value !== null && typeof value === 'object' && !Array.isArray(value);
 
 const parseRetryAfterSeconds = (value) => {
   if (!value) return null;
@@ -74,13 +80,38 @@ const createFailureReply = (kind, route, message, historyMessages, retryAfterSec
   return 'The AI provider is temporarily unavailable. Please try again shortly.';
 };
 
-const createFailureResult = (kind, route, message, historyMessages, retryAfterSeconds = null) => ({
-  content: createFailureReply(kind, route, message, historyMessages, retryAfterSeconds),
-  source: 'local',
-});
+const createFailureResult = (
+  kind,
+  route,
+  message,
+  historyMessages,
+  retryAfterSeconds = null,
+  currentContext = null
+) => {
+  const result = {
+    content: createFailureReply(kind, route, message, historyMessages, retryAfterSeconds),
+    source: 'local',
+  };
+
+  const pendingClarification =
+    route === 'ambiguous-projects'
+      ? 'project-scope'
+      : route === 'ambiguous-subject'
+        ? 'profile-subject'
+        : null;
+
+  if (pendingClarification) {
+    result.context = createAssistantContext(
+      { message, pendingClarification, clarificationAttempts: 0 },
+      currentContext
+    );
+  }
+
+  return result;
+};
 
 export const getAssistantReply = async (
-  { message, messages = [] },
+  { message, messages = [], context = null },
   {
     apiUrl = API_URL,
     fetchImpl = globalThis.fetch,
@@ -100,17 +131,26 @@ export const getAssistantReply = async (
       : recentMessages;
   const arithmeticReply = createArithmeticReply(message);
 
-  if (arithmeticReply !== null) {
+  if (arithmeticReply !== null && !isContextObject(context)) {
     return {
       content: arithmeticReply,
       source: 'arithmetic',
     };
   }
 
-  const route = classifyAssistantQuestion(message, historyMessages);
+  const validatedContext = validateAssistantContext(context);
+  const route = classifyAssistantQuestion(message, historyMessages, validatedContext);
+  const hasValidPriorContext =
+    isContextObject(context) && context.version === validatedContext.version;
+  const failureRoute =
+    (hasValidPriorContext && route !== 'weather') ||
+    (isContextObject(context) &&
+      (route === 'ambiguous-projects' || route === 'ambiguous-subject'))
+      ? 'general'
+      : route;
 
   if (!apiUrl || typeof fetchImpl !== 'function') {
-    return createFailureResult('network', route, message, historyMessages);
+    return createFailureResult('network', failureRoute, message, historyMessages, null, context);
   }
 
   const controller = new AbortController();
@@ -126,6 +166,7 @@ export const getAssistantReply = async (
       body: JSON.stringify({
         message,
         messages: historyMessages,
+        context: isContextObject(context) ? context : null,
       }),
     });
 
@@ -133,38 +174,46 @@ export const getAssistantReply = async (
       const retryAfterSeconds = parseRetryAfterSeconds(response.headers.get('retry-after'));
       return createFailureResult(
         'rate-limit',
-        route,
+        failureRoute,
         message,
         historyMessages,
-        retryAfterSeconds
+        retryAfterSeconds,
+        context
       );
     }
 
     if (response.status === 503 || !response.ok) {
-      return createFailureResult('provider', route, message, historyMessages);
+      return createFailureResult('provider', failureRoute, message, historyMessages, null, context);
     }
 
     const contentType = response.headers.get('content-type') || '';
 
     if (!contentType.includes('application/json')) {
-      return createFailureResult('provider', route, message, historyMessages);
+      return createFailureResult('provider', failureRoute, message, historyMessages, null, context);
     }
 
     let data;
     try {
       data = await response.json();
     } catch {
-      return createFailureResult('provider', route, message, historyMessages);
+      return createFailureResult('provider', failureRoute, message, historyMessages, null, context);
     }
 
     if (!data?.reply) {
-      return createFailureResult('provider', route, message, historyMessages);
+      return createFailureResult('provider', failureRoute, message, historyMessages, null, context);
     }
 
-    return {
+    const result = {
       content: data.reply,
-      source: 'api',
+      source:
+        typeof data.source === 'string' && data.source.trim().length > 0 ? data.source : 'api',
     };
+
+    if (isContextObject(data.context)) {
+      result.context = data.context;
+    }
+
+    return result;
   } catch (error) {
     const kind = controller.signal.aborted || error?.name === 'AbortError' ? 'timeout' : 'network';
 
@@ -172,7 +221,7 @@ export const getAssistantReply = async (
       console.info(`Portfolio assistant using ${kind} fallback.`);
     }
 
-    return createFailureResult(kind, route, message, historyMessages);
+    return createFailureResult(kind, failureRoute, message, historyMessages, null, context);
   } finally {
     clearTimeoutImpl?.(timeoutId);
   }

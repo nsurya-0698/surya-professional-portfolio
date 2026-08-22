@@ -271,6 +271,7 @@ const PersonalAssistantChat = () => {
     }
   });
   const [messages, setMessages] = useState([welcomeMessage]);
+  const [conversationContext, setConversationContext] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isHoveringAvatar, setIsHoveringAvatar] = useState(false);
@@ -463,6 +464,7 @@ const PersonalAssistantChat = () => {
         getAssistantReply({
           message: trimmedContent,
           messages: nextMessages,
+          context: conversationContext,
         }),
         delay(TYPING_DELAY_MS),
       ]);
@@ -471,6 +473,9 @@ const PersonalAssistantChat = () => {
         ...currentMessages,
         createMessage('assistant', reply.content),
       ]);
+      if (Object.hasOwn(reply, 'context')) {
+        setConversationContext(reply.context);
+      }
       setIsResponding(true);
 
       if (responseTimerRef.current) {
