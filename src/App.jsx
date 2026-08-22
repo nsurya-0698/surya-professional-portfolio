@@ -135,18 +135,34 @@ function App() {
     const revealMutationObserver = new MutationObserver(observeRevealElements);
     revealMutationObserver.observe(document.body, { childList: true, subtree: true });
 
+    const progressElement = document.querySelector('.page-progress');
+    let progressFrame = 0;
     const updateScrollProgress = () => {
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
-      document.documentElement.style.setProperty('--page-progress', progress);
+      if (progressFrame) return;
+
+      progressFrame = window.requestAnimationFrame(() => {
+        progressFrame = 0;
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollable > 0
+          ? Math.min(1, Math.max(0, window.scrollY / scrollable))
+          : 0;
+        if (progressElement) {
+          progressElement.style.transform = `scaleX(${progress})`;
+        }
+      });
     };
     updateScrollProgress();
     window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    window.addEventListener('resize', updateScrollProgress, { passive: true });
 
     return () => {
       revealObserver.disconnect();
       revealMutationObserver.disconnect();
       window.removeEventListener('scroll', updateScrollProgress);
+      window.removeEventListener('resize', updateScrollProgress);
+      if (progressFrame) {
+        window.cancelAnimationFrame(progressFrame);
+      }
     };
   }, []);
 
