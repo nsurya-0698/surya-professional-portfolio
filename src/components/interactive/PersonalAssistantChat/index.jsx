@@ -21,7 +21,7 @@ const welcomeMessage = {
   id: 'welcome',
   role: 'assistant',
   content:
-    "Hi, I'm Surya's portfolio assistant. Ask me about his experience, projects, skills, or fit for a role.",
+    "Hi, I'm Byte—Surya's personal AI assistant. Ask about his résumé and experience, or ask me a general question, including live weather.",
 };
 
 const createMessage = (role, content) => ({
@@ -685,7 +685,7 @@ const PersonalAssistantChat = () => {
               <AIAgentAvatar state={avatarState} compact />
               <div>
                 <h2>Surya&apos;s AI Assistant</h2>
-                <p>Ask about experience, projects, skills, or fit</p>
+                <p>Résumé-grounded • General AI • Live weather</p>
               </div>
             </div>
             <button
@@ -709,11 +709,11 @@ const PersonalAssistantChat = () => {
 
           <form className="assistant-input-area" onSubmit={handleSubmit}>
             <textarea
-              aria-label="Ask about Surya's experience, projects, or skills"
+              aria-label="Ask about Surya or a general topic"
               disabled={isLoading}
               onChange={(event) => setInputValue(event.target.value)}
               onKeyDown={handleInputKeyDown}
-              placeholder="Ask about experience, projects, or skills..."
+              placeholder="Ask about Surya or anything..."
               ref={inputRef}
               rows={1}
               value={inputValue}

@@ -9,6 +9,9 @@
     "deploy": "gh-pages -d dist",
     "dev": "vite",
     "build": "vite build",
+    "assistant:deploy": "npx wrangler@4.125.0 deploy",
+    "assistant:dev": "npx wrangler@4.125.0 dev",
+    "assistant:test": "node --test workers/profile-assistant.test.js src/lib/profileAssistant.test.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },

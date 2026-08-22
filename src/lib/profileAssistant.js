@@ -157,19 +157,28 @@ const TOPIC_KEYWORDS = {
   availability: ['available', 'availability', 'start date', 'notice period', 'visa', 'sponsorship', 'work authorization'],
   location: ['location', 'located', 'where is he', 'where does he', 'relocate', 'remote', 'onsite', 'hybrid'],
   salary: ['salary', 'compensation', 'pay expectation', 'rate'],
-  personal: ['age', 'date of birth', 'married', 'family', 'address', 'personal'],
+  personal: [
+    'age',
+    'date of birth',
+    'married',
+    'family',
+    'address',
+    'personal',
+    'hobby',
+    'hobbies',
+    'favorite',
+    'favourite',
+  ],
   identity: ['who are you', 'are you surya', 'is this chatgpt', 'are you ai', 'what are you'],
   summary: [
-    'surya',
-    'portfolio',
-    'about',
-    'summary',
-    'yourself',
-    'him',
-    'intro',
-    'introduce',
-    'introduction',
-    'tell me about',
+    'who is surya',
+    'about surya',
+    'tell me about surya',
+    'surya summary',
+    'professional summary',
+    'career summary',
+    'introduce surya',
+    'surya introduction',
     'recruiter summary',
     'elevator pitch',
   ],
@@ -458,7 +467,7 @@ const createSkillReply = (skill) => {
 };
 
 const createUnknownSkillReply = () =>
-  `I do not see that exact technology listed in Surya's portfolio, so I do not want to claim it. The visible stack includes ${makeSkillLine(PROFILE_KNOWLEDGE.skills)}.\n\n${FOLLOW_UPS.skills}`;
+  `I do not see that exact technology listed in Surya's portfolio, so I do not want to claim it. Please email Surya at ${PROFILE_KNOWLEDGE.contact.email}, connect with him on LinkedIn at ${PROFILE_KNOWLEDGE.contact.linkedin}, or use the Contact section: #contact.`;
 
 const createCertificationsReply = () =>
   `Surya lists these certifications:\n- AWS Certified Solutions Architect - Associate, score 965/1000\n- Generative AI with Large Language Models from DeepLearning.AI and AWS\n\n${FOLLOW_UPS.default}`;
@@ -512,13 +521,13 @@ const createSalaryReply = () =>
   `I do not see salary, compensation, or rate expectations listed in the portfolio. Please email Surya at ${PROFILE_KNOWLEDGE.contact.email}, call ${PROFILE_KNOWLEDGE.contact.phone}, or use the Contact section: #contact.\n\n${FOLLOW_UPS.contact}`;
 
 const createPersonalReply = () =>
-  `I do not have private personal details like age, family information, home address, or private background. For professional contact, you can email Surya at ${PROFILE_KNOWLEDGE.contact.email}, call ${PROFILE_KNOWLEDGE.contact.phone}, or use the Contact section: #contact.`;
+  `I do not see that personal detail in Surya's portfolio, so I do not want to guess. Please email Surya at ${PROFILE_KNOWLEDGE.contact.email}, connect with him on LinkedIn at ${PROFILE_KNOWLEDGE.contact.linkedin}, or use the Contact section: #contact.`;
 
 const createStaticAgentReply = () =>
   `This is a lightweight portfolio assistant designed for Surya's static website. It answers from curated portfolio and resume content rather than making unsupported claims. For best results, ask about Surya's experience, projects, skills, education, certifications, contact details, or fit for a role.`;
 
 const createOffTopicReply = () =>
-  `I am focused on Surya's professional portfolio, so I may not be helpful for unrelated topics. I can still help you evaluate his background, technical strengths, projects, work history, education, certifications, and contact details.`;
+  `That information is not included in Surya's professional portfolio, so I do not want to guess. Please email Surya at ${PROFILE_KNOWLEDGE.contact.email}, connect with him on LinkedIn at ${PROFILE_KNOWLEDGE.contact.linkedin}, or use the Contact section: #contact.`;
 
 const createUnknownReply = () =>
   `I do not see that specific detail in Surya's portfolio, so I do not want to guess. The best next step is to email Surya at ${PROFILE_KNOWLEDGE.contact.email}, call ${PROFILE_KNOWLEDGE.contact.phone}, or use the Contact section: #contact.\n\nYou can also ask me about his experience, projects, skills, education, certifications, contact details, or fit for a role.`;
@@ -672,7 +681,18 @@ export const createLocalAssistantReply = (message, messages = []) => {
     return createSkillReply(skill);
   }
 
-  if (hasAny(normalizedText, ['does he know', 'has he used', 'can he use', 'experience with', 'familiar with'])) {
+  if (
+    hasAny(normalizedText, [
+      'does he know',
+      'does surya know',
+      'has he used',
+      'has surya used',
+      'can he use',
+      'can surya use',
+      'experience with',
+      'familiar with',
+    ])
+  ) {
     return createUnknownSkillReply();
   }
 
