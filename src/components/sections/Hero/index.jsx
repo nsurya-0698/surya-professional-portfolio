@@ -115,7 +115,6 @@ const Hero = () => {
             <div className="hero-portrait-shell">
               <img className="personalpic" src={proPic} alt="Surya Teja Nammi" />
             </div>
-            <figcaption className="portrait-caption"><span aria-hidden="true" />Nashville, Tennessee</figcaption>
           </figure>
 
           <aside className="hero-right-rail" aria-label="Professional focus">
