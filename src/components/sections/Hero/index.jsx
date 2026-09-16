@@ -52,16 +52,18 @@ const Hero = () => {
       const viewportHeight = window.innerHeight;
       const availableTravel = Math.max(bounds.height - viewportHeight * 0.56, 1);
       const scrollProgress = clamp((viewportHeight * 0.08 - bounds.top) / availableTravel);
-      const storyProgress = clamp((scrollProgress - 0.14) / 0.56);
+      const introExitProgress = clamp(scrollProgress / 0.28);
+      const storyProgress = clamp((scrollProgress - 0.44) / 0.38);
+      const portraitProgress = clamp((scrollProgress - 0.18) / 0.62);
 
-      hero.style.setProperty('--intro-opacity', `${(1 - storyProgress).toFixed(3)}`);
+      hero.style.setProperty('--intro-opacity', `${(1 - introExitProgress).toFixed(3)}`);
       hero.style.setProperty('--story-opacity', `${storyProgress.toFixed(3)}`);
-      hero.style.setProperty('--intro-shift', `${(-storyProgress * 14).toFixed(2)}px`);
+      hero.style.setProperty('--intro-shift', `${(-introExitProgress * 14).toFixed(2)}px`);
       hero.style.setProperty('--story-shift', `${((1 - storyProgress) * 18).toFixed(2)}px`);
-      hero.style.setProperty('--portrait-rotation', `${(-storyProgress * 8).toFixed(2)}deg`);
-      hero.style.setProperty('--portrait-shift', `${(-storyProgress * 14).toFixed(2)}px`);
-      hero.style.setProperty('--portrait-scale', `${(1 + storyProgress * 0.025).toFixed(3)}`);
-      hero.style.setProperty('--portrait-drift-state', storyProgress > 0.08 ? 'paused' : 'running');
+      hero.style.setProperty('--portrait-rotation', `${(-portraitProgress * 8).toFixed(2)}deg`);
+      hero.style.setProperty('--portrait-shift', `${(-portraitProgress * 14).toFixed(2)}px`);
+      hero.style.setProperty('--portrait-scale', `${(1 + portraitProgress * 0.025).toFixed(3)}`);
+      hero.style.setProperty('--portrait-drift-state', portraitProgress > 0.08 ? 'paused' : 'running');
     };
 
     const requestUpdate = () => {
