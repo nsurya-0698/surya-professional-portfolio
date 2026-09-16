@@ -1,6 +1,6 @@
 import { ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import resume from '../../../assets/documents/Surya.pdf';
-import proPic from './Image-cutout-native.png';
+import proPic from './Image-shoulder-extended.png';
 import './index.css';
 
 const PROOF_POINTS = [
