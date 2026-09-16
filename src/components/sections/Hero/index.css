@@ -216,16 +216,6 @@
   animation: heroPortraitIn 820ms 160ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.hero-portrait-stage::after {
-  position: absolute;
-  right: 8%;
-  bottom: 2rem;
-  left: 8%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.42), rgba(160, 132, 238, 0.34), transparent);
-  content: '';
-}
-
 .hero-portrait-shell {
   display: flex;
   align-items: flex-end;
