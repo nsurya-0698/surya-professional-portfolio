@@ -12,17 +12,6 @@
   isolation: isolate;
 }
 
-.opening-container::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    linear-gradient(90deg, rgba(100, 255, 218, 0.055), transparent 24%, transparent 76%, rgba(160, 132, 238, 0.06)),
-    linear-gradient(180deg, rgba(15, 23, 42, 0.11), transparent 44%, rgba(2, 6, 23, 0.24));
-  content: '';
-  pointer-events: none;
-}
-
 .hero-shell {
   position: sticky;
   top: 74px;
