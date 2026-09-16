@@ -189,6 +189,20 @@ export const PROFILE_KNOWLEDGE = {
 
 const formatList = (items) => items.map((item) => `- ${item}`).join('\n');
 
+export const PUBLIC_PORTFOLIO_CONTEXT = `
+Personal projects:
+${PROFILE_KNOWLEDGE.projects
+  .map((item) => `- ${item.title}: ${item.summary} Technologies: ${item.technologies.join(', ')}${item.status ? `. Status: ${item.status}` : ''}${item.link ? `. Link: ${item.link}` : ''}`)
+  .join('\n')}
+
+Public contact links:
+- Email: ${PROFILE_KNOWLEDGE.contact.email}
+- Phone: ${PROFILE_KNOWLEDGE.contact.phone}
+- GitHub: ${PROFILE_KNOWLEDGE.contact.github}
+- LinkedIn: ${PROFILE_KNOWLEDGE.contact.linkedin}
+- Resume: ${PROFILE_KNOWLEDGE.contact.resume}
+`.trim();
+
 export const PROFILE_CONTEXT = `
 Name: ${PROFILE_KNOWLEDGE.name}
 Title: ${PROFILE_KNOWLEDGE.title}

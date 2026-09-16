@@ -37,7 +37,7 @@ with a server-side `Authorization: Bearer ${OPENROUTER_API_KEY}` header, applica
 
 ## Résumé Grounding
 
-`src/data/profileKnowledge.js` remains the canonical machine-readable public résumé source because the website, deterministic fallback, and model context already share it. The checked-in résumé PDF remains the user-facing artifact. The implementation must not upload or transmit the PDF binary on every request.
+`src/data/resumeKnowledge.js` is the canonical machine-readable résumé grounding source and mirrors the checked-in `src/assets/documents/Surya.pdf`. A SHA-256 drift test requires both artifacts to be updated together. The implementation must not upload or transmit the PDF binary on every request. Broader portfolio data remains available only to the existing deterministic local fallback.
 
 For profile questions:
 

@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
-  GENERAL_MODEL,
-  PROFILE_MODEL,
+  OPENROUTER_MODEL,
   UNKNOWN_REPLY,
 } from '../src/lib/assistantConfig.js';
 import {
@@ -13,6 +12,8 @@ import {
 } from './profile-assistant.js';
 
 const allowedOrigin = 'https://nsurya-0698.github.io';
+const openRouterEndpoint = 'https://openrouter.ai/api/v1/chat/completions';
+const testOpenRouterKey = 'test-openrouter-key-do-not-log';
 
 const createRequest = ({
   body = { message: 'What did Surya do at Oracle?', messages: [] },
@@ -31,15 +32,41 @@ const createRequest = ({
     body: method === 'GET' || method === 'HEAD' ? undefined : JSON.stringify(body),
   });
 
-const createEnv = (modelResponse = 'GROUNDED\nSurya builds Generative AI services at Oracle.') => {
+const createOpenRouterPayload = (modelResponse) => {
+  if (modelResponse && typeof modelResponse === 'object') return modelResponse;
+
+  return {
+    id: 'test-completion',
+    model: OPENROUTER_MODEL,
+    choices: [
+      {
+        finish_reason: 'stop',
+        message: {
+          role: 'assistant',
+          content: String(modelResponse),
+        },
+      },
+    ],
+  };
+};
+
+const createEnv = (
+  modelResponse = 'GROUNDED\nSurya builds Generative AI services at Oracle.'
+) => {
   const calls = [];
+  const requests = [];
+
   return {
     calls,
-    AI: {
-      run: async (...args) => {
-        calls.push(args);
-        return typeof modelResponse === 'string' ? { response: modelResponse } : modelResponse;
-      },
+    requests,
+    OPENROUTER_API_KEY: testOpenRouterKey,
+    OPENROUTER_FETCH: async (url, init = {}) => {
+      const body = JSON.parse(String(init.body || '{}'));
+      const headers = new Headers(init.headers);
+      calls.push([body.model, body]);
+      requests.push({ url: String(url), init, headers, body });
+
+      return Response.json(createOpenRouterPayload(modelResponse));
     },
     VISITOR_RATE_LIMITER: {
       limit: async () => ({ success: true }),
@@ -197,9 +224,11 @@ test('reports a public health response without running inference', async () => {
 
   assert.equal(response.status, 200);
   assert.equal(payload.status, 'ok');
-  assert.equal(payload.model, '@cf/qwen/qwen3-30b-a3b-fp8');
-  assert.equal(payload.profileModel, '@cf/qwen/qwen3-30b-a3b-fp8');
-  assert.equal(payload.generalModel, '@cf/zai-org/glm-4.7-flash');
+  assert.equal(payload.provider, 'openrouter');
+  assert.equal(payload.model, OPENROUTER_MODEL);
+  assert.equal(payload.freeOnly, true);
+  assert.equal(payload.webSearch, false);
+  assert.doesNotMatch(JSON.stringify(payload), /test-openrouter-key/i);
 });
 
 test('rejects browser origins outside the portfolio and local preview', async () => {
@@ -258,8 +287,8 @@ test('asks what a bare projects request means without assuming profile context',
   );
   const explicitPayload = await explicitResponse.json();
 
-  assert.equal(explicitPayload.source, 'cloudflare-profile-ai');
-  assert.equal(explicitEnv.calls[0][0], PROFILE_MODEL);
+  assert.equal(explicitPayload.source, 'openrouter-profile-ai');
+  assert.equal(explicitEnv.calls[0][0], OPENROUTER_MODEL);
 });
 
 test('bridges a project clarification reply into a complete model question', async () => {
@@ -277,11 +306,11 @@ test('bridges a project clarification reply into a complete model question', asy
   );
   const profilePayload = await profileResponse.json();
 
-  assert.equal(profilePayload.source, 'cloudflare-profile-ai');
-  assert.equal(profileEnv.calls[0][0], PROFILE_MODEL);
+  assert.equal(profilePayload.source, 'openrouter-profile-ai');
+  assert.equal(profileEnv.calls[0][0], OPENROUTER_MODEL);
   assert.equal(
     profileEnv.calls[0][1].messages.at(-1).content,
-    "Tell me about Surya's projects.\n\n/no_think"
+    "Tell me about Surya's projects."
   );
 
   const generalEnv = createEnv('Projects are planned efforts with defined outcomes.');
@@ -291,8 +320,8 @@ test('bridges a project clarification reply into a complete model question', asy
   );
   const generalPayload = await generalResponse.json();
 
-  assert.equal(generalPayload.source, 'cloudflare-general-ai');
-  assert.equal(generalEnv.calls[0][0], GENERAL_MODEL);
+  assert.equal(generalPayload.source, 'openrouter-general-ai');
+  assert.equal(generalEnv.calls[0][0], OPENROUTER_MODEL);
   assert.equal(
     generalEnv.calls[0][1].messages.at(-1).content,
     'Tell me about projects in general.'
@@ -305,10 +334,10 @@ test('bridges a project clarification reply into a complete model question', asy
     createRequest({ body: { message: "Show me Surya's projects", messages: history } }),
     explicitProfileEnv
   );
-  assert.equal(explicitProfileEnv.calls[0][0], PROFILE_MODEL);
+  assert.equal(explicitProfileEnv.calls[0][0], OPENROUTER_MODEL);
   assert.equal(
     explicitProfileEnv.calls[0][1].messages.at(-1).content,
-    "Show me Surya's projects\n\n/no_think"
+    "Show me Surya's projects"
   );
 
   const newTopicEnv = createEnv('Recursion repeatedly reduces a problem to a smaller instance.');
@@ -318,7 +347,7 @@ test('bridges a project clarification reply into a complete model question', asy
     }),
     newTopicEnv
   );
-  assert.equal(newTopicEnv.calls[0][0], GENERAL_MODEL);
+  assert.equal(newTopicEnv.calls[0][0], OPENROUTER_MODEL);
   assert.equal(
     newTopicEnv.calls[0][1].messages.at(-1).content,
     'Never mind. Explain recursion.'
@@ -350,10 +379,10 @@ test('uses bounded session context to resolve project clarification yes and no c
   );
   const profile = await profileResponse.json();
 
-  assert.equal(profileEnv.calls[0][0], PROFILE_MODEL);
+  assert.equal(profileEnv.calls[0][0], OPENROUTER_MODEL);
   assert.equal(
     profileEnv.calls[0][1].messages.at(-1).content,
-    "Tell me about Surya's projects.\n\n/no_think"
+    "Tell me about Surya's projects."
   );
   assert.equal(profile.context.activeRoute, 'profile');
   assert.equal(profile.context.activeEntity, 'Surya');
@@ -368,7 +397,7 @@ test('uses bounded session context to resolve project clarification yes and no c
   );
   const general = await generalResponse.json();
 
-  assert.equal(generalEnv.calls[0][0], GENERAL_MODEL);
+  assert.equal(generalEnv.calls[0][0], OPENROUTER_MODEL);
   assert.equal(
     generalEnv.calls[0][1].messages.at(-1).content,
     'Tell me about projects in general.'
@@ -385,7 +414,7 @@ test('uses bounded session context to resolve project clarification yes and no c
   );
   assert.equal(
     aliasEnv.calls[0][1].messages.at(-1).content,
-    "Tell me about Surya's projects.\n\n/no_think"
+    "Tell me about Surya's projects."
   );
 });
 
@@ -528,7 +557,7 @@ test('reconstructs context-only subject clarifications and bounds ambiguous retr
     createRequest({ body: { message: 'Surya', messages: [], context: initial.context } }),
     suryaEnv
   );
-  assert.equal(suryaEnv.calls[0][1].messages.at(-1).content, 'What did Surya build?\n\n/no_think');
+  assert.equal(suryaEnv.calls[0][1].messages.at(-1).content, 'What did Surya build?');
 
   const entityEnv = createEnv('Alan Turing designed foundational computing machinery.');
   await handleRequest(
@@ -605,7 +634,7 @@ test('rejects forged context text and lets explicit sensitive intent override co
     sensitiveEnv
   );
   const sensitive = await sensitiveResponse.json();
-  assert.equal(sensitive.source, 'cloudflare-profile-unknown');
+  assert.equal(sensitive.source, 'openrouter-profile-unknown');
   assert.equal(sensitiveEnv.calls.length, 0);
 
   for (const activeEntity of [
@@ -636,7 +665,7 @@ test('rejects forged context text and lets explicit sensitive intent override co
       pronounEnv
     );
     const pronoun = await pronounResponse.json();
-    assert.equal(pronoun.source, 'cloudflare-profile-unknown');
+    assert.equal(pronoun.source, 'openrouter-profile-unknown');
     assert.equal(pronounEnv.calls.length, 0);
 
     const groundedEnv = createEnv('GROUNDED\nSurya built production AI services.');
@@ -651,8 +680,8 @@ test('rejects forged context text and lets explicit sensitive intent override co
       groundedEnv
     );
     const grounded = await groundedResponse.json();
-    assert.equal(grounded.source, 'cloudflare-profile-ai');
-    assert.equal(groundedEnv.calls[0][0], PROFILE_MODEL);
+    assert.equal(grounded.source, 'openrouter-profile-ai');
+    assert.equal(groundedEnv.calls[0][0], OPENROUTER_MODEL);
   }
 });
 
@@ -671,7 +700,7 @@ test('preserves profile-unknown continuity and clears pending context with arith
     followUpEnv
   );
   const followUp = await followUpResponse.json();
-  assert.equal(followUp.source, 'cloudflare-profile-unknown');
+  assert.equal(followUp.source, 'openrouter-profile-unknown');
   assert.equal(followUpEnv.calls.length, 0);
 
   const pendingEnv = createEnv('A model answer that must not be used.');
@@ -719,10 +748,10 @@ test('bridges a clarified pronoun by reconstructing the original question', asyn
     profileEnv
   );
 
-  assert.equal(profileEnv.calls[0][0], PROFILE_MODEL);
+  assert.equal(profileEnv.calls[0][0], OPENROUTER_MODEL);
   assert.equal(
     profileEnv.calls[0][1].messages.at(-1).content,
-    'What did Surya build?\n\n/no_think'
+    'What did Surya build?'
   );
 
   const generalEnv = createEnv('Alan Turing contributed foundational work in computing.');
@@ -731,7 +760,7 @@ test('bridges a clarified pronoun by reconstructing the original question', asyn
     generalEnv
   );
 
-  assert.equal(generalEnv.calls[0][0], GENERAL_MODEL);
+  assert.equal(generalEnv.calls[0][0], OPENROUTER_MODEL);
   assert.equal(
     generalEnv.calls[0][1].messages.at(-1).content,
     'What did Alan Turing build?'
@@ -757,8 +786,8 @@ test('answers grounded profile questions and forwards only bounded same-mode use
   const [model, modelInput] = env.calls[0];
 
   assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-profile-ai');
-  assert.equal(model, PROFILE_MODEL);
+  assert.equal(payload.source, 'openrouter-profile-ai');
+  assert.equal(model, OPENROUTER_MODEL);
   assert.match(payload.reply, /Agent Gateway/);
   assert.equal(modelInput.messages.length, 5);
   assert.equal(modelInput.messages.slice(1).every((message) => message.role === 'user'), true);
@@ -770,11 +799,19 @@ test('answers grounded profile questions and forwards only bounded same-mode use
     modelInput.messages.slice(1).some((message) => /Paytm/.test(message.content)),
     false
   );
-  assert.equal(modelInput.messages.at(-1).content, 'What did Surya do at Oracle?\n\n/no_think');
+  assert.equal(modelInput.messages.at(-1).content, 'What did Surya do at Oracle?');
+  assert.match(modelInput.messages[0].content, /NxtTrendz E-Commerce/);
+  assert.match(modelInput.messages[0].content, /AI-Powered Yoga Instructor/);
   assert.equal(modelInput.max_tokens, 520);
   assert.equal(modelInput.temperature, 0.2);
   assert.equal(modelInput.top_p, 0.85);
-  assert.equal(modelInput.repetition_penalty, 1.08);
+  assert.equal(modelInput.stream, false);
+  assert.deepEqual(modelInput.provider, {
+    data_collection: 'deny',
+    zdr: true,
+    allow_fallbacks: true,
+  });
+  assert.equal('repetition_penalty' in modelInput, false);
   assert.equal('max_completion_tokens' in modelInput, false);
   assert.equal('chat_template_kwargs' in modelInput, false);
 });
@@ -793,20 +830,21 @@ test('does not carry profile history into a general answer', async () => {
   const payload = await response.json();
   const [model, modelInput] = env.calls[0];
 
-  assert.equal(payload.source, 'cloudflare-general-ai');
-  assert.equal(model, GENERAL_MODEL);
+  assert.equal(payload.source, 'openrouter-general-ai');
+  assert.equal(model, OPENROUTER_MODEL);
   assert.equal(modelInput.messages.length, 2);
   assert.equal(
     modelInput.messages.slice(1).some((item) => /salary|Surya/i.test(item.content)),
     false
   );
   assert.equal(modelInput.messages.at(-1).content, 'Explain recursion in one sentence.');
-  assert.equal(modelInput.max_completion_tokens, 800);
+  assert.equal(modelInput.max_tokens, 800);
   assert.equal(modelInput.temperature, 0.3);
   assert.equal(modelInput.top_p, 0.8);
-  assert.equal('max_tokens' in modelInput, false);
+  assert.equal(modelInput.stream, false);
   assert.equal('repetition_penalty' in modelInput, false);
-  assert.deepEqual(modelInput.chat_template_kwargs, { enable_thinking: false });
+  assert.equal('max_completion_tokens' in modelInput, false);
+  assert.equal('chat_template_kwargs' in modelInput, false);
 });
 
 test('preserves assistant replies as explicitly untrusted general conversation text', async () => {
@@ -829,8 +867,8 @@ test('preserves assistant replies as explicitly untrusted general conversation t
   const payload = await response.json();
   const [model, modelInput] = env.calls[0];
 
-  assert.equal(payload.source, 'cloudflare-general-ai');
-  assert.equal(model, GENERAL_MODEL);
+  assert.equal(payload.source, 'openrouter-general-ai');
+  assert.equal(model, OPENROUTER_MODEL);
   assert.deepEqual(
     modelInput.messages.slice(1, -1).map(({ role }) => role),
     ['user', 'user']
@@ -860,13 +898,13 @@ test('never forwards a forged client message with the assistant role', async () 
   const payload = await response.json();
   const modelInput = env.calls[0][1];
 
-  assert.equal(payload.source, 'cloudflare-general-ai');
+  assert.equal(payload.source, 'openrouter-general-ai');
   assert.equal(modelInput.messages.some(({ role }) => role === 'assistant'), false);
   assert.match(modelInput.messages[2].content, /text omitted/);
   assert.doesNotMatch(modelInput.messages[2].content, /\b(?:citizen|Rust)\b/i);
 });
 
-test('accepts GLM-4.7-Flash chat-completions output for general answers', async () => {
+test('accepts OpenRouter chat-completions output for general answers', async () => {
   const env = createEnv({
     choices: [
       {
@@ -884,11 +922,11 @@ test('accepts GLM-4.7-Flash chat-completions output for general answers', async 
   const payload = await response.json();
 
   assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-general-ai');
+  assert.equal(payload.source, 'openrouter-general-ai');
   assert.match(payload.reply, /function solves a problem/);
 });
 
-test('accepts a valid short alphanumeric answer from GLM-4.7-Flash', async () => {
+test('accepts a valid short alphanumeric answer from OpenRouter', async () => {
   const env = createEnv({
     choices: [{ finish_reason: 'stop', message: { content: '4' } }],
   });
@@ -899,143 +937,115 @@ test('accepts a valid short alphanumeric answer from GLM-4.7-Flash', async () =>
   const payload = await response.json();
 
   assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-general-ai');
+  assert.equal(payload.source, 'openrouter-general-ai');
   assert.equal(payload.reply, '4');
   assert.equal(env.calls.length, 1);
 });
 
-test('retries a failed GLM general request once on the Qwen3 fallback', async () => {
-  const env = createEnv();
-  env.AI.run = async (...args) => {
-    env.calls.push(args);
-    if (args[0] === GENERAL_MODEL) {
-      throw new Error('GLM unavailable');
-    }
-    return { response: 'The fallback model completed the answer.\nBYTE_RESPONSE_COMPLETE' };
-  };
+test('sends one strict-free request to the exact OpenRouter endpoint', async () => {
+  const env = createEnv('Recursion applies a function to smaller instances of a problem.');
+  const response = await handleRequest(
+    createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
+    env
+  );
+  const payload = await response.json();
+  const outbound = env.requests[0];
+
+  assert.equal(response.status, 200);
+  assert.equal(payload.source, 'openrouter-general-ai');
+  assert.equal(env.requests.length, 1);
+  assert.equal(outbound.url, openRouterEndpoint);
+  assert.equal(outbound.init.method, 'POST');
+  assert.equal(outbound.headers.get('authorization'), `Bearer ${testOpenRouterKey}`);
+  assert.equal(outbound.headers.get('content-type'), 'application/json');
+  assert.equal(outbound.body.model, 'inclusionai/ling-3.0-flash-vl:free');
+  assert.equal(outbound.body.model, OPENROUTER_MODEL);
+  assert.equal(outbound.body.stream, false);
+  assert.equal(outbound.body.provider.data_collection, 'deny');
+  assert.equal(outbound.body.provider.zdr, true);
+  assert.equal('models' in outbound.body, false);
+  assert.equal('tools' in outbound.body, false);
+  assert.equal('plugins' in outbound.body, false);
+  assert.doesNotMatch(JSON.stringify(outbound.body), /web_search|:online/i);
+  assert.doesNotMatch(JSON.stringify(outbound.body), /test-openrouter-key/i);
+  assert.doesNotMatch(JSON.stringify(payload), /test-openrouter-key/i);
+});
+
+test('returns 503 without calling OpenRouter when its secret is missing', async () => {
+  const env = createEnv('This answer must not be used.');
+  delete env.OPENROUTER_API_KEY;
+
   const response = await handleRequest(
     createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
     env
   );
   const payload = await response.json();
 
-  assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-general-fallback-ai');
-  assert.match(payload.reply, /fallback model/);
-  assert.deepEqual(env.calls.map(([model]) => model), [GENERAL_MODEL, PROFILE_MODEL]);
-  const fallbackInput = env.calls[1][1];
-  assert.equal(fallbackInput.max_tokens, 240);
-  assert.equal(fallbackInput.temperature, 0.2);
-  assert.equal(fallbackInput.top_p, 0.85);
-  assert.equal(fallbackInput.repetition_penalty, 1.08);
-  assert.equal('max_completion_tokens' in fallbackInput, false);
-  assert.equal('chat_template_kwargs' in fallbackInput, false);
-  assert.equal(fallbackInput.messages.at(-1).content, 'Explain recursion.\n\n/no_think');
-  assert.match(fallbackInput.messages[0].content, /BYTE_RESPONSE_COMPLETE/);
-  assert.doesNotMatch(
-    fallbackInput.messages[0].content,
-    /nammiteja087@gmail\.com|Quest Diagnostics|Paytm/
-  );
+  assert.equal(response.status, 503);
+  assert.match(payload.error, /unavailable|configuration/i);
+  assert.equal(env.requests.length, 0);
+  assert.doesNotMatch(JSON.stringify(payload), /openrouter-key/i);
 });
 
-test('rejects a truncated GLM answer and uses the Qwen3 fallback', async () => {
+test('propagates OpenRouter 429 and Retry-After without leaking provider details', async () => {
   const env = createEnv();
-  env.AI.run = async (...args) => {
-    env.calls.push(args);
-    if (args[0] === GENERAL_MODEL) {
-      return {
-        choices: [
-          {
-            finish_reason: 'length',
-            message: { content: 'This incomplete response must never be returned' },
-          },
-        ],
-      };
-    }
-    return { response: 'This concise fallback answer is complete.\nBYTE_RESPONSE_COMPLETE' };
-  };
+  env.OPENROUTER_FETCH = async () =>
+    Response.json(
+      { error: { message: `quota exhausted for ${testOpenRouterKey}` } },
+      { status: 429, headers: { 'Retry-After': '37' } }
+    );
+
+  const response = await handleRequest(
+    createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
+    env
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 429);
+  assert.equal(response.headers.get('retry-after'), '37');
+  assert.doesNotMatch(JSON.stringify(payload), /quota exhausted|test-openrouter-key/i);
+});
+
+test('rejects malformed OpenRouter output without trying another model', async () => {
+  const env = createEnv({ choices: [] });
+  const response = await handleRequest(
+    createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
+    env
+  );
+  const payload = await response.json();
+
+  assert.equal(response.status, 503);
+  assert.equal(payload.error, 'Assistant model is unavailable');
+  assert.deepEqual(env.calls.map(([model]) => model), [OPENROUTER_MODEL]);
+});
+
+test('rejects a truncated OpenRouter answer without trying another model', async () => {
+  const env = createEnv({
+    choices: [
+      {
+        finish_reason: 'length',
+        message: { content: 'This incomplete response must never be returned' },
+      },
+    ],
+  });
   const response = await handleRequest(
     createRequest({ body: { message: 'Explain a distributed system.', messages: [] } }),
     env
   );
   const payload = await response.json();
 
-  assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-general-fallback-ai');
-  assert.equal(payload.reply, 'This concise fallback answer is complete.');
-  assert.deepEqual(env.calls.map(([model]) => model), [GENERAL_MODEL, PROFILE_MODEL]);
-});
-
-test('retries an invalid GLM answer once on the Qwen3 fallback', async () => {
-  const env = createEnv();
-  env.AI.run = async (...args) => {
-    env.calls.push(args);
-    return args[0] === GENERAL_MODEL
-      ? { choices: [{ finish_reason: 'stop', message: { content: '...' } }] }
-      : { response: 'The fallback supplied a valid answer.\nBYTE_RESPONSE_COMPLETE' };
-  };
-  const response = await handleRequest(
-    createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
-    env
-  );
-  const payload = await response.json();
-
-  assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-general-fallback-ai');
-  assert.equal(payload.reply, 'The fallback supplied a valid answer.');
-  assert.deepEqual(env.calls.map(([model]) => model), [GENERAL_MODEL, PROFILE_MODEL]);
-});
-
-test('rejects a metadata-free fallback answer without its completion marker', async () => {
-  const env = createEnv();
-  env.AI.run = async (...args) => {
-    env.calls.push(args);
-    return args[0] === GENERAL_MODEL
-      ? { choices: [{ finish_reason: 'length', message: { content: 'Truncated primary' } }] }
-      : { response: 'This fallback may have been truncated before completion.' };
-  };
-  const response = await handleRequest(
-    createRequest({ body: { message: 'Explain distributed consensus.', messages: [] } }),
-    env
-  );
-  const payload = await response.json();
-
   assert.equal(response.status, 503);
   assert.equal(payload.error, 'Assistant model is unavailable');
-  assert.deepEqual(env.calls.map(([model]) => model), [GENERAL_MODEL, PROFILE_MODEL]);
+  assert.deepEqual(env.calls.map(([model]) => model), [OPENROUTER_MODEL]);
+  assert.doesNotMatch(JSON.stringify(payload), /incomplete response/i);
 });
 
-test('rejects a marked fallback when any finish reason reports truncation', async () => {
-  const env = createEnv();
-  env.AI.run = async (...args) => {
-    env.calls.push(args);
-    return args[0] === GENERAL_MODEL
-      ? { choices: [{ finish_reason: 'length', message: { content: 'Truncated primary' } }] }
-      : {
-          finish_reason: 'stop',
-          response: {
-            response: 'This fallback is not safe to return.\nBYTE_RESPONSE_COMPLETE',
-            finish_reason: 'max_tokens',
-          },
-        };
-  };
-  const response = await handleRequest(
-    createRequest({ body: { message: 'Explain distributed consensus.', messages: [] } }),
-    env
-  );
-  const payload = await response.json();
-
-  assert.equal(response.status, 503);
-  assert.equal(payload.error, 'Assistant model is unavailable');
-  assert.deepEqual(env.calls.map(([model]) => model), [GENERAL_MODEL, PROFILE_MODEL]);
-});
-
-test('returns a controlled unavailable response after both general models fail', async () => {
+test('returns a controlled response when OpenRouter fails and never leaks its secret', async () => {
   const env = createEnv();
   let attempts = 0;
-  env.AI.run = async () => {
+  env.OPENROUTER_FETCH = async () => {
     attempts += 1;
-    throw new Error('Workers AI quota unavailable');
+    throw new Error(`OpenRouter failed with ${testOpenRouterKey}`);
   };
   const response = await handleRequest(
     createRequest({ body: { message: 'Explain recursion.', messages: [] } }),
@@ -1045,7 +1055,8 @@ test('returns a controlled unavailable response after both general models fail',
 
   assert.equal(response.status, 503);
   assert.equal(payload.error, 'Assistant model is unavailable');
-  assert.equal(attempts, 2);
+  assert.equal(attempts, 1);
+  assert.doesNotMatch(JSON.stringify(payload), /OpenRouter failed|test-openrouter-key/i);
 });
 
 test('does not let a vague follow-up bypass sensitive profile grounding', async () => {
@@ -1061,7 +1072,7 @@ test('does not let a vague follow-up bypass sensitive profile grounding', async 
   );
   const payload = await response.json();
 
-  assert.equal(payload.source, 'cloudflare-profile-unknown');
+  assert.equal(payload.source, 'openrouter-profile-unknown');
   assert.equal(payload.reply, UNKNOWN_REPLY);
   assert.equal(env.calls.length, 0);
 });
@@ -1092,11 +1103,11 @@ test('answers current general questions with a deterministic non-live caveat', a
     const payload = await response.json();
 
     assert.equal(response.status, 200);
-    assert.equal(payload.source, 'cloudflare-general-ai');
+    assert.equal(payload.source, 'openrouter-general-ai');
     assert.match(payload.reply, /^Live-data note:/);
     assert.match(payload.reply, /confident answer from static model knowledge/);
     assert.equal(env.calls.length, 1);
-    assert.equal(env.calls[0][0], GENERAL_MODEL);
+    assert.equal(env.calls[0][0], OPENROUTER_MODEL);
   }
 });
 
@@ -1117,7 +1128,7 @@ test('carries a deterministic live-data caveat into a contextual today follow-up
   const payload = await response.json();
 
   assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-general-ai');
+  assert.equal(payload.source, 'openrouter-general-ai');
   assert.match(payload.reply, /^Live-data note:/);
 });
 
@@ -1143,11 +1154,11 @@ test('keeps the live-data caveat when only bounded context remains', async () =>
     followUpEnv
   );
   const followUp = await followUpResponse.json();
-  assert.equal(followUp.source, 'cloudflare-general-ai');
+  assert.equal(followUp.source, 'openrouter-general-ai');
   assert.match(followUp.reply, /^Live-data note:/);
 });
 
-test('uses deterministic resume content when Qwen misses the profile protocol', async () => {
+test('uses deterministic resume content when OpenRouter misses the profile protocol', async () => {
   const env = createEnv('Here is an answer without the grounding status.');
   const response = await handleRequest(
     createRequest({ body: { message: "What is Surya's current role?", messages: [] } }),
@@ -1156,7 +1167,7 @@ test('uses deterministic resume content when Qwen misses the profile protocol', 
   const payload = await response.json();
 
   assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-profile-fallback');
+  assert.equal(payload.source, 'local-profile-fallback');
   assert.match(payload.reply, /Software Developer 3/);
   assert.match(payload.reply, /Oracle/);
 });
@@ -1169,7 +1180,7 @@ test('honors an explicit model UNKNOWN instead of substituting a generic skill a
   );
   const payload = await response.json();
 
-  assert.equal(payload.source, 'cloudflare-profile-unknown');
+  assert.equal(payload.source, 'openrouter-profile-unknown');
   assert.equal(payload.reply, UNKNOWN_REPLY);
 });
 
@@ -1182,7 +1193,7 @@ test('returns contact details when the profile model marks a fact as unknown', a
   const payload = await response.json();
 
   assert.equal(response.status, 200);
-  assert.equal(payload.source, 'cloudflare-profile-unknown');
+  assert.equal(payload.source, 'openrouter-profile-unknown');
   assert.equal(payload.reply, UNKNOWN_REPLY);
   assert.equal(env.calls.length, 1);
 });
@@ -1197,7 +1208,7 @@ test('lets the grounded model answer resume facts outside the local keyword pars
   );
   const payload = await response.json();
 
-  assert.equal(payload.source, 'cloudflare-profile-ai');
+  assert.equal(payload.source, 'openrouter-profile-ai');
   assert.match(payload.reply, /PostgreSQL/);
   assert.equal(env.calls.length, 1);
 });
@@ -1221,7 +1232,7 @@ test('bypasses the model for sensitive profile information and prompt injection'
     );
     const payload = await response.json();
 
-    assert.equal(payload.source, 'cloudflare-profile-unknown');
+    assert.equal(payload.source, 'openrouter-profile-unknown');
     assert.equal(payload.reply, UNKNOWN_REPLY);
     assert.equal(env.calls.length, 0);
   }
@@ -1239,9 +1250,12 @@ test('answers general questions without exposing resume context to the general m
   const [, modelInput] = env.calls[0];
   const systemPrompt = modelInput.messages[0].content;
 
-  assert.equal(payload.source, 'cloudflare-general-ai');
+  assert.equal(payload.source, 'openrouter-general-ai');
   assert.match(payload.reply, /CAP theorem/);
-  assert.doesNotMatch(systemPrompt, /nammiteja087@gmail\.com|Quest Diagnostics|Paytm/);
+  assert.doesNotMatch(
+    systemPrompt,
+    /nammiteja087@gmail\.com|Quest Diagnostics|Paytm|NxtTrendz|Yoga Instructor/
+  );
 });
 
 test('removes model-generated URLs from general answers', async () => {
@@ -1396,7 +1410,7 @@ test('keeps weather location across bounded follow-ups and honors explicit topic
     switchEnv
   );
   const switched = await switchResponse.json();
-  assert.equal(switched.source, 'cloudflare-general-ai');
+  assert.equal(switched.source, 'openrouter-general-ai');
   assert.equal(switched.context.activeRoute, 'general');
   assert.equal(geocodedLocations.length, beforeSwitch);
   assert.deepEqual(geocodedLocations, [
@@ -1553,7 +1567,7 @@ test('applies the shared visitor and general-global limits to general requests',
 
   assert.equal(profileResponse.status, 200);
   assert.equal(profileEnv.calls.length, 1);
-  assert.equal(profileEnv.calls[0][0], PROFILE_MODEL);
+  assert.equal(profileEnv.calls[0][0], OPENROUTER_MODEL);
 });
 
 test('fails closed when a required AI rate-limit binding is missing', async () => {

@@ -213,7 +213,7 @@ test('forwards opaque conversation context and preserves successful response met
         requestBody = JSON.parse(options.body);
         return jsonResponse({
           reply: "Surya's projects include...",
-          source: 'cloudflare-profile-ai',
+          source: 'openrouter-profile-ai',
           context: nextContext,
         });
       },
@@ -224,7 +224,7 @@ test('forwards opaque conversation context and preserves successful response met
   assert.deepEqual(requestBody.messages, [
     { role: 'assistant', content: 'Are you asking about Surya?' },
   ]);
-  assert.equal(result.source, 'cloudflare-profile-ai');
+  assert.equal(result.source, 'openrouter-profile-ai');
   assert.deepEqual(result.context, nextContext);
 });
 
@@ -266,7 +266,7 @@ test('sends null for malformed context and ignores malformed response context', 
         requestBody = JSON.parse(options.body);
         return jsonResponse({
           reply: 'Hello!',
-          source: 'cloudflare-general-ai',
+          source: 'openrouter-general-ai',
           context: ['invalid'],
         });
       },
@@ -274,7 +274,7 @@ test('sends null for malformed context and ignores malformed response context', 
   );
 
   assert.equal(requestBody.context, null);
-  assert.equal(result.source, 'cloudflare-general-ai');
+  assert.equal(result.source, 'openrouter-general-ai');
   assert.equal(Object.hasOwn(result, 'context'), false);
 });
 
@@ -479,7 +479,7 @@ test('keeps cross-mode context coherent when a Surya request fails between gener
       fetchImpl: async () =>
         jsonResponse({
           reply: 'Alan Turing was a pioneering computer scientist.',
-          source: 'cloudflare-general-ai',
+          source: 'openrouter-general-ai',
           context: alanContext,
         }),
     }
@@ -522,7 +522,7 @@ test('keeps cross-mode context coherent when a Surya request fails between gener
         followUpBody = JSON.parse(options.body);
         return jsonResponse({
           reply: 'Alan Turing helped develop foundational computing concepts.',
-          source: 'cloudflare-general-ai',
+          source: 'openrouter-general-ai',
           context: alanContext,
         });
       },

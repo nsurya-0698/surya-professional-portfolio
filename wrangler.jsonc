@@ -4,9 +4,6 @@
   "main": "workers/profile-assistant.js",
   "compatibility_date": "2026-08-22",
   "workers_dev": true,
-  "ai": {
-    "binding": "AI"
-  },
   "ratelimits": [
     {
       "name": "VISITOR_RATE_LIMITER",

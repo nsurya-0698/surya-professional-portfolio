@@ -29,14 +29,27 @@ npm run build
 
 ## Personal AI Assistant
 
-The portfolio connects to a Cloudflare Worker using a free-plan-compatible Workers AI model. It keeps questions about Surya grounded in `src/data/profileKnowledge.js`, answers general questions in a separate context, and retrieves live weather through Open-Meteo.
+The portfolio connects to a Cloudflare Worker that securely proxies one pinned free OpenRouter model. Questions about Surya are grounded in `src/data/resumeKnowledge.js`, general questions use a separate prompt without résumé data, and live weather comes from Open-Meteo. OpenRouter web search is intentionally disabled because it is not part of the free inference tier.
+
+Create an ignored `.dev.vars` file for local Worker development:
+
+```text
+OPENROUTER_API_KEY=your_dedicated_openrouter_key
+```
 
 ```bash
 npm run assistant:dev
+npm run assistant:test
+```
+
+For hosted use, install the key as a Worker secret; never add it to `wrangler.jsonc`, a `VITE_*` variable, or the repository:
+
+```bash
+npx wrangler@4.125.0 secret put OPENROUTER_API_KEY
 npm run assistant:deploy
 ```
 
-Run `npm run assistant:deploy` whenever `src/data/profileKnowledge.js` or Worker behavior changes so the hosted assistant stays synchronized with the visible portfolio. The production Worker endpoint is the frontend default; `VITE_PROFILE_ASSISTANT_API_URL` can override it for another environment.
+Run `npm run assistant:deploy` whenever `src/data/resumeKnowledge.js` or Worker behavior changes so the hosted assistant stays synchronized with the checked-in résumé. The production Worker endpoint is the frontend default; `VITE_PROFILE_ASSISTANT_API_URL` can override it for a preview environment.
 
 ## Deployment
 

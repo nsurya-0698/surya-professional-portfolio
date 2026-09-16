@@ -10,7 +10,7 @@ const DEFAULT_API_URL =
   'https://surya-portfolio-assistant.surya-professional-portfolio.workers.dev/api/chat';
 const API_URL = (import.meta.env?.VITE_PROFILE_ASSISTANT_API_URL || DEFAULT_API_URL).trim();
 const MAX_HISTORY_MESSAGES = 6;
-const REQUEST_TIMEOUT_MS = 20_000;
+export const PROFILE_ASSISTANT_REQUEST_TIMEOUT_MS = 20_000;
 const PROFILE_ROUTES = new Set(['profile', 'profile-unknown', 'mixed']);
 const PROJECTS_CLARIFICATION = "Are you asking about Surya's portfolio projects?";
 const SUBJECT_CLARIFICATION = 'Are you asking about Surya?';
@@ -117,7 +117,7 @@ export const getAssistantReply = async (
     fetchImpl = globalThis.fetch,
     setTimeoutImpl = globalThis.setTimeout,
     clearTimeoutImpl = globalThis.clearTimeout,
-    requestTimeoutMs = REQUEST_TIMEOUT_MS,
+    requestTimeoutMs = PROFILE_ASSISTANT_REQUEST_TIMEOUT_MS,
   } = {}
 ) => {
   const normalizedMessages = Array.isArray(messages) ? messages : [];
